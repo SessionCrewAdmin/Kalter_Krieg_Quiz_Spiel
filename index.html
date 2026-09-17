@@ -227,7 +227,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
     <div class="terminal">
       <b>MISSIONSZIEL:</b> Rekonstruiere den Kalten Krieg von 1945 bis 1991.<br>
       <b>MODUS:</b> Abschlusswiederholung · erhöhtes Niveau · <span class="codeword">8 Missionen + Boss-Finale</span><br>
-      <b>WARNUNG:</b> Mehrere Aufgaben verlangen Zusammenhänge – bloßes Auswendiglernen reicht nicht.
+      <b>WARNUNG:</b> Mehrere Aufgaben verlangen Zusammenhänge – bloßes Auswendiglernen reicht nicht.<br>
+      <b>RANGLISTE:</b> <span id="dbStatus">Online-Verbindung wird beim Speichern geprüft.</span>
     </div>
     <details class="scorelegend" open>
       <summary>WERTUNG // So sammelst du Punkte</summary>
@@ -620,8 +621,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 (() => {
-const SUPABASE_URL = ""; // z.B. https://xyzcompany.supabase.co
-const SUPABASE_ANON_KEY = ""; // öffentlicher anon key
+const SUPABASE_URL = "https://fzqxnjhuvgpgovcovosl.supabase.co"; // Supabase project URL
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV"; // public browser key
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
 const missionErrors=Array(9).fill(0); const weakTopics={};
@@ -669,12 +670,11 @@ function saveLocalScore(entry){
   return rows.slice(0,20);
 }
 async function saveRemoteScore(entry){
-  if(!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("not-configured");
+  if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) throw new Error("not-configured");
   const r=await fetch(SUPABASE_URL+"/rest/v1/scores",{
     method:"POST",
     headers:{
-      "apikey":SUPABASE_ANON_KEY,
-      "Authorization":"Bearer "+SUPABASE_ANON_KEY,
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
       "Content-Type":"application/json",
       "Prefer":"return=minimal"
     },
@@ -688,9 +688,9 @@ async function saveRemoteScore(entry){
   if(!r.ok) throw new Error("save-failed");
 }
 async function fetchRemoteScores(){
-  if(!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error("not-configured");
+  if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) throw new Error("not-configured");
   const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at&order=score.desc,mistakes.asc,best_combo.desc&limit=20";
-  const r=await fetch(u,{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+SUPABASE_ANON_KEY}});
+  const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});
   if(!r.ok) throw new Error("fetch-failed");
   const rows=await r.json();
   return rows.map(x=>({name:x.player_name,score:x.score,mistakes:x.mistakes,bestCombo:x.best_combo||0}));
@@ -707,22 +707,27 @@ function renderLeaderboard(rows){
 async function persistResult(){
   const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString()};
   $("#saveStatus").textContent="Ergebnis wird gespeichert …";
-  if(SUPABASE_URL && SUPABASE_ANON_KEY){
+  if(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY){
     try{
       await saveRemoteScore(entry);
       const rows=await fetchRemoteScores();
       renderLeaderboard(rows);
-      $("#saveStatus").textContent="Ergebnis gespeichert.";
-      $("#leaderboardNote").textContent="Klassenweite Rangliste.";
+      $("#saveStatus").textContent="Ergebnis online gespeichert.";
+      $("#leaderboardNote").textContent="Gemeinsame Klassenrangliste · Punkte ↓ · Fehler ↑ · Best-Combo ↓";
       return;
     }catch(e){
-      console.warn(e);
+      console.warn("Supabase:",e);
+      const rows=saveLocalScore(entry);
+      renderLeaderboard(rows);
+      $("#saveStatus").textContent="Online-Speicherung fehlgeschlagen – Ergebnis wurde lokal gesichert.";
+      $("#leaderboardNote").textContent="Prüfe in Supabase, ob die Tabelle 'scores' und die RLS-Policies eingerichtet sind.";
+      return;
     }
   }
   const rows=saveLocalScore(entry);
   renderLeaderboard(rows);
   $("#saveStatus").textContent="Ergebnis lokal gespeichert.";
-  $("#leaderboardNote").textContent="Aktuell läuft die Rangliste nur auf diesem Gerät. Für eine gemeinsame Klassenrangliste Supabase konfigurieren.";
+  $("#leaderboardNote").textContent="Keine Online-Datenbank konfiguriert.";
 }
 function addScore(n){score+=n;combo++;bestCombo=Math.max(bestCombo,combo);$("#score").textContent=score;$("#combo").textContent=combo;beep(true)}
 function miss(fb,msg){

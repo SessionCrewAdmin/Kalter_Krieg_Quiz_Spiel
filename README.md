@@ -1,25 +1,16 @@
-# Operation Kalter Krieg V8
+# V9 – Supabase aktiviert
 
-Neu in dieser Version:
-- Die bisherigen Quellen-Schnipsel wurden zu echten Zitat-Duellen umgebaut.
-- Ablauf:
-  1. echtes historisches Zitat lesen
-  2. der richtigen Person zuordnen
-  3. danach die Deutungsfrage beantworten
+Die Project URL und der Publishable Key sind bereits in index.html eingetragen.
 
-Aktuell enthalten:
-- Harry S. Truman, Rede vor dem Kongress, 12. März 1947
-- Ronald Reagan, Rede am Brandenburger Tor, 12. Juni 1987
+Noch notwendig:
+1. SUPABASE_SQL.sql einmal im Supabase SQL Editor ausführen.
+2. index.html in GitHub Pages hochladen / alte Datei ersetzen.
+3. Quiz einmal vollständig durchspielen.
+4. Am Endscreen sollte "Ergebnis online gespeichert." erscheinen.
 
-Didaktischer Vorteil:
-- nicht nur Wiedererkennen
-- zusätzlich Sprecherzuordnung
-- danach historische Einordnung und Deutung
+Die Highscore-Liste ist klassenweit:
+1. Punkte absteigend
+2. bei Gleichstand weniger Fehler
+3. danach höhere Best-Combo
 
-Hinweis:
-Die übrigen Features aus V7 bleiben erhalten:
-- Hinweise ab 3/5 Fehlern
-- Karten-Challenges ohne direkten Ländernamen
-- Risikofrage
-- adaptives Boss-Finale
-- lokale Highscores
+Falls Supabase nicht erreichbar ist, speichert das Quiz automatisch lokal als Fallback.
