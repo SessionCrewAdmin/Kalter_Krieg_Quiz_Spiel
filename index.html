@@ -203,7 +203,7 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
     <div class="hud">
       <div class="pill">Punkte <span id="score">0</span></div>
       <div class="pill">Fehler <span id="mistakes">0</span></div>
-      <div class="pill">Combo <span id="combo">0</span></div>
+      <div class="pill">Serie <span id="combo">0</span></div>
       <div class="pill">Mission <span id="missionHud">0/8</span></div>
     </div>
   </div>
@@ -211,41 +211,40 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
 
   <section id="start" class="screen active">
     <div class="hero">
-      <div class="kicker">Abschluss-Stoffwiederholung</div>
+      <div class="kicker">Abschlussquiz</div>
       <h1>Operation<br>Kalter Krieg</h1>
-      <p>Keine einfache Quizrunde: Acht Missionen, Weltkarte ohne direkte Ländernamen, Quellen-Schnipsel, Chronologie, Risikofrage und ein adaptives Boss-Finale. Fehler kosten keine Leben – aber Punkte und Combo.</p>
+      <p>Teste zum Abschluss, was du über den Kalten Krieg noch weißt. Dich erwarten acht Runden mit Karten, Zuordnungen, Quellen und Zeitstrahlen.</p>
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:2"><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(90,145,199,.45);background:rgba(90,145,199,.10);font-weight:900;letter-spacing:.08em">WESTBLOCK</span><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(214,91,91,.45);background:rgba(214,91,91,.10);font-weight:900;letter-spacing:.08em">OSTBLOCK</span></div><div class="namecard">
-        <label for="playerName">Agentenname / Vorname</label>
+        <label for="playerName">Dein Name</label>
         <input id="playerName" maxlength="24" autocomplete="off" placeholder="z. B. Mia">
-        <div class="small">Der Name erscheint später in der Highscore-Liste.</div>
+        <div class="small">Dein Name erscheint am Ende in der Rangliste.</div>
         <div class="nameerror" id="nameError"></div>
       </div>
-      <div class="classified-stamp">Classified // Student Access</div>
-      <button class="btn btn-primary" id="startBtn">Zugriffscode akzeptieren</button>
-    <div style="margin-top:16px;text-align:center;color:var(--muted);font-size:14px;letter-spacing:.12em;text-transform:uppercase">Codename: Eiszeit // Archivfreigabe erforderlich</div>
+      <div class="classified-stamp">Classified</div>
+      <button class="btn btn-primary" id="startBtn">Quiz starten</button>
+    <div style="margin-top:16px;text-align:center;color:var(--muted);font-size:14px;letter-spacing:.12em;text-transform:uppercase">Codename: Eiszeit</div>
     </div>
     <div class="terminal">
-      <b>MISSIONSZIEL:</b> Rekonstruiere den Kalten Krieg von 1945 bis 1991.<br>
-      <b>MODUS:</b> Abschlusswiederholung · erhöhtes Niveau · <span class="codeword">8 Missionen + Boss-Finale</span><br>
-      <b>WARNUNG:</b> Mehrere Aufgaben verlangen Zusammenhänge – bloßes Auswendiglernen reicht nicht.<br>
-      <b>RANGLISTE:</b> <span id="dbStatus">Online-Verbindung wird beim Speichern geprüft.</span>
+      <b>ZIEL:</b> Bearbeite alle acht Runden und sammle möglichst viele Punkte.<br>
+      <b>ABLAUF:</b> 8 Runden · verschiedene Aufgabentypen · <span class="codeword">Finalrunde</span><br>
+      <b>TIPP:</b> Lies genau. Bei einigen Aufgaben musst du Zusammenhänge erkennen und nicht nur Begriffe wiedergeben.<br>
+      <b>HIGHSCORE:</b> <span id="dbStatus">Dein Ergebnis wird am Ende gespeichert.</span>
     </div>
     <details class="scorelegend" open>
-      <summary>WERTUNG // So sammelst du Punkte</summary>
+      <summary>Punkteübersicht</summary>
       <div class="scorelegend-grid">
-        <div class="scorelegend-item"><b>Karten-Ziel richtig finden</b><span class="scorelegend-points">+100 bis +110</span></div>
-        <div class="scorelegend-item"><b>Einzelfrage richtig lösen</b><span class="scorelegend-points">+120</span></div>
-        <div class="scorelegend-item"><b>Mehrfachauswahl komplett richtig</b><span class="scorelegend-points">+150</span></div>
-        <div class="scorelegend-item"><b>Einzelne Zuordnung richtig</b><span class="scorelegend-points">+45 bis +55</span></div>
-        <div class="scorelegend-item"><b>Kuba-Krisenphase richtig</b><span class="scorelegend-points">+90</span></div>
-        <div class="scorelegend-item"><b>Chronologie / Kausalitätskette</b><span class="scorelegend-points">+140 bis +180</span></div>
-        <div class="scorelegend-item"><b>Mission vollständig abgeschlossen</b><span class="scorelegend-points">+200 Bonus</span></div>
-        <div class="scorelegend-item"><b>Boss-Finale: richtige Antwort</b><span class="scorelegend-points">+100</span></div>
+        <div class="scorelegend-item"><b>Kartenaufgabe richtig</b><span class="scorelegend-points">+100 bis +110</span></div>
+        <div class="scorelegend-item"><b>Einzelfrage richtig</b><span class="scorelegend-points">+120</span></div>
+        <div class="scorelegend-item"><b>Mehrfachauswahl vollständig richtig</b><span class="scorelegend-points">+150</span></div>
+        <div class="scorelegend-item"><b>Richtige Zuordnung</b><span class="scorelegend-points">+45 bis +55</span></div>
+        <div class="scorelegend-item"><b>Kuba-Aufgabe richtig</b><span class="scorelegend-points">+90</span></div>
+        <div class="scorelegend-item"><b>Reihenfolge richtig</b><span class="scorelegend-points">+140 bis +180</span></div>
+        <div class="scorelegend-item"><b>Runde abgeschlossen</b><span class="scorelegend-points">+200 Bonus</span></div>
+        <div class="scorelegend-item"><b>Finalrunde: richtige Antwort</b><span class="scorelegend-points">+100</span></div>
       </div>
       <div class="scorelegend-note">
-        <b>Fehler:</b> Es werden keine Punkte abgezogen, aber jeder Fehler wird gezählt und setzt deine Combo auf 0.
-        Die Combo zeigt, wie viele Aufgaben du hintereinander richtig gelöst hast; sie gibt aktuell keine zusätzlichen Punkte.
-        Bei gleichem Punktestand entscheidet in der Rangliste zuerst die geringere Fehlerzahl, danach die höhere Best-Combo.
+        <b>Fehler:</b> Für falsche Antworten werden keine Punkte abgezogen. Sie werden aber gezählt und setzen deine Serie auf 0.
+        Bei gleichem Punktestand steht vorne, wer weniger Fehler gemacht hat. Danach entscheidet die längste Serie richtiger Antworten.
       </div>
     </details>
   </section>
@@ -600,7 +599,7 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="stats">
         <div class="stat"><strong id="finalScore">0</strong>Punkte</div>
         <div class="stat"><strong id="finalMistakes">0</strong>Fehler</div>
-        <div class="stat"><strong id="bestCombo">0</strong>Beste Combo</div>
+        <div class="stat"><strong id="bestCombo">0</strong>Beste Serie</div>
         <div class="stat"><strong>8/8</strong>Missionen</div>
       </div>
       <div class="rank" id="rankText"></div><p id="agentResult" style="font-size:20px;font-weight:900"></p>

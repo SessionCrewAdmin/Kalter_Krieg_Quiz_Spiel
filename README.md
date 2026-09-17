@@ -1,16 +1,11 @@
-# V9 – Supabase aktiviert
+# V10 – natürlichere Startseite
 
-Die Project URL und der Publishable Key sind bereits in index.html eingetragen.
+Geändert:
+- Starttext deutlich kürzer und natürlicher
+- weniger künstliche Gaming-/KI-Formulierungen
+- „Zugriffscode akzeptieren“ → „Quiz starten“
+- „Agentenname“ → „Dein Name“
+- Punkteübersicht sprachlich vereinfacht
+- „Combo“ im sichtbaren Text → „Serie“
 
-Noch notwendig:
-1. SUPABASE_SQL.sql einmal im Supabase SQL Editor ausführen.
-2. index.html in GitHub Pages hochladen / alte Datei ersetzen.
-3. Quiz einmal vollständig durchspielen.
-4. Am Endscreen sollte "Ergebnis online gespeichert." erscheinen.
-
-Die Highscore-Liste ist klassenweit:
-1. Punkte absteigend
-2. bei Gleichstand weniger Fehler
-3. danach höhere Best-Combo
-
-Falls Supabase nicht erreichbar ist, speichert das Quiz automatisch lokal als Fallback.
+Look, Aufgaben, Supabase und Highscore bleiben unverändert.
