@@ -186,7 +186,53 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
 .revealnote{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(92,179,124,.12);border:1px solid rgba(92,179,124,.35);color:#d9f5e2}
 .revealnote.show{display:block}
 
+
+/* V11: kompakter Einzelschritt-Modus */
+html,body{min-height:100%;overflow-x:hidden}
+.app{min-height:100dvh}
+.screen.active{min-height:calc(100dvh - 108px)}
+.panel.completed-step{display:none!important}
+.mission-head{margin-bottom:10px}
+.mission-head h2{font-size:clamp(30px,4vw,48px)}
+.panel{padding:16px;margin-top:10px}
+.task h3{font-size:20px}
+.task p{margin:6px 0 10px}
+.feedback{margin-top:9px;min-height:38px}
+.navrow{margin-top:12px}
+.mapwrap{height:clamp(300px,46dvh,470px)}
+.choice{min-height:58px;padding:13px}
+.statement{padding:12px;margin:8px 0}
+.eventcard{padding:11px;margin:7px 0}
+.seq-item{padding:9px}
+.scorelegend{max-width:900px}
+.hero{padding-top:34px;padding-bottom:24px}
+.hero h1{font-size:clamp(44px,7vw,78px)}
+.hero p{font-size:18px}
+.namecard{margin-top:18px;padding:14px}
+.terminal{margin-top:12px;padding:13px}
+
 @media(max-width:800px){
+
+  .app{padding:10px}
+  .topbar{position:relative;padding:6px 0 10px}
+  .brand{font-size:12px;letter-spacing:.08em}
+  .hud{gap:5px}
+  .pill{padding:6px 8px;font-size:12px}
+  .progressline{margin:8px 0 12px}
+  .screen.active{min-height:auto}
+  .mission-head h2{font-size:30px}
+  .mission-head p{font-size:14px}
+  .panel{padding:13px;border-radius:14px}
+  .mapwrap{height:clamp(280px,42dvh,360px)}
+  .choice{min-height:52px;padding:12px;font-size:15px}
+  .hero{padding:24px 10px 18px}
+  .hero h1{font-size:48px}
+  .hero p{font-size:16px}
+  .terminal{font-size:13px}
+  .namecard{padding:12px}
+  .scorelegend{padding:14px}
+  .scorelegend summary{font-size:14px}
+
   .scorelegend-grid{grid-template-columns:1fr}
   .lb-row{grid-template-columns:38px 1fr 72px}.lb-row > :last-child{display:none}
   .choice-grid,.bin-grid,.bossgrid,.stats{grid-template-columns:1fr}
@@ -194,6 +240,111 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
   .mission-head{display:block}
   .difficulty{display:inline-block;margin-top:10px}
 }
+
+@media(max-width:520px){
+  .app{padding:8px}
+  .topbar{align-items:flex-start;gap:8px}
+  .hud{justify-content:flex-end}
+  .pill{font-size:11px;padding:5px 7px}
+  .mission-number,.difficulty{font-size:10px}
+  .mission-head h2{font-size:26px}
+  .mapwrap{height:300px}
+  .choice-grid{grid-template-columns:1fr}
+  .binary{flex-direction:column}
+  .category-row{gap:6px}
+  .catbtn{padding:8px 9px;font-size:14px}
+  .seq-item{grid-template-columns:34px 1fr auto}
+  .move button{width:34px;height:34px}
+  .hero h1{font-size:40px}
+  .hero p{font-size:15px}
+  .namecard input{font-size:16px}
+}
+
+
+/* V12: kompakter Anmeldebildschirm */
+#start.active{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:14px;
+  align-items:start;
+}
+#start .hero{
+  padding:24px 22px 18px;
+  min-height:0;
+}
+#start .hero h1{
+  font-size:clamp(40px,5.5vw,68px);
+  margin:10px 0 12px;
+}
+#start .hero p{
+  font-size:16px;
+  line-height:1.4;
+  max-width:680px;
+}
+#start .namecard{
+  margin-top:14px;
+  padding:12px;
+}
+#start .classified-stamp{
+  margin:10px 0 4px;
+  padding:5px 9px;
+  font-size:12px;
+}
+#start #startBtn{
+  margin-top:10px;
+}
+#start .terminal{
+  margin:0;
+  padding:13px 14px;
+  font-size:13px;
+}
+#start .scorelegend{
+  margin:10px 0 0;
+  padding:12px 14px;
+}
+#start .scorelegend-grid{
+  gap:5px 14px;
+}
+#start .scorelegend-item{
+  padding:5px 0;
+  font-size:13px;
+}
+#start .scorelegend-note{
+  margin-top:8px;
+  padding-top:8px;
+  font-size:12px;
+}
+#start .start-side{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+@media(max-width:900px){
+  #start.active{
+    grid-template-columns:1fr;
+  }
+  #start .hero{
+    padding:20px 14px 16px;
+  }
+  #start .hero h1{
+    font-size:clamp(38px,9vw,56px);
+  }
+  #start .hero p{
+    font-size:15px;
+  }
+  #start .terminal{
+    font-size:12px;
+  }
+}
+@media(max-height:760px) and (min-width:901px){
+  #start .hero{padding-top:16px;padding-bottom:14px}
+  #start .hero h1{font-size:52px}
+  #start .hero p{font-size:14px}
+  #start .namecard{margin-top:10px;padding:10px}
+  #start .terminal{font-size:12px;padding:10px 12px}
+  #start .scorelegend{padding:10px 12px}
+}
+
 </style>
 </head>
 <body>
@@ -224,13 +375,14 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <button class="btn btn-primary" id="startBtn">Quiz starten</button>
     <div style="margin-top:16px;text-align:center;color:var(--muted);font-size:14px;letter-spacing:.12em;text-transform:uppercase">Codename: Eiszeit</div>
     </div>
+    <div class="start-side">
     <div class="terminal">
       <b>ZIEL:</b> Bearbeite alle acht Runden und sammle möglichst viele Punkte.<br>
       <b>ABLAUF:</b> 8 Runden · verschiedene Aufgabentypen · <span class="codeword">Finalrunde</span><br>
       <b>TIPP:</b> Lies genau. Bei einigen Aufgaben musst du Zusammenhänge erkennen und nicht nur Begriffe wiedergeben.<br>
       <b>HIGHSCORE:</b> <span id="dbStatus">Dein Ergebnis wird am Ende gespeichert.</span>
     </div>
-    <details class="scorelegend" open>
+    <details class="scorelegend">
       <summary>Punkteübersicht</summary>
       <div class="scorelegend-grid">
         <div class="scorelegend-item"><b>Kartenaufgabe richtig</b><span class="scorelegend-points">+100 bis +110</span></div>
@@ -247,6 +399,7 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
         Bei gleichem Punktestand steht vorne, wer weniger Fehler gemacht hat. Danach entscheidet die längste Serie richtiger Antworten.
       </div>
     </details>
+    </div>
   </section>
 
   <section id="m1" class="screen">
@@ -785,11 +938,28 @@ function maybeShowHint(n){
   }
 }
 function good(fb,msg){fb.className="feedback good";fb.textContent=msg}
-function unlock(id){$("#"+id).classList.remove("locked")}
+function unlock(id){
+  const next=$("#"+id);
+  if(!next)return;
+  next.classList.remove("locked");
+  const screen=next.closest(".screen");
+  if(screen){
+    [...screen.querySelectorAll(".panel")].forEach(p=>{
+      if(p!==next && !p.classList.contains("locked")) p.classList.add("completed-step");
+    });
+  }
+  next.classList.remove("completed-step");
+  requestAnimationFrame(()=>next.scrollIntoView({behavior:"smooth",block:"start"}));
+}
 function show(id){$$(".screen").forEach(s=>s.classList.remove("active"));$("#"+id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
 function enterMission(n){
   currentMission=n;$("#missionHud").textContent=n+"/8";$("#progressFill").style.width=((n-1)/8*100)+"%";show("m"+n);
-  const el=$("#m"+n);el.classList.remove("unlockflash");void el.offsetWidth;el.classList.add("unlockflash");unlockSound();
+  const el=$("#m"+n);
+  const available=[...el.querySelectorAll(".panel")].filter(p=>!p.classList.contains("locked"));
+  if(available.length){
+    available.forEach((p,i)=>p.classList.toggle("completed-step",i!==available.length-1));
+  }
+  el.classList.remove("unlockflash");void el.offsetWidth;el.classList.add("unlockflash");unlockSound();
   if(n===5){el.classList.add("alarmPulse");alarmSound();setTimeout(()=>el.classList.remove("alarmPulse"),2200)}
 }
 function completeMission(n){if(!completed.has(n)){completed.add(n);addScore(200)}$("#progressFill").style.width=(n/8*100)+"%"}

@@ -1,11 +1,11 @@
-# V10 – natürlichere Startseite
+# V12 – kompakter Anmeldebildschirm
 
-Geändert:
-- Starttext deutlich kürzer und natürlicher
-- weniger künstliche Gaming-/KI-Formulierungen
-- „Zugriffscode akzeptieren“ → „Quiz starten“
-- „Agentenname“ → „Dein Name“
-- Punkteübersicht sprachlich vereinfacht
-- „Combo“ im sichtbaren Text → „Serie“
+Neu:
+- Startseite auf Desktop zweispaltig
+- Titel + Name links
+- Ziel/Ablauf/Highscore + Punkteübersicht rechts
+- deutlich weniger Höhe und damit auf Laptop/Beamer meist ohne Scrollen
+- auf Tablet/Handy automatisch wieder einspaltig
+- auf niedrigen Laptop-Auflösungen zusätzliche Kompaktregeln
 
-Look, Aufgaben, Supabase und Highscore bleiben unverändert.
+Alle bisherigen Quiz-, Highscore-, Supabase- und Responsive-Funktionen bleiben erhalten.
