@@ -167,6 +167,25 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
 .scorelegend-points{color:var(--gold);font-weight:1000;white-space:nowrap}
 .scorelegend-note{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.5}
 
+
+.hintbox{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid #6f5b2b;background:rgba(92,71,24,.22);color:#f4dfaa}
+.hintbox.show{display:block}
+.hintbox.big{border-color:#a56d32;background:rgba(126,73,26,.28);color:#ffe0b8}
+.hintbox .hintlabel{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:1000;margin-bottom:5px}
+.sourcebox{background:linear-gradient(180deg,#e9dfc6,#d9ccb0);color:#241f18;border:1px solid #8f8062;border-radius:10px;padding:16px 18px;margin:12px 0;font-family:Georgia,"Times New Roman",serif;box-shadow:inset 0 0 24px rgba(90,67,37,.08)}
+.sourcebox .sourcehead{font-family:Inter,Arial,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:1000;color:#6d5736;margin-bottom:8px}
+.riskbox{border:1px solid #875424;background:linear-gradient(180deg,rgba(105,59,19,.35),rgba(61,34,16,.28));border-radius:16px;padding:18px;margin-top:14px}
+.risktitle{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.riskbadge{background:#b8762f;color:#111;padding:7px 10px;border-radius:999px;font-weight:1000;font-size:12px}
+.weakness{display:inline-block;margin:4px 5px 0 0;padding:5px 8px;border-radius:999px;background:#1c313e;border:1px solid #405866;color:#c7d6de;font-size:12px}
+
+
+.quotebox{background:linear-gradient(180deg,#efe7d2,#ddd2b7);color:#201b14;border:1px solid #8d7e62;border-radius:12px;padding:18px;margin:12px 0;box-shadow:inset 0 0 20px rgba(90,67,37,.08)}
+.quotebox .qt{font-family:Georgia,"Times New Roman",serif;font-size:24px;line-height:1.45;font-style:italic}
+.quotebox .qmeta{margin-top:10px;font-size:12px;letter-spacing:.06em;color:#6d5736;font-weight:800;text-transform:uppercase}
+.revealnote{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(92,179,124,.12);border:1px solid rgba(92,179,124,.35);color:#d9f5e2}
+.revealnote.show{display:block}
+
 @media(max-width:800px){
   .scorelegend-grid{grid-template-columns:1fr}
   .lb-row{grid-template-columns:38px 1fr 72px}.lb-row > :last-child{display:none}
@@ -194,7 +213,7 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
     <div class="hero">
       <div class="kicker">Abschluss-Stoffwiederholung</div>
       <h1>Operation<br>Kalter Krieg</h1>
-      <p>Keine einfache Quizrunde: Acht Missionen, mehrstufige Aufgaben, Weltkarte, Chronologie, Quellenanalyse, Kausalitäten und ein Boss-Finale. Fehler kosten keine Leben – aber Punkte und Combo.</p>
+      <p>Keine einfache Quizrunde: Acht Missionen, Weltkarte ohne direkte Ländernamen, Quellen-Schnipsel, Chronologie, Risikofrage und ein adaptives Boss-Finale. Fehler kosten keine Leben – aber Punkte und Combo.</p>
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:2"><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(90,145,199,.45);background:rgba(90,145,199,.10);font-weight:900;letter-spacing:.08em">WESTBLOCK</span><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(214,91,91,.45);background:rgba(214,91,91,.10);font-weight:900;letter-spacing:.08em">OSTBLOCK</span></div><div class="namecard">
         <label for="playerName">Agentenname / Vorname</label>
         <input id="playerName" maxlength="24" autocomplete="off" placeholder="z. B. Mia">
@@ -275,6 +294,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       </div>
       <div class="feedback" id="m1cFb">Wähle die stärkste Begründung.</div>
     </div>
+    <div class="hintbox" id="hintSmall1"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText1"></span></div>
+    <div class="hintbox big" id="hintBig1"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText1"></span></div>
     <div class="navrow"><button class="btn btn-primary" id="next1" disabled>Mission 2 freigeben</button></div>
   </section>
 
@@ -305,6 +326,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       </div>
       <div class="feedback" id="m2bFb">Wähle die treffendste Kombination.</div>
     </div>
+    <div class="hintbox" id="hintSmall2"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText2"></span></div>
+    <div class="hintbox big" id="hintBig2"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText2"></span></div>
     <div class="navrow"><button class="btn btn-primary" id="next2" disabled>Mission 3 freigeben</button></div>
   </section>
 
@@ -329,6 +352,37 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       </div>
       <div class="navrow"><button class="btn btn-secondary" id="checkM3multi">Auswertung</button></div>
       <div class="feedback" id="m3bFb">Mehrere Antworten sind richtig.</div>
+    </div>
+    <div class="hintbox" id="hintSmall3"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText3"></span></div>
+    <div class="hintbox big" id="hintBig3"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText3"></span></div>
+
+    
+    <div class="panel task locked" id="m3cPanel">
+      <div class="tasktag">Zitat-Duell · Zuordnung + Deutung</div>
+      <h3>3C · Wer hat das gesagt?</h3>
+      <div class="quotebox">
+        <div class="qt">“It must be the policy of the United States to support free peoples who are resisting attempted subjugation...”</div>
+        <div class="qmeta">Archivhinweis: Rede vor dem US-Kongress, März 1947</div>
+      </div>
+      <div class="choice-grid" data-q="m3cWho">
+        <button class="choice" data-correct="1">Harry S. Truman</button>
+        <button class="choice">John F. Kennedy</button>
+        <button class="choice">Ronald Reagan</button>
+        <button class="choice">Michail Gorbatschow</button>
+      </div>
+      <div class="feedback" id="m3cWhoFb">Ordne das Zitat der richtigen Person zu.</div>
+      <div class="revealnote" id="m3cReveal">Richtig. Das Zitat stammt aus Trumans Rede vor dem Kongress vom 12. März 1947 und steht für die Truman-Doktrin.</div>
+
+      <div class="task hidden" id="m3cInterpretBox" style="margin-top:16px">
+        <h3>3D · Was sagt das Zitat inhaltlich aus?</h3>
+        <div class="choice-grid" data-q="m3cInterpret">
+          <button class="choice" data-correct="1">Es begründet die Idee, bedrohte „freie Völker“ zu unterstützen und den Einfluss totalitärer Systeme einzudämmen.</button>
+          <button class="choice">Es fordert die sofortige Auflösung aller Militärbündnisse.</button>
+          <button class="choice">Es beschreibt das Ende des Kalten Krieges.</button>
+          <button class="choice">Es belegt, dass die USA und die UdSSR direkt Krieg gegeneinander führten.</button>
+        </div>
+        <div class="feedback" id="m3cInterpretFb">Beantworte danach die Deutungsfrage.</div>
+      </div>
     </div>
     <div class="navrow"><button class="btn btn-primary" id="next3" disabled>Mission 4 freigeben</button></div>
   </section>
@@ -365,6 +419,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       </div>
       <div class="feedback" id="m4cFb">Wähle die beste Erklärung.</div>
     </div>
+    <div class="hintbox" id="hintSmall4"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText4"></span></div>
+    <div class="hintbox big" id="hintBig4"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText4"></span></div>
     <div class="navrow"><button class="btn btn-primary" id="next4" disabled>Mission 5 freigeben</button></div>
   </section>
 
@@ -376,9 +432,9 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
 
     <div class="panel">
       <div class="tasktag">Karte</div>
-      <h3>5A · Lokalisiere Kuba</h3>
+      <h3>5A · Krisenherd lokalisieren</h3>
       <div class="mapwrap"><svg id="map5" viewBox="0 0 1400 720"></svg><div class="loading" id="load5">Karte wird geladen …</div><div class="radar"></div></div>
-      <div class="feedback" id="m5aFb">Ziel: Kuba.</div>
+      <div class="feedback" id="m5aFb">Finde den karibischen Inselstaat, auf dem 1962 sowjetische Raketen stationiert wurden.</div>
     </div>
 
     <div class="panel task locked" id="m5bPanel">
@@ -397,6 +453,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="navrow"><button class="btn btn-secondary" id="checkCubaSeq">Ablauf prüfen</button></div>
       <div class="feedback" id="m5cFb">Ordne die vier Schritte.</div>
     </div>
+    <div class="hintbox" id="hintSmall5"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText5"></span></div>
+    <div class="hintbox big" id="hintBig5"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText5"></span></div>
     <div class="navrow"><button class="btn btn-primary" id="next5" disabled>Mission 6 freigeben</button></div>
   </section>
 
@@ -407,9 +465,9 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
     </div>
     <div class="panel">
       <div class="tasktag">Karte</div>
-      <h3>6A · Lokalisiere Vietnam</h3>
+      <h3>6A · Kriegsschauplatz lokalisieren</h3>
       <div class="mapwrap"><svg id="map6" viewBox="0 0 1400 720"></svg><div class="loading" id="load6">Karte wird geladen …</div><div class="radar"></div></div>
-      <div class="feedback" id="m6aFb">Ziel: Vietnam.</div>
+      <div class="feedback" id="m6aFb">Finde den südostasiatischen Staat, in dem sich der globale Systemkonflikt mit einem regionalen Krieg überlagerte.</div>
     </div>
     <div class="panel task locked" id="m6bPanel">
       <div class="tasktag">Kausalitätskette</div>
@@ -430,6 +488,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="navrow"><button class="btn btn-secondary" id="checkM6multi">Auswertung</button></div>
       <div class="feedback" id="m6cFb">Wähle alle zutreffenden Aussagen.</div>
     </div>
+    <div class="hintbox" id="hintSmall6"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText6"></span></div>
+    <div class="hintbox big" id="hintBig6"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText6"></span></div>
     <div class="navrow"><button class="btn btn-primary" id="next6" disabled>Mission 7 freigeben</button></div>
   </section>
 
@@ -451,6 +511,37 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="navrow"><button class="btn btn-secondary" id="checkDetenteSeq">Chronologie prüfen</button></div>
       <div class="feedback" id="m7bFb">Sortiere die Ereignisse.</div>
     </div>
+    <div class="hintbox" id="hintSmall7"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText7"></span></div>
+    <div class="hintbox big" id="hintBig7"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText7"></span></div>
+
+    
+    <div class="panel task locked" id="m7cPanel">
+      <div class="tasktag">Zitat-Duell · Zuordnung + Deutung</div>
+      <h3>7C · Wer hat das gesagt?</h3>
+      <div class="quotebox">
+        <div class="qt">“Mr. Gorbachev, tear down this wall!”</div>
+        <div class="qmeta">Archivhinweis: Rede am Brandenburger Tor, Juni 1987</div>
+      </div>
+      <div class="choice-grid" data-q="m7cWho">
+        <button class="choice">Harry S. Truman</button>
+        <button class="choice">John F. Kennedy</button>
+        <button class="choice" data-correct="1">Ronald Reagan</button>
+        <button class="choice">Willy Brandt</button>
+      </div>
+      <div class="feedback" id="m7cWhoFb">Ordne das Zitat der richtigen Person zu.</div>
+      <div class="revealnote" id="m7cReveal">Richtig. Das Zitat stammt aus Ronald Reagans Berlin-Rede vom 12. Juni 1987.</div>
+
+      <div class="task hidden" id="m7cInterpretBox" style="margin-top:16px">
+        <h3>7D · Was zeigt dieses Zitat besonders deutlich?</h3>
+        <div class="choice-grid" data-q="m7cInterpret">
+          <button class="choice" data-correct="1">Die späte Phase des Kalten Krieges war weiterhin von Systemkonkurrenz geprägt, zugleich stand Berlin symbolisch für die Überwindung der Teilung.</button>
+          <button class="choice">Die Blockbildung spielte 1987 keinerlei Rolle mehr.</button>
+          <button class="choice">Die deutsche Einheit war zu diesem Zeitpunkt bereits vollzogen.</button>
+          <button class="choice">Die Berliner Mauer wurde mit dieser Rede unmittelbar am selben Tag geöffnet.</button>
+        </div>
+        <div class="feedback" id="m7cInterpretFb">Beantworte danach die Deutungsfrage.</div>
+      </div>
+    </div>
     <div class="navrow"><button class="btn btn-primary" id="next7" disabled>Mission 8 freigeben</button></div>
   </section>
 
@@ -467,6 +558,27 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="feedback" id="m8aFb">Sortiere vom frühesten zum spätesten Ereignis.</div>
     </div>
 
+
+    <div class="riskbox locked" id="riskPanel">
+      <div class="risktitle">
+        <div>
+          <div class="tasktag">Risikofrage · freiwillig</div>
+          <h3 style="margin:0">Doppelte Chance</h3>
+        </div>
+        <div class="riskbadge">+300 / −150</div>
+      </div>
+      <p>Du kannst die Frage überspringen. Wenn du spielst: richtig = +300 Punkte, falsch = −150 Punkte.</p>
+      <div class="choice-grid" data-q="risk1">
+        <button class="choice" data-correct="1">Die Auflösung der Sowjetunion beendete 1991 die politische Ordnung, auf der der Ostblock in seiner bisherigen Form beruhte.</button>
+        <button class="choice">Mit dem Fall der Berliner Mauer 1989 löste sich die Sowjetunion am selben Tag auf.</button>
+        <button class="choice">Die deutsche Einheit führte automatisch zur Auflösung der NATO.</button>
+        <button class="choice">Der Kalte Krieg endete bereits mit der Gründung von BRD und DDR.</button>
+      </div>
+      <div class="feedback" id="risk1Fb">Entscheide: Risiko eingehen oder überspringen.</div>
+      <div class="navrow">
+        <button class="btn btn-secondary" id="skipRisk">Risikofrage überspringen</button>
+      </div>
+    </div>
     <div class="panel task locked" id="m8bPanel">
       <div class="tasktag">Boss-Finale · 6 Mischfragen</div>
       <h3>8B · Der Archiv-Code</h3>
@@ -476,6 +588,8 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
       <div class="feedback" id="bossFb">Bereit?</div>
       <div class="navrow"><button class="btn btn-primary" id="startBoss">Boss-Finale starten</button></div>
     </div>
+    <div class="hintbox" id="hintSmall8"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText8"></span></div>
+    <div class="hintbox big" id="hintBig8"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText8"></span></div>
   </section>
 
   <section id="finish" class="screen">
@@ -510,6 +624,7 @@ const SUPABASE_URL = ""; // z.B. https://xyzcompany.supabase.co
 const SUPABASE_ANON_KEY = ""; // öffentlicher anon key
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
+const missionErrors=Array(9).fill(0); const weakTopics={};
 const completed=new Set();
 
 function beep(ok=true){
@@ -610,7 +725,61 @@ async function persistResult(){
   $("#leaderboardNote").textContent="Aktuell läuft die Rangliste nur auf diesem Gerät. Für eine gemeinsame Klassenrangliste Supabase konfigurieren.";
 }
 function addScore(n){score+=n;combo++;bestCombo=Math.max(bestCombo,combo);$("#score").textContent=score;$("#combo").textContent=combo;beep(true)}
-function miss(fb,msg){mistakes++;combo=0;$("#mistakes").textContent=mistakes;$("#combo").textContent=combo;fb.className="feedback bad";fb.textContent=msg;beep(false)}
+function miss(fb,msg){
+  mistakes++;combo=0;$("#mistakes").textContent=mistakes;$("#combo").textContent=combo;
+  if(currentMission>=1&&currentMission<=8){
+    missionErrors[currentMission]++;
+    weakTopics[currentMission]=(weakTopics[currentMission]||0)+1;
+    maybeShowHint(currentMission);
+  }
+  fb.className="feedback bad";fb.textContent=msg;beep(false)
+}
+const hintTexts={
+  1:{
+    small:"Denke weniger an einzelne Staaten und mehr an die beiden Machtzentren, die nach 1945 gegensätzliche politische und wirtschaftliche Systeme anführten.",
+    big:"Westen = Washington; Osten = Moskau. Bei der Karte wird für das sowjetische Kerngebiet das heutige Russland verwendet."
+  },
+  2:{
+    small:"Achte auf Bündnisse und Wirtschaftsorganisationen: NATO/Marshallplan gehören nicht zur gleichen Seite wie Warschauer Pakt/RGW.",
+    big:"Westblock: USA, BRD, NATO, Marshallplan. Ostblock: UdSSR, DDR, Warschauer Pakt, RGW. Indien, Jugoslawien, Schweden und die Blockfreien passen nicht eindeutig in einen der beiden Blöcke."
+  },
+  3:{
+    small:"Frage dich bei jedem Fall: Geht es um das Bild vom Gegner, um gezielte Beeinflussung oder um militärische Abschreckung?",
+    big:"Feindbild = Gegner pauschal als Bedrohung. Propaganda = gezielte Beeinflussung. Abschreckung = Stärke soll Angriff verhindern."
+  },
+  4:{
+    small:"Ordne erst politische Systeme und Bündnisse den beiden deutschen Staaten zu; bei der Chronologie hilft die Entwicklung von Blockade über Staatsgründung und Mauer bis zur Annäherung.",
+    big:"Luftbrücke kommt vor Staatsgründung, die Staatsgründung vor der Mauer, der Grundlagenvertrag lange nach dem Mauerbau und der Mauerfall ganz am Ende."
+  },
+  5:{
+    small:"Der gesuchte Staat liegt in der Karibik direkt südlich der USA. Bei der Krise: Entdeckung → Reaktion der USA → höchste Spannung → Verhandlungslösung.",
+    big:"Gesucht ist Kuba. Kennedy reagierte mit einer Seeblockade/„Quarantäne“, danach folgten Verhandlungen und der sowjetische Raketenabzug."
+  },
+  6:{
+    small:"Der Kriegsschauplatz liegt in Südostasien. Bei der Abfolge: Teilung → wachsende Konfrontation → massives US-Eingreifen → Protest/Kritik → Rückzug/Kriegsende.",
+    big:"Gesucht ist Vietnam. Der Konflikt war kein direkter USA-UdSSR-Krieg, sondern ein regionaler Krieg, der stark in den globalen Systemkonflikt eingebunden war."
+  },
+  7:{
+    small:"Ostpolitik, SALT und KSZE gehören zur Entspannung; Afghanistan und neue Raketen-/Rüstungsfragen markieren die erneute Verschärfung.",
+    big:"Chronologisch: Moskauer Vertrag → SALT I → KSZE → NATO-Doppelbeschluss → sowjetischer Einmarsch in Afghanistan."
+  },
+  8:{
+    small:"Denke an die Reihenfolge Reformkurs → Umbrüche in Osteuropa → Mauerfall → deutsche Einheit → Zerfall der Sowjetunion.",
+    big:"Gorbatschow kommt zuerst, dann 1989 die Umbrüche und der Mauerfall, danach 1990 die deutsche Einheit und 1991 die Auflösung der Sowjetunion."
+  }
+};
+function maybeShowHint(n){
+  const e=missionErrors[n],h=hintTexts[n];
+  if(!h)return;
+  if(e>=3){
+    const box=$("#hintSmall"+n),txt=$("#hintSmallText"+n);
+    if(box&&txt){txt.textContent=h.small;box.classList.add("show")}
+  }
+  if(e>=5){
+    const box=$("#hintBig"+n),txt=$("#hintBigText"+n);
+    if(box&&txt){txt.textContent=h.big;box.classList.add("show")}
+  }
+}
 function good(fb,msg){fb.className="feedback good";fb.textContent=msg}
 function unlock(id){$("#"+id).classList.remove("locked")}
 function show(id){$$(".screen").forEach(s=>s.classList.remove("active"));$("#"+id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
@@ -636,7 +805,13 @@ function setupChoice(qid,onDone){
    done=true;btn.classList.add("correct");group.querySelectorAll(".choice").forEach(b=>b.disabled=true);addScore(120);good(fb,"Richtig. "+({
     m1c:"Die nukleare Abschreckung sollte Krieg verhindern, machte eine Eskalation aber zugleich existenziell gefährlich.",
     m2b:"Richtig: Der Konflikt war politisch, wirtschaftlich, ideologisch und militärisch.",
-    m4c:"Richtig: Berlin war ein unmittelbarer Kontaktpunkt der Machtblöcke."
+    m4c:"Richtig: Berlin war ein unmittelbarer Kontaktpunkt der Machtblöcke.",
+    m3c:"Richtig: Solche Aussagen spiegeln Misstrauen, Eindämmungsdenken und die Logik konkurrierender Einflusszonen.",
+    m7c:"Richtig: Entspannung bedeutete nicht das Ende der Konkurrenz; Kooperation und neue Konfrontation konnten gleichzeitig auftreten.",
+    m3cWho:"Richtig: Die Person stimmt. Jetzt kommt die Deutung.",
+    m3cInterpret:"Richtig: Das Zitat steht für Eindämmung und die Unterstützung sogenannter freier Völker gegen totalitären Einfluss.",
+    m7cWho:"Richtig: Die Person stimmt. Jetzt kommt die Deutung.",
+    m7cInterpret:"Richtig: Das Zitat zeigt die symbolische Bedeutung Berlins und die anhaltende Konkurrenz in der späten Phase des Kalten Krieges."
    }[qid]||""));onDone();
   }else{btn.classList.add("wrong");btn.disabled=true;miss(fb,"Nicht korrekt. Prüfe den Zusammenhang noch einmal.")}
  }));
@@ -738,7 +913,9 @@ feind.slice(0,5).forEach(([txt,ans],i)=>{
  const d=document.createElement("div");d.className="statement";d.innerHTML=`<b>Fall ${i+1}</b><br>${txt}<div class="category-row">${cats.map(c=>`<button class="catbtn" data-v="${c}">${c}</button>`).join("")}</div>`;
  d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(55);good($("#m3Fb"),fdone+" von 5 richtig.");if(fdone===5)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));$("#feindCases").appendChild(d)
 });
-$("#checkM3multi").addEventListener("click",()=>checkMulti("m3multi","m3bFb",()=>{completeMission(3);$("#next3").disabled=false}));
+$("#checkM3multi").addEventListener("click",()=>checkMulti("m3multi","m3bFb",()=>unlock("m3cPanel")));
+setupChoice("m3cWho",()=>{$("#m3cReveal").classList.add("show");$("#m3cInterpretBox").classList.remove("hidden")});
+setupChoice("m3cInterpret",()=>{completeMission(3);$("#next3").disabled=false});
 
 // M4
 const ger=[["NATO-Mitgliedschaft","BRD"],["Warschauer Pakt","DDR"],["soziale Marktwirtschaft","BRD"],["Planwirtschaft","DDR"],["SED-Herrschaft","DDR"],["parlamentarische Demokratie","BRD"],["deutsche Sprache und gemeinsame Geschichte","beide"],["Folgen des Zweiten Weltkriegs","beide"]];
@@ -756,6 +933,8 @@ const germanyCheck=seqGame("germanySeq",[
 ]);
 $("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(140);good($("#m4bFb"),"Chronologie korrekt.");unlock("m4cPanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Denke an die Entwicklung von Nachkriegszeit über Teilung und Mauer bis zur Annäherung und schließlich 1989.")});
 setupChoice("m4c",()=>{completeMission(4);$("#next4").disabled=false});
+setupChoice("m7cWho",()=>{$("#m7cReveal").classList.add("show");$("#m7cInterpretBox").classList.remove("hidden")});
+setupChoice("m7cInterpret",()=>{completeMission(7);$("#next7").disabled=false});
 
 // M5
 let m5init=false;
@@ -811,7 +990,7 @@ const detSeqCheck=seqGame("detenteSeq",[
  {order:4,title:"NATO-Doppelbeschluss"},
  {order:5,title:"Sowjetischer Einmarsch in Afghanistan"}
 ]);
-$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(140);good($("#m7bFb"),"Chronologie korrekt.");completeMission(7);$("#next7").disabled=false;$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Denke an die Abfolge von Ostpolitik, Rüstungskontrolle, KSZE und der erneuten Verschärfung am Ende der 1970er.")});
+$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(140);good($("#m7bFb"),"Chronologie korrekt.");unlock("m7cPanel");$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Denke an die Abfolge von Ostpolitik, Rüstungskontrolle, KSZE und der erneuten Verschärfung am Ende der 1970er.")});
 
 // M8
 const endCheck=seqGame("endSeq",[
@@ -821,18 +1000,77 @@ const endCheck=seqGame("endSeq",[
  {order:4,title:"Deutsche Einheit."},
  {order:5,title:"Auflösung der Sowjetunion."}
 ]);
-$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(180);good($("#m8aFb"),"Timeline korrekt. Boss-Finale freigeschaltet.");unlock("m8bPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Rekonstruiere den Ablauf von Gorbatschows Reformkurs über die Umbrüche in Osteuropa bis zum Ende der Sowjetunion.")});
+$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(180);good($("#m8aFb"),"Timeline korrekt. Risikofrage freigeschaltet.");unlock("riskPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Rekonstruiere den Ablauf von Gorbatschows Reformkurs über die Umbrüche in Osteuropa bis zum Ende der Sowjetunion.")});
+
+
+let riskDone=false;
+(function(){
+ const group=document.querySelector('[data-q="risk1"]');
+ if(!group)return;
+ const buttons=[...group.querySelectorAll(".choice")].sort(()=>Math.random()-.5);
+ buttons.forEach(b=>group.appendChild(b));
+ buttons.forEach(btn=>btn.addEventListener("click",()=>{
+   if(riskDone)return;
+   riskDone=true;
+   buttons.forEach(b=>b.disabled=true);
+   if(btn.dataset.correct){
+     score+=300;combo++;bestCombo=Math.max(bestCombo,combo);
+     $("#score").textContent=score;$("#combo").textContent=combo;
+     btn.classList.add("correct");good($("#risk1Fb"),"Risiko gewonnen: +300 Punkte.");beep(true);
+   }else{
+     score=Math.max(0,score-150);mistakes++;combo=0;
+     $("#score").textContent=score;$("#mistakes").textContent=mistakes;$("#combo").textContent=combo;
+     weakTopics[8]=(weakTopics[8]||0)+1; missionErrors[8]++; maybeShowHint(8);
+     btn.classList.add("wrong");good($("#risk1Fb"),"Risiko verloren: −150 Punkte. Die Mission geht trotzdem weiter.");beep(false);
+   }
+   unlock("m8bPanel");
+   $("#skipRisk").disabled=true;
+ }));
+ $("#skipRisk").addEventListener("click",()=>{
+   if(riskDone)return;
+   riskDone=true;buttons.forEach(b=>b.disabled=true);
+   good($("#risk1Fb"),"Risikofrage übersprungen. Keine Punkte gewonnen oder verloren.");
+   unlock("m8bPanel");$("#skipRisk").disabled=true;
+ });
+})();
 
 // Boss finale
-const bossQs=[
- {q:"Welche Aussage beschreibt den Kalten Krieg am treffendsten?",a:"Systemkonflikt zwischen USA und UdSSR mit Blockbildung, Aufrüstung und indirekten Konflikten, aber ohne dauerhaften direkten Krieg der Supermächte.",o:["Ein ausschließlich deutscher Konflikt.","Ein direkter Krieg zwischen NATO und Warschauer Pakt von 1945 bis 1991."]},
- {q:"Welches Ereignis gehört zur deutschen Teilungsgeschichte?",a:"Bau der Berliner Mauer 1961",o:["Kubakrise 1962","KSZE-Schlussakte 1975"]},
- {q:"Was war ein Kernproblem der Kuba-Krise?",a:"Sowjetische Mittelstreckenraketen auf Kuba und die Gefahr einer direkten Eskalation.",o:["Der Beitritt Kubas zur NATO.","Die deutsche Wiedervereinigung."]},
- {q:"Warum ist Vietnam für den Kalten Krieg wichtig?",a:"Ein regionaler Konflikt wurde durch den globalen Systemkonflikt überlagert und internationalisiert.",o:["USA und UdSSR erklärten einander dort offiziell den Krieg.","Vietnam war Teil der Europäischen Gemeinschaft."]},
- {q:"Welches Paar steht eher für Entspannungspolitik?",a:"SALT I und KSZE",o:["Berliner Blockade und Mauerbau","Afghanistan 1979 und NATO-Doppelbeschluss"]},
- {q:"Welches Ereignis markiert den endgültigen Zusammenbruch der alten sowjetischen Blockordnung?",a:"Auflösung der Sowjetunion 1991",o:["Bau der Berliner Mauer 1961","Gründung der NATO 1949"]}
+const bossPool=[
+ {tag:1,q:"Welche Aussage beschreibt den Kalten Krieg am treffendsten?",a:"Systemkonflikt zwischen USA und UdSSR mit Blockbildung, Aufrüstung und indirekten Konflikten, aber ohne dauerhaften direkten Krieg der Supermächte.",o:["Ein ausschließlich deutscher Konflikt.","Ein direkter Krieg zwischen NATO und Warschauer Pakt von 1945 bis 1991."]},
+ {tag:1,q:"Warum spricht man von einer bipolaren Weltordnung?",a:"Weil zwei Supermächte und ihre jeweiligen Bündnissysteme große Teile der internationalen Politik prägten.",o:["Weil es weltweit nur zwei Staaten gab.","Weil alle Konflikte ausschließlich in Europa stattfanden."]},
+ {tag:2,q:"Welches Element gehört zum Westblock?",a:"NATO",o:["Warschauer Pakt","RGW"]},
+ {tag:2,q:"Warum passt die Blockfreie Bewegung nicht eindeutig in Ost oder West?",a:"Weil ihre Mitglieder sich nicht dauerhaft einem der beiden Machtblöcke unterordnen wollten.",o:["Weil sie Teil der NATO war.","Weil sie nur aus Staaten des Warschauer Pakts bestand."]},
+ {tag:3,q:"Was ist mit Abschreckung gemeint?",a:"Militärische Stärke soll einen Angriff verhindern, weil die erwarteten Kosten zu hoch wären.",o:["Der Gegner soll durch Propaganda überzeugt werden.","Alle Waffen werden abgeschafft."]},
+ {tag:3,q:"Welche Aussage beschreibt ein Feindbild?",a:"Der Gegner wird pauschal als grundsätzlich gefährlich und moralisch minderwertig dargestellt.",o:["Die Gegenseite wird differenziert analysiert.","Beide Seiten reduzieren ihre Streitkräfte gemeinsam."]},
+ {tag:4,q:"Welches Ereignis gehört zur deutschen Teilungsgeschichte?",a:"Bau der Berliner Mauer",o:["Kubakrise","KSZE-Schlussakte"]},
+ {tag:4,q:"Warum war Berlin ein Brennpunkt?",a:"Weil sich dort die Machtblöcke räumlich unmittelbar gegenüberstanden.",o:["Weil Berlin vollständig zur UdSSR gehörte.","Weil Berlin nie geteilt war."]},
+ {tag:5,q:"Was war ein Kernproblem der Kuba-Krise?",a:"Sowjetische Raketen auf Kuba und die Gefahr direkter Eskalation zwischen den Supermächten.",o:["Der Beitritt Kubas zur NATO.","Die deutsche Wiedervereinigung."]},
+ {tag:5,q:"Welche Maßnahme ergriff Kennedy zentral?",a:"Eine Seeblockade/„Quarantäne“ um Kuba.",o:["Sofortige Kriegserklärung an die UdSSR.","Auflösung der NATO."]},
+ {tag:6,q:"Warum ist Vietnam für den Kalten Krieg wichtig?",a:"Ein regionaler Konflikt wurde durch den globalen Systemkonflikt überlagert und internationalisiert.",o:["USA und UdSSR erklärten sich dort direkt den Krieg.","Vietnam war Mitglied der NATO."]},
+ {tag:6,q:"Welche Aussage zum Vietnamkrieg ist treffend?",a:"Die USA weiteten ihr militärisches Eingreifen stark aus, bevor wachsender Widerstand und hohe Kosten zum Rückzug beitrugen.",o:["Der Krieg endete unmittelbar nach der Teilung Vietnams.","Die Sowjetunion besetzte die USA."]},
+ {tag:7,q:"Welches Paar steht eher für Entspannungspolitik?",a:"SALT I und KSZE",o:["Berliner Blockade und Mauerbau","Afghanistan und NATO-Doppelbeschluss"]},
+ {tag:7,q:"Was zeigt der sowjetische Einmarsch in Afghanistan 1979?",a:"Eine erneute Verschärfung des Ost-West-Konflikts nach Jahren der Entspannung.",o:["Das endgültige Ende des Kalten Krieges.","Den Beitritt Afghanistans zur NATO."]},
+ {tag:8,q:"Welches Ereignis markiert den endgültigen Zusammenbruch der alten sowjetischen Blockordnung?",a:"Auflösung der Sowjetunion 1991",o:["Bau der Berliner Mauer","Gründung der NATO"]},
+ {tag:8,q:"Welche Abfolge ist korrekt?",a:"Gorbatschow → Umbrüche in Osteuropa → Mauerfall → deutsche Einheit → Auflösung der Sowjetunion",o:["Mauerfall → Gorbatschow → NATO-Gründung → deutsche Einheit","Deutsche Einheit → Mauerbau → Gorbatschow → Sowjetunion"]}
 ];
+let bossQs=[];
 let bossIndex=0,bossRight=0,bossTimer=null,bossSeconds=120;
+function buildAdaptiveBoss(){
+  const ranked=Object.entries(weakTopics).sort((a,b)=>b[1]-a[1]).map(([k])=>Number(k));
+  const chosen=[];
+  for(const tag of ranked){
+    const candidates=bossPool.filter(q=>q.tag===tag && !chosen.includes(q));
+    if(candidates.length) chosen.push(candidates[Math.floor(Math.random()*candidates.length)]);
+    if(chosen.length>=4) break;
+  }
+  const rest=bossPool.filter(q=>!chosen.includes(q)).sort(()=>Math.random()-.5);
+  while(chosen.length<6 && rest.length) chosen.push(rest.shift());
+  bossQs=chosen.slice(0,6);
+  const weakNames={1:"Weltordnung",2:"Blockbildung",3:"Feindbilder",4:"Deutschland",5:"Kuba-Krise",6:"Vietnam",7:"Entspannung",8:"Ende des Kalten Krieges"};
+  const labels=ranked.slice(0,3).map(n=>weakNames[n]).filter(Boolean);
+  const fb=$("#bossFb");
+  if(labels.length) fb.innerHTML="Adaptives Finale: besonders berücksichtigt werden <span class='weakness'>"+labels.join("</span><span class='weakness'>")+"</span>.";
+}
 function renderBoss(){
  const area=$("#bossArea");area.innerHTML="";
  if(bossIndex>=bossQs.length){finishBoss();return}
@@ -845,7 +1083,7 @@ function finishBoss(){
  else{miss($("#bossFb"),`Boss-Finale nicht bestanden: ${bossRight}/6. Du brauchst mindestens 5/6. Versuch es erneut.`);$("#startBoss").textContent="Boss-Finale wiederholen";$("#bossArea").innerHTML=""}
 }
 $("#startBoss").addEventListener("click",()=>{
- bossIndex=0;bossRight=0;bossSeconds=120;$("#bossTimer").textContent="02:00";$("#startBoss").disabled=true;$("#bossFb").className="feedback";$("#bossFb").textContent="Boss-Finale läuft.";
+ buildAdaptiveBoss();bossIndex=0;bossRight=0;bossSeconds=120;$("#bossTimer").textContent="02:00";$("#startBoss").disabled=true;$("#bossFb").className="feedback";$("#bossFb").textContent="Boss-Finale läuft.";
  renderBoss();clearInterval(bossTimer);bossTimer=setInterval(()=>{bossSeconds--;const m=String(Math.floor(bossSeconds/60)).padStart(2,"0"),s=String(bossSeconds%60).padStart(2,"0");$("#bossTimer").textContent=`${m}:${s}`;if(bossSeconds<=0){clearInterval(bossTimer);bossIndex=99;finishBoss()}},1000)
 });
 
