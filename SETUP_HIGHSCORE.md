@@ -58,3 +58,10 @@ Die Startseite zeigt jetzt eine aufklappbare Wertungsübersicht.
 - Fehler ziehen keine Punkte ab.
 - Fehler werden separat gezählt und setzen die Combo zurück.
 - Bei Punktgleichstand entscheidet zuerst die geringere Fehlerzahl, danach die höhere Best-Combo.
+
+## V6 – Schwierigkeits- und Zufallsanpassungen
+- Mission 1 nennt USA/Russland nicht mehr direkt in der Aufgabenstellung.
+- Mission 2A wird mit Fisher-Yates zufällig gemischt.
+- Alle Single-Choice-Aufgaben werden beim Laden zufällig angeordnet.
+- Mission 3A mischt Fälle und Antwortbuttons; es gibt einen größeren Fall-Pool.
+- Mission 4B, 7B und 8 zeigen keine Jahreszahlen mehr.

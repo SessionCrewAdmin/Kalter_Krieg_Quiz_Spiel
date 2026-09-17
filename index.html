@@ -239,14 +239,15 @@ box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 25px rgba(0,0,0,.20)}
     <div class="panel task">
       <div class="tasktag">Kartenaufgabe · 2 Ziele</div>
       <h3>1A · Lokalisiere die beiden Machtzentren</h3>
-      <p>Klicke zuerst die USA, danach Russland als geografische Orientierung für das Kerngebiet der damaligen UdSSR.</p>
+      <p><b>Hinweis 1:</b> Finde die westliche Supermacht, die nach 1945 den westlichen Block politisch, wirtschaftlich und militärisch prägte.</p>
+      <p><b>Hinweis 2:</b> Danach: Finde das heutige Land, das als geografisches Kerngebiet der zweiten Supermacht dient, deren Hauptstadt Moskau war.</p>
       <div class="mapwrap">
         <svg id="map1" viewBox="0 0 1400 720"></svg>
         <div class="loading" id="load1">Weltkarte wird geladen …</div>
         <div class="radar"></div>
         <div class="mapnote">Die Karte zeigt heutige Grenzen. Russland steht hier nur als geografische Orientierung; die UdSSR umfasste deutlich mehr Gebiete.</div>
       </div>
-      <div class="feedback" id="m1aFb">Ziel 1: USA.</div>
+      <div class="feedback" id="m1aFb">Ziel 1: westliche Supermacht bestimmen und auf der Karte finden.</div>
     </div>
 
     <div class="panel task locked" id="m1bPanel">
@@ -627,7 +628,9 @@ $("#startBtn").addEventListener("click",()=>{
 
 function setupChoice(qid,onDone){
  const group=document.querySelector(`[data-q="${qid}"]`),fb=$("#"+qid+"Fb");let done=false;
- group.querySelectorAll(".choice").forEach(btn=>btn.addEventListener("click",()=>{
+ const shuffled=[...group.querySelectorAll(".choice")].sort(()=>Math.random()-.5);
+ shuffled.forEach(b=>group.appendChild(b));
+ shuffled.forEach(btn=>btn.addEventListener("click",()=>{
   if(done)return;
   if(btn.dataset.correct){
    done=true;btn.classList.add("correct");group.querySelectorAll(".choice").forEach(b=>b.disabled=true);addScore(120);good(fb,"Richtig. "+({
@@ -687,9 +690,9 @@ let m1step=0;
   svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).on("click",function(e,d){
    const target=m1step===0?"United States of America":"Russia",fb=$("#m1aFb");
    if(d.properties.name===target){d3.select(this).classed("hit",true).style("pointer-events","none");addScore(100);m1step++;
-    if(m1step===1)good(fb,"USA gefunden. Ziel 2: Russland als geografische Orientierung.");
+    if(m1step===1)good(fb,"Erstes Machtzentrum gefunden. Jetzt das heutige Kerngebiet der zweiten Supermacht mit Hauptstadt Moskau.");
     else{good(fb,"Beide Machtzentren lokalisiert.");unlock("m1bPanel")}
-   }else{miss(fb,"Falsches Land. Gesucht: "+(m1step===0?"USA":"Russland")+".")}
+   }else{miss(fb,m1step===0?"Nicht korrekt. Denke an die westliche Supermacht nach 1945.":"Nicht korrekt. Gesucht ist das heutige Kerngebiet der damaligen UdSSR mit Hauptstadt Moskau.")}
   });$("#load1").classList.add("hidden");
  },"#load1");
 })();
@@ -702,7 +705,10 @@ const blocks=[
  ["UdSSR","east"],["DDR","east"],["Warschauer Pakt","east"],["RGW / Comecon","east"],
  ["Jugoslawien","other"],["Indien","other"],["Schweden","other"],["Blockfreie Bewegung","other"]
 ];
-blocks.sort(()=>Math.random()-.5);
+for(let i=blocks.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [blocks[i],blocks[j]]=[blocks[j],blocks[i]];
+}
 let selToken=null,bcount=0;
 blocks.forEach(([t,s])=>{const b=document.createElement("button");b.className="token";b.textContent=t;b.dataset.side=s;b.addEventListener("click",()=>{$$(".token").forEach(x=>x.classList.remove("selected"));selToken=b;b.classList.add("selected")});$("#blockPool").appendChild(b)});
 $$(".drop").forEach(b=>b.addEventListener("click",()=>{
@@ -718,11 +724,18 @@ const feind=[
  ["Ein Plakat stellt das eigene System als überlegen und den Gegner als rückständig dar.","Propaganda"],
  ["Beide Seiten halten Atomwaffen bereit, um einen Angriff des Gegners abzuschrecken.","Abschreckung"],
  ["Medien zeigen fast nur die Schwächen des anderen Systems und blenden dessen Vielfalt aus.","Propaganda"],
- ["Die Gegenseite wird nicht als politischer Konkurrent, sondern als existenzielle Gefahr dargestellt.","Feindbild"]
+ ["Die Gegenseite wird nicht als politischer Konkurrent, sondern als existenzielle Gefahr dargestellt.","Feindbild"],
+ ["Die eigene militärische Stärke soll einen Angriff so riskant machen, dass der Gegner ihn unterlässt.","Abschreckung"],
+ ["Eine Regierung nutzt Film, Schule und Plakate, um das eigene System positiv und das gegnerische negativ darzustellen.","Propaganda"]
 ];
+for(let i=feind.length-1;i>0;i--){
+ const j=Math.floor(Math.random()*(i+1));[feind[i],feind[j]]=[feind[j],feind[i]];
+}
 let fdone=0;
-feind.forEach(([txt,ans],i)=>{
- const d=document.createElement("div");d.className="statement";d.innerHTML=`<b>Fall ${i+1}</b><br>${txt}<div class="category-row">${["Feindbild","Propaganda","Abschreckung"].map(c=>`<button class="catbtn" data-v="${c}">${c}</button>`).join("")}</div>`;
+feind.slice(0,5).forEach(([txt,ans],i)=>{
+ const cats=["Feindbild","Propaganda","Abschreckung"];
+ for(let k=cats.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cats[k],cats[j]]=[cats[j],cats[k]]}
+ const d=document.createElement("div");d.className="statement";d.innerHTML=`<b>Fall ${i+1}</b><br>${txt}<div class="category-row">${cats.map(c=>`<button class="catbtn" data-v="${c}">${c}</button>`).join("")}</div>`;
  d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(55);good($("#m3Fb"),fdone+" von 5 richtig.");if(fdone===5)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));$("#feindCases").appendChild(d)
 });
 $("#checkM3multi").addEventListener("click",()=>checkMulti("m3multi","m3bFb",()=>{completeMission(3);$("#next3").disabled=false}));
@@ -735,13 +748,13 @@ ger.forEach(([term,ans])=>{
  d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";gdone++;addScore(45);good($("#m4aFb"),gdone+" von 8 richtig.");if(gdone===8)unlock("m4bPanel")}else{b.disabled=true;miss($("#m4aFb"),"Nicht korrekt. Prüfe, ob der Begriff nur einen Staat oder beide betrifft.")}}));$("#germanyCases").appendChild(d)
 });
 const germanyCheck=seqGame("germanySeq",[
- {order:1,title:"1948/49: Berliner Blockade und Luftbrücke"},
- {order:2,title:"1949: Gründung von BRD und DDR"},
- {order:3,title:"1961: Bau der Berliner Mauer"},
- {order:4,title:"1972: Grundlagenvertrag zwischen BRD und DDR"},
- {order:5,title:"1989: Fall der Berliner Mauer"}
+ {order:1,title:"Berliner Blockade und Luftbrücke"},
+ {order:2,title:"Gründung von BRD und DDR"},
+ {order:3,title:"Bau der Berliner Mauer"},
+ {order:4,title:"Grundlagenvertrag zwischen BRD und DDR"},
+ {order:5,title:"Fall der Berliner Mauer"}
 ]);
-$("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(140);good($("#m4bFb"),"Chronologie korrekt.");unlock("m4cPanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Prüfe besonders 1948/49, 1949, 1961, 1972 und 1989.")});
+$("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(140);good($("#m4bFb"),"Chronologie korrekt.");unlock("m4cPanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Denke an die Entwicklung von Nachkriegszeit über Teilung und Mauer bis zur Annäherung und schließlich 1989.")});
 setupChoice("m4c",()=>{completeMission(4);$("#next4").disabled=false});
 
 // M5
@@ -792,23 +805,23 @@ const det=[
 let ddone=0;
 det.forEach(([term,ans])=>{const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="Entspannung">← Entspannung</button><button class="btn btn-secondary" data-v="Konfrontation">Konfrontation →</button></div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";ddone++;addScore(45);good($("#m7aFb"),ddone+" von 7 richtig.");if(ddone===7)unlock("m7bPanel")}else{b.disabled=true;miss($("#m7aFb"),"Nicht korrekt. Prüfe, ob das Ereignis Spannungen eher verringerte oder verschärfte.")}}));$("#detenteCases").appendChild(d)});
 const detSeqCheck=seqGame("detenteSeq",[
- {order:1,title:"1970: Moskauer Vertrag"},
- {order:2,title:"1972: SALT I"},
- {order:3,title:"1975: KSZE-Schlussakte"},
- {order:4,title:"1979: NATO-Doppelbeschluss"},
- {order:5,title:"1979: Sowjetischer Einmarsch in Afghanistan"}
+ {order:1,title:"Moskauer Vertrag"},
+ {order:2,title:"SALT I"},
+ {order:3,title:"KSZE-Schlussakte"},
+ {order:4,title:"NATO-Doppelbeschluss"},
+ {order:5,title:"Sowjetischer Einmarsch in Afghanistan"}
 ]);
-$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(140);good($("#m7bFb"),"Chronologie korrekt.");completeMission(7);$("#next7").disabled=false;$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Achte auf die frühen 1970er, 1975 und 1979.")});
+$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(140);good($("#m7bFb"),"Chronologie korrekt.");completeMission(7);$("#next7").disabled=false;$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Denke an die Abfolge von Ostpolitik, Rüstungskontrolle, KSZE und der erneuten Verschärfung am Ende der 1970er.")});
 
 // M8
 const endCheck=seqGame("endSeq",[
- {order:1,title:"1985: Gorbatschow wird Generalsekretär der KPdSU."},
- {order:2,title:"1989: Revolutionen und Systemumbrüche in Osteuropa."},
- {order:3,title:"9. November 1989: Fall der Berliner Mauer."},
- {order:4,title:"3. Oktober 1990: Deutsche Einheit."},
- {order:5,title:"1991: Auflösung der Sowjetunion."}
+ {order:1,title:"Gorbatschow wird Generalsekretär der KPdSU."},
+ {order:2,title:"Revolutionen und Systemumbrüche in Osteuropa."},
+ {order:3,title:"Fall der Berliner Mauer."},
+ {order:4,title:"Deutsche Einheit."},
+ {order:5,title:"Auflösung der Sowjetunion."}
 ]);
-$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(180);good($("#m8aFb"),"Timeline korrekt. Boss-Finale freigeschaltet.");unlock("m8bPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Prüfe 1985, 1989, 1990 und 1991.")});
+$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(180);good($("#m8aFb"),"Timeline korrekt. Boss-Finale freigeschaltet.");unlock("m8bPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Rekonstruiere den Ablauf von Gorbatschows Reformkurs über die Umbrüche in Osteuropa bis zum Ende der Sowjetunion.")});
 
 // Boss finale
 const bossQs=[
