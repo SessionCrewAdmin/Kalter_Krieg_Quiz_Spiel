@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operation Kalter Krieg – Abschlussmission</title>
+<style>
+:root{
+  --bg:#101820; --panel:#18242e; --panel2:#202f3a; --paper:#eef1ea;
+  --ink:#f4f1e6; --muted:#aebbc4; --line:#344651;
+  --red:#c94b4b; --blue:#4f83b5; --gold:#d3ad55; --green:#58a778; --bad:#d7655d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,Helvetica,sans-serif}
+body{min-height:100vh}
+button{font:inherit}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.app{max-width:1180px;margin:0 auto;padding:18px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 2px 18px;border-bottom:1px solid var(--line)}
+.brand{font-weight:900;letter-spacing:.04em}
+.hud{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--panel);padding:8px 12px;border-radius:999px;font-weight:800}
+.progressline{height:8px;background:#263640;border-radius:99px;overflow:hidden;margin:14px 0 18px}
+.progressfill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--gold));transition:.3s}
+.screen{display:none}
+.screen.active{display:block}
+.hero{padding:56px 28px 36px;text-align:center}
+.kicker{text-transform:uppercase;letter-spacing:.22em;color:var(--gold);font-weight:900;font-size:13px}
+.hero h1{font-size:clamp(46px,8vw,88px);line-height:.95;margin:15px 0 18px}
+.hero p{max-width:760px;margin:0 auto;color:var(--muted);font-size:21px;line-height:1.5}
+.hero .btn{margin-top:28px}
+.btn{border:0;border-radius:12px;padding:13px 18px;cursor:pointer;font-weight:900}
+.btn-primary{background:var(--gold);color:#111}
+.btn-secondary{background:#263640;color:var(--ink);border:1px solid var(--line)}
+.btn-danger{background:var(--bad);color:white}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.mission-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:16px}
+.mission-head h2{font-size:clamp(32px,5vw,54px);margin:4px 0 6px}
+.mission-head p{color:var(--muted);margin:0;line-height:1.5}
+.mission-number{color:var(--gold);font-weight:900;letter-spacing:.15em;text-transform:uppercase;font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+.task{margin-top:16px}
+.task h3{margin:0 0 12px;font-size:23px}
+.task p{color:var(--muted);line-height:1.45}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.choice{background:#23343f;border:1px solid #41545f;color:var(--ink);padding:16px;border-radius:13px;text-align:left;cursor:pointer;min-height:64px}
+.choice:hover{background:#2a3f4b}
+.choice.correct{border-color:var(--green);background:#17382b}
+.choice.wrong{border-color:var(--bad);background:#432326}
+.feedback{min-height:42px;margin-top:12px;padding:10px 12px;border-radius:10px;background:#13202a;color:var(--muted)}
+.feedback.good{color:#d6f4e1;border:1px solid #2c6d50}
+.feedback.bad{color:#ffd8d3;border:1px solid #7e3a35}
+.navrow{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+.mapwrap{position:relative;height:520px;background:#dce8ed;border-radius:16px;overflow:hidden}
+#worldMap{width:100%;height:100%;display:block}
+.country{fill:#a9bac3;stroke:#eaf0f3;stroke-width:.6;cursor:pointer}
+.country:hover{fill:#91a7b2}
+.country.hit{fill:var(--green)!important}
+.mapnote{position:absolute;left:12px;bottom:12px;background:rgba(16,24,32,.9);color:#e9eff2;padding:8px 10px;border-radius:8px;font-size:12px;max-width:440px}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#dce8ed;color:#263640;font-weight:900}
+.sort-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bin{min-height:250px;border:2px dashed #4b5d68;border-radius:15px;padding:14px}
+.bin h4{margin:0 0 10px}
+.itempool{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.token{background:#293b47;border:1px solid #4a5d68;color:var(--ink);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+.token.selected{outline:3px solid var(--gold)}
+.bin .token{display:block;width:100%;margin:7px 0;text-align:left}
+.small{font-size:13px;color:var(--muted)}
+.category-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.catbtn{padding:9px 12px;border-radius:999px;border:1px solid #4b5d68;background:#263844;color:var(--ink);cursor:pointer}
+.statement{padding:16px;border-left:4px solid var(--gold);background:#21313b;border-radius:10px;margin:12px 0}
+.sequence{display:grid;gap:10px}
+.seq-item{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;background:#23343f;border:1px solid #40525d;padding:12px;border-radius:12px}
+.seq-num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#111d25;color:var(--gold);font-weight:900}
+.move{display:flex;gap:6px}
+.move button{width:38px;height:38px;border-radius:9px;border:1px solid #4b5d68;background:#2b3d48;color:var(--ink);cursor:pointer}
+.meter{position:relative;height:60px;border-radius:14px;background:linear-gradient(90deg,#467aaa,#273945,#a14747);margin:16px 0}
+.meter::before{content:"Entspannung";position:absolute;left:12px;top:20px;font-weight:900}
+.meter::after{content:"Konfrontation";position:absolute;right:12px;top:20px;font-weight:900}
+.eventcard{background:#23343f;border:1px solid #40525d;border-radius:12px;padding:14px;margin:10px 0}
+.binary{display:flex;gap:8px;margin-top:10px}
+.binary button{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px auto;max-width:760px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:center}
+.stat strong{display:block;font-size:40px;color:var(--gold)}
+.finalbox{max-width:900px;margin:0 auto;text-align:center;padding:40px 20px}
+.finalbox h2{font-size:clamp(42px,7vw,78px);margin:10px 0}
+.rank{font-size:24px;font-weight:900;color:var(--gold);margin-top:12px}
+.sources{margin-top:30px;text-align:left;background:#15222b;border:1px solid var(--line);padding:16px;border-radius:14px;color:var(--muted);font-size:14px;line-height:1.5}
+.sources a{color:#c8dff1}
+.hidden{display:none!important}
+@media(max-width:760px){
+  .choice-grid,.sort-grid,.stats{grid-template-columns:1fr}
+  .mapwrap{height:420px}
+  .mission-head{display:block}
+  .hud{font-size:13px}
+  .hero{padding-left:8px;padding-right:8px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="brand">OPERATION KALTER KRIEG</div>
+    <div class="hud">
+      <div class="pill">Punkte: <span id="score">0</span></div>
+      <div class="pill">Fehler: <span id="mistakes">0</span></div>
+      <div class="pill">Mission: <span id="missionHud">0/8</span></div>
+    </div>
+  </div>
+  <div class="progressline"><div class="progressfill" id="progressFill"></div></div>
+
+  <section id="start" class="screen active">
+    <div class="hero">
+      <div class="kicker">Abschlussquiz</div>
+      <h1>Operation<br>Kalter Krieg</h1>
+      <p>Acht Missionen. Weltkarte, Zuordnungen, Krisen-Simulationen, Zeitstrahl und Wissensduelle. Ziel: den roten Faden des Kalten Krieges von 1945 bis 1991 entschlüsseln.</p>
+      <button class="btn btn-primary" id="startBtn">Mission starten</button>
+    </div>
+  </section>
+
+  <!-- Mission 1 -->
+  <section id="m1" class="screen">
+    <div class="mission-head">
+      <div><div class="mission-number">Mission 1 von 8</div><h2>Die Welt nach 1945</h2><p>Wie prägte der Konflikt zwischen USA und UdSSR die Weltpolitik?</p></div>
+    </div>
+    <div class="panel task">
+      <h3>1A · Finde die beiden Supermächte</h3>
+      <p>Klicke zuerst auf die <b>USA</b> und anschließend auf das <b>Kerngebiet der damaligen UdSSR</b> (auf der heutigen Karte: Russland).</p>
+      <div class="mapwrap">
+        <svg id="worldMap" viewBox="0 0 1400 720" aria-label="Weltkarte"></svg>
+        <div id="mapLoading" class="loading">Weltkarte wird geladen …</div>
+        <div class="mapnote">Hinweis: Die Karte zeigt heutige Staatsgrenzen. Für die UdSSR dient Russland nur als geografische Orientierung; die Sowjetunion umfasste deutlich mehr Gebiete.</div>
+      </div>
+      <div class="feedback" id="m1mapFeedback">Gesucht: USA → Russland als Kerngebiet der damaligen UdSSR.</div>
+    </div>
+    <div class="panel task hidden" id="m1b">
+      <h3>1B · Was bedeutet „bipolare Weltordnung“?</h3>
+      <div class="choice-grid" data-question="m1b">
+        <button class="choice" data-correct="true">Zwei Supermächte und ihre Bündnissysteme prägen große Teile der Weltpolitik.</button>
+        <button class="choice">Alle Staaten der Welt gehören vollständig zu genau einem der beiden Blöcke.</button>
+        <button class="choice">Die USA und die UdSSR führen dauerhaft direkt Krieg gegeneinander.</button>
+        <button class="choice">Europa ist die einzige Region, die vom Konflikt betroffen ist.</button>
+      </div>
+      <div class="feedback" id="m1bFeedback">Wähle die treffendste Erklärung.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next1" disabled>Weiter zu Mission 2</button></div>
+  </section>
+
+  <!-- Mission 2 -->
+  <section id="m2" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 2 von 8</div><h2>Blockbildung</h2><p>Ordne zentrale Begriffe dem West- oder Ostblock zu.</p></div></div>
+    <div class="panel">
+      <div class="itempool" id="blockPool">
+        <button class="token" data-side="west">USA</button>
+        <button class="token" data-side="east">UdSSR</button>
+        <button class="token" data-side="west">BRD</button>
+        <button class="token" data-side="east">DDR</button>
+        <button class="token" data-side="west">NATO</button>
+        <button class="token" data-side="east">Warschauer Pakt</button>
+        <button class="token" data-side="west">Marshallplan</button>
+        <button class="token" data-side="east">RGW / Comecon</button>
+      </div>
+      <p class="small">Spielweise: Begriff anklicken, dann auf „Westblock“ oder „Ostblock“.</p>
+      <div class="sort-grid">
+        <div class="bin" id="westBin"><h4>Westblock</h4><button class="btn btn-secondary dropbtn" data-bin="west">Hier einordnen</button></div>
+        <div class="bin" id="eastBin"><h4>Ostblock</h4><button class="btn btn-secondary dropbtn" data-bin="east">Hier einordnen</button></div>
+      </div>
+      <div class="feedback" id="m2Feedback">0 von 8 zugeordnet.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next2" disabled>Weiter zu Mission 3</button></div>
+  </section>
+
+  <!-- Mission 3 -->
+  <section id="m3" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 3 von 8</div><h2>Feindbilder</h2><p>Unterscheide Feindbild, Propaganda und Abschreckung.</p></div></div>
+    <div class="panel">
+      <div id="feindStatements"></div>
+      <div class="feedback" id="m3Feedback">Ordne alle drei Aussagen richtig ein.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next3" disabled>Weiter zu Mission 4</button></div>
+  </section>
+
+  <!-- Mission 4 -->
+  <section id="m4" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 4 von 8</div><h2>Deutschland: West gegen Ost?</h2><p>Die deutsche Teilung als Brennpunkt des Ost-West-Konflikts.</p></div></div>
+    <div class="panel">
+      <h3>4A · BRD oder DDR?</h3>
+      <div id="germanyCards"></div>
+      <div class="feedback" id="m4aFeedback">Ordne alle Begriffe zu.</div>
+    </div>
+    <div class="panel task hidden" id="m4b">
+      <h3>4B · Berlin 1948/49</h3>
+      <div class="choice-grid" data-question="m4b">
+        <button class="choice">Die Westmächte gaben West-Berlin auf.</button>
+        <button class="choice" data-correct="true">Die Westmächte versorgten West-Berlin während der sowjetischen Blockade über die Luft.</button>
+        <button class="choice">Die Berliner Mauer wurde als Reaktion auf die Blockade gebaut.</button>
+        <button class="choice">Deutschland wurde 1948 wiedervereinigt.</button>
+      </div>
+      <div class="feedback" id="m4bFeedback">Welche Aussage beschreibt die Berliner Blockade/Luftbrücke richtig?</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next4" disabled>Weiter zu Mission 5</button></div>
+  </section>
+
+  <!-- Mission 5 -->
+  <section id="m5" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 5 von 8</div><h2>Kuba-Krise 1962</h2><p>Die Welt hält den Atem an.</p></div></div>
+    <div class="panel">
+      <h3>5A · Wo liegt Kuba?</h3>
+      <p>Klicke Kuba auf der Weltkarte an.</p>
+      <div class="mapwrap"><svg id="mapCuba" viewBox="0 0 1400 720"></svg><div class="loading" id="loadCuba">Karte wird geladen …</div></div>
+      <div class="feedback" id="m5aFeedback">Finde Kuba.</div>
+    </div>
+    <div class="panel task hidden" id="m5b">
+      <h3>5B · Bringe die Krise in eine sinnvolle Reihenfolge</h3>
+      <div class="sequence" id="cubaSeq"></div>
+      <div class="navrow"><button class="btn btn-secondary" id="checkCubaSeq">Reihenfolge prüfen</button></div>
+      <div class="feedback" id="m5bFeedback">Ordne die vier Schritte.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next5" disabled>Weiter zu Mission 6</button></div>
+  </section>
+
+  <!-- Mission 6 -->
+  <section id="m6" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 6 von 8</div><h2>Vietnamkrieg</h2><p>Ein regionaler Krieg mit globaler Bedeutung.</p></div></div>
+    <div class="panel">
+      <h3>6A · Finde Vietnam</h3>
+      <div class="mapwrap"><svg id="mapVietnam" viewBox="0 0 1400 720"></svg><div class="loading" id="loadVietnam">Karte wird geladen …</div></div>
+      <div class="feedback" id="m6aFeedback">Klicke Vietnam an.</div>
+    </div>
+    <div class="panel task hidden" id="m6b">
+      <h3>6B · Warum passt der Vietnamkrieg in den Kalten Krieg?</h3>
+      <div class="choice-grid" data-question="m6b">
+        <button class="choice" data-correct="true">Weil sich dort ein inner-vietnamesischer Konflikt mit dem globalen Systemkonflikt überlagerte und die USA sowie die Sowjetunion unterschiedliche Seiten unterstützten.</button>
+        <button class="choice">Weil USA und UdSSR in Vietnam direkt gegeneinander Krieg erklärten.</button>
+        <button class="choice">Weil Vietnam Mitglied der NATO war.</button>
+        <button class="choice">Weil der Krieg ausschließlich durch den Konflikt zwischen BRD und DDR ausgelöst wurde.</button>
+      </div>
+      <div class="feedback" id="m6bFeedback">Wähle die treffendste Einordnung.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next6" disabled>Weiter zu Mission 7</button></div>
+  </section>
+
+  <!-- Mission 7 -->
+  <section id="m7" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 7 von 8</div><h2>Entspannung & neue Konfrontation</h2><p>Erkenne, wann sich das Verhältnis lockerte – und wann es wieder schärfer wurde.</p></div></div>
+    <div class="panel">
+      <div class="meter"></div>
+      <div id="detenteEvents"></div>
+      <div class="feedback" id="m7Feedback">Ordne alle Ereignisse ein.</div>
+    </div>
+    <div class="navrow"><button class="btn btn-primary" id="next7" disabled>Weiter zum Finale</button></div>
+  </section>
+
+  <!-- Mission 8 -->
+  <section id="m8" class="screen">
+    <div class="mission-head"><div><div class="mission-number">Mission 8 von 8</div><h2>Wie endete der Kalte Krieg?</h2><p>Finale: Bringe die entscheidenden Entwicklungen in die richtige Reihenfolge.</p></div></div>
+    <div class="panel">
+      <div class="sequence" id="endSeq"></div>
+      <div class="navrow"><button class="btn btn-secondary" id="checkEndSeq">Finale prüfen</button></div>
+      <div class="feedback" id="m8Feedback">Ordne die Ereignisse vom frühesten zum spätesten.</div>
+    </div>
+  </section>
+
+  <section id="finish" class="screen">
+    <div class="finalbox">
+      <div class="kicker">Mission abgeschlossen</div>
+      <h2>Kalter Krieg<br>entschlüsselt</h2>
+      <div class="stats">
+        <div class="stat"><strong id="finalScore">0</strong>Punkte</div>
+        <div class="stat"><strong id="finalMistakes">0</strong>Fehler</div>
+        <div class="stat"><strong>8/8</strong>Missionen</div>
+      </div>
+      <div class="rank" id="rankText"></div>
+      <p id="finalText" style="color:var(--muted);font-size:19px;line-height:1.5"></p>
+      <button class="btn btn-primary" id="restartAll">Nochmal spielen</button>
+      <div class="sources">
+        <b>Quellenbasis:</b><br>
+        Bundeszentrale für politische Bildung: „Kalter Krieg“ und weiterführende Beiträge zur Kuba-Krise, zum Vietnamkrieg und zur deutschen Einheit.<br>
+        Landeszentrale für politische Bildung Baden-Württemberg: „Der Kalte Krieg 1945 bis 1991“.<br><br>
+        <a href="https://www.bpb.de/kurz-knapp/lexika/das-junge-politik-lexikon/320587/kalter-krieg/" target="_blank">bpb: Kalter Krieg</a><br>
+        <a href="https://osteuropa.lpb-bw.de/kalter-krieg" target="_blank">LpB BW: Kalter Krieg</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+let score=0, mistakes=0, currentMission=0;
+let worldFeatures=null;
+const completed = new Set();
+
+function addScore(n=100){score+=n; $("#score").textContent=score}
+function miss(msgEl, text){mistakes++; $("#mistakes").textContent=mistakes; if(msgEl){msgEl.className="feedback bad"; msgEl.textContent=text}}
+function good(msgEl,text){if(msgEl){msgEl.className="feedback good"; msgEl.textContent=text}}
+function show(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function enterMission(n){
+  currentMission=n; $("#missionHud").textContent=n+"/8"; $("#progressFill").style.width=((n-1)/8*100)+"%"; show("m"+n);
+}
+function completeMission(n){
+  if(!completed.has(n)){completed.add(n); addScore(150)}
+  $("#progressFill").style.width=(n/8*100)+"%";
+}
+$("#startBtn").addEventListener("click",()=>enterMission(1));
+
+function setupChoiceGroup(group, onDone){
+  const buttons=[...group.querySelectorAll(".choice")];
+  let done=false;
+  buttons.forEach(btn=>btn.addEventListener("click",()=>{
+    if(done) return;
+    const q=group.dataset.question, fb=$("#"+q+"Feedback");
+    if(btn.dataset.correct==="true"){
+      done=true; btn.classList.add("correct"); addScore(100); good(fb,"Richtig. "+({
+        m1b:"Der Kalte Krieg prägte große Teile der Weltpolitik durch zwei rivalisierende Machtzentren und ihre Bündnisse.",
+        m4b:"Richtig: Die Luftbrücke versorgte West-Berlin während der sowjetischen Blockade 1948/49.",
+        m6b:"Richtig: Der Vietnamkrieg war zugleich inner-vietnamesischer Konflikt und Teil des globalen Ost-West-Konflikts."
+      }[q]||""));
+      buttons.forEach(b=>b.disabled=true); onDone();
+    } else {
+      btn.classList.add("wrong"); btn.disabled=true; miss(fb,"Noch nicht. Prüfe den historischen Zusammenhang.");
+    }
+  }));
+}
+$$(".choice-grid").forEach(g=>setupChoiceGroup(g,()=>{
+  if(g.dataset.question==="m1b"){completeMission(1);$("#next1").disabled=false}
+  if(g.dataset.question==="m4b"){completeMission(4);$("#next4").disabled=false}
+  if(g.dataset.question==="m6b"){completeMission(6);$("#next6").disabled=false}
+}));
+
+// world map loader and renderer
+const nameAliases = {
+  "United States of America":"United States of America",
+  "United States":"United States of America",
+  "Russia":"Russia",
+  "Cuba":"Cuba",
+  "Vietnam":"Vietnam"
+};
+function drawMap(svgSel, targetName, feedbackSel, afterCorrect, loadingSel){
+  const svg=d3.select(svgSel);
+  const projection=d3.geoNaturalEarth1().fitExtent([[24,18],[1376,702]],{type:"Sphere"});
+  const path=d3.geoPath(projection);
+  svg.append("path").datum({type:"Sphere"}).attr("d",path).attr("fill","#dce8ed");
+  svg.append("path").datum(d3.geoGraticule10()).attr("d",path).attr("fill","none").attr("stroke","#c3d3da").attr("stroke-width",".7");
+  const render=(features)=>{
+    svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path)
+      .on("click",function(e,d){
+        const name=nameAliases[d.properties.name]||d.properties.name;
+        const fb=$(feedbackSel);
+        if(name===targetName){
+          d3.select(this).classed("hit",true); addScore(100); good(fb,"Treffer: "+targetName+"."); svg.selectAll(".country").style("pointer-events","none"); afterCorrect();
+        } else { miss(fb,"Nicht ganz. Das war "+(name||"ein anderes Gebiet")+". Versuch es erneut."); }
+      });
+    $(loadingSel).classList.add("hidden");
+  };
+  if(worldFeatures) render(worldFeatures);
+  else {
+    fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(r=>r.json()).then(world=>{
+      worldFeatures=topojson.feature(world,world.objects.countries).features;
+      render(worldFeatures);
+    }).catch(()=>{
+      $(loadingSel).textContent="Karte konnte nicht geladen werden. Internetverbindung prüfen.";
+    });
+  }
+}
+
+// M1 sequential USA then Russia
+let m1Target="United States of America", m1Hits=0;
+(function(){
+ const svg=d3.select("#worldMap");
+ const projection=d3.geoNaturalEarth1().fitExtent([[24,18],[1376,702]],{type:"Sphere"}), path=d3.geoPath(projection);
+ svg.append("path").datum({type:"Sphere"}).attr("d",path).attr("fill","#dce8ed");
+ svg.append("path").datum(d3.geoGraticule10()).attr("d",path).attr("fill","none").attr("stroke","#c3d3da").attr("stroke-width",".7");
+ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(r=>r.json()).then(world=>{
+   worldFeatures=topojson.feature(world,world.objects.countries).features;
+   svg.selectAll("path.country").data(worldFeatures).join("path").attr("class","country").attr("d",path).on("click",function(e,d){
+     const name=nameAliases[d.properties.name]||d.properties.name, fb=$("#m1mapFeedback");
+     if(name===m1Target){
+       d3.select(this).classed("hit",true).style("pointer-events","none"); addScore(100); m1Hits++;
+       if(m1Hits===1){m1Target="Russia";good(fb,"USA gefunden. Jetzt das Kerngebiet der damaligen UdSSR: Russland.");}
+       else {good(fb,"Beide Supermächte lokalisiert.");$("#m1b").classList.remove("hidden");}
+     } else miss(fb,"Nicht ganz. Gesucht ist gerade: "+(m1Target==="Russia"?"Russland (als Kerngebiet der damaligen UdSSR)":"USA")+".");
+   });
+   $("#mapLoading").classList.add("hidden");
+ }).catch(()=>$("#mapLoading").textContent="Karte konnte nicht geladen werden.");
+})();
+
+// Mission2
+let selectedBlockToken=null, blockCount=0;
+$("#blockPool").addEventListener("click",e=>{
+ if(e.target.classList.contains("token")){$$(".token").forEach(t=>t.classList.remove("selected"));selectedBlockToken=e.target;e.target.classList.add("selected")}
+});
+$$(".dropbtn").forEach(b=>b.addEventListener("click",()=>{
+ const fb=$("#m2Feedback");
+ if(!selectedBlockToken){fb.textContent="Wähle zuerst einen Begriff aus.";return}
+ const side=b.dataset.bin;
+ if(selectedBlockToken.dataset.side===side){
+   addScore(40); selectedBlockToken.classList.remove("selected"); selectedBlockToken.disabled=true;
+   (side==="west"?$("#westBin"):$("#eastBin")).appendChild(selectedBlockToken); blockCount++; selectedBlockToken=null;
+   good(fb,blockCount+" von 8 richtig zugeordnet.");
+   if(blockCount===8){completeMission(2);$("#next2").disabled=false}
+ } else {miss(fb,"Diese Zuordnung passt nicht. Versuch es noch einmal.");}
+}));
+
+// Mission3
+const feindData=[
+ {text:"Der Gegner wird pauschal als gefährlich, böse oder unmenschlich dargestellt.",answer:"Feindbild"},
+ {text:"Plakate, Medien und politische Botschaften sollen die eigene Bevölkerung gezielt beeinflussen.",answer:"Propaganda"},
+ {text:"Militärische Stärke soll einen Angriff verhindern, weil die Kosten für den Gegner zu hoch wären.",answer:"Abschreckung"}
+];
+let m3done=0;
+feindData.forEach((x,i)=>{
+ const d=document.createElement("div"); d.className="statement"; d.innerHTML=`<b>${i+1}.</b> ${x.text}<div class="category-row">${["Feindbild","Propaganda","Abschreckung"].map(c=>`<button class="catbtn" data-cat="${c}">${c}</button>`).join("")}</div>`;
+ d.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{
+   if(d.dataset.done) return;
+   if(btn.dataset.cat===x.answer){d.dataset.done="1";btn.style.borderColor="var(--green)";addScore(60);m3done++;good($("#m3Feedback"),m3done+" von 3 richtig.");if(m3done===3){completeMission(3);$("#next3").disabled=false}}
+   else {btn.disabled=true;miss($("#m3Feedback"),"Nicht ganz. Überlege: Geht es um das Bild vom Gegner, um Beeinflussung oder um militärische Abschreckung?")}
+ }));
+ $("#feindStatements").appendChild(d);
+});
+
+// Mission4 Germany
+const gerData=[["NATO","BRD"],["Warschauer Pakt","DDR"],["soziale Marktwirtschaft","BRD"],["Planwirtschaft","DDR"],["Westbindung","BRD"],["SED-Herrschaft","DDR"]];
+let gdone=0;
+gerData.forEach(([term,ans],i)=>{
+ const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="BRD">BRD</button><button class="btn btn-secondary" data-v="DDR">DDR</button></div>`;
+ d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+   if(d.dataset.done)return;
+   if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";addScore(40);gdone++;good($("#m4aFeedback"),gdone+" von 6 richtig.");if(gdone===6)$("#m4b").classList.remove("hidden")}
+   else {b.disabled=true;miss($("#m4aFeedback"),"Diese Zuordnung stimmt nicht. Versuch die andere Seite.")}
+ }));
+ $("#germanyCards").appendChild(d);
+});
+
+// sequence helper
+function sequenceGame(containerId, items){
+ const el=$("#"+containerId);
+ const state=[...items].sort(()=>Math.random()-.5);
+ function render(){
+  el.innerHTML="";
+  state.forEach((it,i)=>{
+   const row=document.createElement("div");row.className="seq-item";
+   row.innerHTML=`<div class="seq-num">${i+1}</div><div><b>${it.title}</b><div class="small">${it.note||""}</div></div><div class="move"><button data-dir="-1" ${i===0?"disabled":""}>↑</button><button data-dir="1" ${i===state.length-1?"disabled":""}>↓</button></div>`;
+   row.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    const j=i+Number(b.dataset.dir); [state[i],state[j]]=[state[j],state[i]]; render();
+   }));
+   el.appendChild(row);
+  });
+ }
+ render();
+ return ()=>state.every((x,i)=>x.order===i+1);
+}
+
+// maps for M5/M6 lazy now
+let m5mapStarted=false,m6mapStarted=false;
+function initM5(){
+ if(m5mapStarted)return;m5mapStarted=true;
+ drawMap("#mapCuba","Cuba","#m5aFeedback",()=>$("#m5b").classList.remove("hidden"),"#loadCuba");
+}
+function initM6(){
+ if(m6mapStarted)return;m6mapStarted=true;
+ drawMap("#mapVietnam","Vietnam","#m6aFeedback",()=>$("#m6b").classList.remove("hidden"),"#loadVietnam");
+}
+const cubaCheck=sequenceGame("cubaSeq",[
+ {order:1,title:"US-Aufklärung entdeckt sowjetische Raketenstellungen auf Kuba."},
+ {order:2,title:"Kennedy kündigt eine Seeblockade („Quarantäne“) an."},
+ {order:3,title:"USA und UdSSR verhandeln unter extremem Eskalationsdruck."},
+ {order:4,title:"Die UdSSR zieht Raketen aus Kuba ab; die USA sagen u. a. einen Nichtangriff auf Kuba zu.",note:"Zusätzlich wurde der Abzug amerikanischer Jupiter-Raketen aus der Türkei geheim vereinbart."}
+]);
+$("#checkCubaSeq").addEventListener("click",()=>{
+ if(cubaCheck()){addScore(120);good($("#m5bFeedback"),"Richtig. Die Krise wurde politisch entschärft, bevor sie in einen direkten Krieg der Supermächte eskalierte.");completeMission(5);$("#next5").disabled=false;$("#checkCubaSeq").disabled=true}
+ else miss($("#m5bFeedback"),"Noch nicht korrekt. Beginne mit der Entdeckung der Raketenstellungen und denke dann an Kennedys Reaktion.");
+});
+
+// Mission7
+const detData=[
+ ["Ostverträge der Bundesrepublik (ab 1970)","Entspannung"],
+ ["SALT I / Rüstungskontrolle (1972)","Entspannung"],
+ ["KSZE-Schlussakte von Helsinki (1975)","Entspannung"],
+ ["NATO-Doppelbeschluss (1979)","Konfrontation"],
+ ["Sowjetischer Einmarsch in Afghanistan (1979)","Konfrontation"]
+];
+let dDone=0;
+detData.forEach(([term,ans])=>{
+ const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="Entspannung">← Entspannung</button><button class="btn btn-secondary" data-v="Konfrontation">Konfrontation →</button></div>`;
+ d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+   if(d.dataset.done)return;
+   if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";addScore(45);dDone++;good($("#m7Feedback"),dDone+" von 5 richtig.");if(dDone===5){completeMission(7);$("#next7").disabled=false}}
+   else {b.disabled=true;miss($("#m7Feedback"),"Nicht ganz. Ordne das Ereignis nach seiner Wirkung auf die Ost-West-Spannungen ein.")}
+ }));
+ $("#detenteEvents").appendChild(d);
+});
+
+// Final timeline
+const endCheck=sequenceGame("endSeq",[
+ {order:1,title:"1985: Michail Gorbatschow übernimmt die Führung der Sowjetunion.",note:"Glasnost und Perestroika verändern die politische Lage."},
+ {order:2,title:"1989: Friedliche Revolutionen und Umbrüche im Ostblock."},
+ {order:3,title:"9. November 1989: Fall der Berliner Mauer."},
+ {order:4,title:"3. Oktober 1990: Deutsche Einheit."},
+ {order:5,title:"1991: Auflösung der Sowjetunion.",note:"Der Ost-West-Konflikt gilt damit als beendet."}
+]);
+$("#checkEndSeq").addEventListener("click",()=>{
+ if(endCheck()){addScore(180);good($("#m8Feedback"),"Finale gelöst. Die Umbrüche 1989/90 und die Auflösung der Sowjetunion 1991 markieren das Ende der alten Blockordnung.");completeMission(8);setTimeout(finishGame,650);$("#checkEndSeq").disabled=true}
+ else miss($("#m8Feedback"),"Die Reihenfolge stimmt noch nicht. Achte besonders auf 1985, 1989, 1990 und 1991.");
+});
+
+function finishGame(){
+ $("#progressFill").style.width="100%";$("#missionHud").textContent="8/8";$("#finalScore").textContent=score;$("#finalMistakes").textContent=mistakes;
+ let rank,text;
+ if(mistakes<=3){rank="Sehr sicher durch die Epoche";text="Du hast Zusammenhänge, Räume und zeitliche Abläufe sehr sicher erkannt."}
+ else if(mistakes<=8){rank="Guter Überblick";text="Der rote Faden sitzt. Einzelne Details könntest du noch einmal prüfen."}
+ else {rank="Mission erfüllt";text="Du hast alle Themen abgeschlossen. Nutze die Fehler als Hinweis, welche Bereiche du noch einmal wiederholen solltest."}
+ $("#rankText").textContent=rank;$("#finalText").textContent=text;show("finish");
+}
+
+// navigation
+$("#next1").addEventListener("click",()=>enterMission(2));
+$("#next2").addEventListener("click",()=>enterMission(3));
+$("#next3").addEventListener("click",()=>enterMission(4));
+$("#next4").addEventListener("click",()=>{enterMission(5);initM5()});
+$("#next5").addEventListener("click",()=>{enterMission(6);initM6()});
+$("#next6").addEventListener("click",()=>enterMission(7));
+$("#next7").addEventListener("click",()=>enterMission(8));
+$("#restartAll").addEventListener("click",()=>location.reload());
+})();
+</script>
+</body>
+</html>
