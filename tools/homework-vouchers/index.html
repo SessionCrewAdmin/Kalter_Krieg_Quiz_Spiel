@@ -50,7 +50,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 <div class="modal" id="authModal"><div class="modal-card"><h2>Admin entsperren</h2><p>Für Schülerdaten, das Erstellen und das Einlösen wird das Administrator-Passwort von Kathleens Kiste benötigt.</p><div class="field"><label>Administrator-Passwort</label><input id="authPass" type="password" autocomplete="current-password"></div><div class="modal-actions"><button class="btn primary" id="authOk">Entsperren</button><button class="btn" id="authCancel">Abbrechen</button></div></div></div>
 
 <div class="modal" id="createModal"><div class="modal-card"><h2>Neuen Homework Voucher erstellen</h2><p>Der Voucher-Code wird sicher in Supabase erzeugt. Der QR-Code enthält keine Schülerdaten, sondern nur einen Prüf-Link.</p><div class="form">
-<div class="field"><label>Schüler / Kürzel</label><input id="fStudent" autocomplete="off" placeholder="z. B. Anna M."></div>
+<div class="field"><label>Schnellauswahl aus Klassenlisten</label><select id="fClassList"><option value="">Manuell eingeben</option></select></div><div class="field"><label>Schüler aus Klasse</label><select id="fStudentList"><option value="">Manuell eingeben</option></select></div><div class="field"><label>Schüler / Kürzel</label><input id="fStudent" autocomplete="off" placeholder="z. B. Anna M."></div>
 <div class="field"><label>Klasse</label><input id="fClass" autocomplete="off" placeholder="z. B. 9a"></div>
 <div class="field wide"><label>Anlass</label><input id="fReason" placeholder="z. B. World Quiz – Perfect Round"></div>
 <div class="field"><label>Gültig bis</label><input id="fExpires" type="date"></div>
@@ -65,7 +65,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 
 <div class="modal" id="verifyModal"><div class="modal-card verify-card"><div class="verify-icon" id="verifyIcon">🎟️</div><div class="verify-status" id="verifyStatus">Voucher prüfen …</div><div class="verify-code" id="verifyCode"></div><p id="verifyText"></p><div class="modal-actions" style="justify-content:center"><button class="btn green hidden" id="verifyRedeem">Als Lehrkraft einlösen</button><button class="btn" id="verifyClose">Schließen</button></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script src="../classroom-tools-shared.js"></script><script src="../presentation-mode.js"></script>
 <script>
 (function(){
 const SUPABASE_URL='https://fzqxnjhuvgpgovcovosl.supabase.co';
@@ -96,7 +96,7 @@ $$('[data-view]').forEach(b=>b.onclick=()=>showVoucher(b.dataset.view));$$('[dat
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]))}
 
 function openCreate(prefill){const p=prefill||{};$('#fStudent').value='';$('#fClass').value='';$('#fReason').value=p.reason||'';$('#fSource').value=p.source||'Manuell';$('#fClaim').value=p.claim||'';$('#fNote').value=p.note||'';const d=new Date();d.setMonth(d.getMonth()+3);$('#fExpires').value=d.toISOString().slice(0,10);$('#createModal').classList.add('show')}
-$('#newBtn').onclick=()=>ensureAdmin(async()=>openCreate());
+async function fillClassLists(){try{if(!window.KathleenClassLists)return;await KathleenClassLists.requireUnlock();const lists=KathleenClassLists.load(),sel=$('#fClassList');sel.innerHTML='<option value="">Manuell eingeben</option>'+lists.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+' · '+x.students.length+'</option>').join('');$('#fStudentList').innerHTML='<option value="">Manuell eingeben</option>'}catch(e){console.warn(e)}}$('#fClassList').onchange=()=>{const x=KathleenClassLists.get($('#fClassList').value);$('#fStudentList').innerHTML='<option value="">Schüler wählen</option>'+(x?x.students.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join(''):'');if(x)$('#fClass').value=x.name};$('#fStudentList').onchange=()=>{if($('#fStudentList').value)$('#fStudent').value=$('#fStudentList').value};$('#newBtn').onclick=()=>ensureAdmin(async()=>(await fillClassLists(),openCreate()));
 $('#createCancel').onclick=()=>$('#createModal').classList.remove('show');
 $('#createOk').onclick=()=>ensureAdmin(async()=>{const student=$('#fStudent').value.trim(),cls=$('#fClass').value.trim(),reason=$('#fReason').value.trim();if(!student||!cls||!reason){toast('Schüler, Klasse und Anlass fehlen');return}try{const exp=$('#fExpires').value?new Date($('#fExpires').value+'T23:59:59').toISOString():null;const v=await rpc('voucher_create',{p_passphrase:pass(),p_student_name:student,p_class_name:cls,p_reason:reason,p_expires_at:exp,p_note:$('#fNote').value.trim(),p_source_tool:$('#fSource').value.trim()||'Manuell',p_source_session:null,p_claim_code:$('#fClaim').value||null});$('#createModal').classList.remove('show');toast('Voucher erstellt ✓');$('#search').value='';$('#filter').value='all';await load();showVoucher(v.code);}catch(e){console.error(e);toast(String(e).includes('claim_already_used')?'Dieser Gewinn wurde bereits eingelöst':'Voucher konnte nicht erstellt werden')}});
 
