@@ -653,6 +653,110 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
   50%{transform:translateY(-4px)}
 }
 
+
+/* =========================================================
+   V15 CLASSROOM CONTROL // LEHRERMODUS
+   ========================================================= */
+.session-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.session-fields label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.10em;font-weight:900;color:var(--muted);margin-bottom:5px}
+.session-fields input,.teacher-grid select{
+  width:100%;box-sizing:border-box;border:1px solid var(--line);background:#08151e;color:var(--ink);
+  border-radius:10px;padding:11px 12px;font:800 16px/1.2 Inter,Arial,sans-serif;outline:none
+}
+.session-fields input:focus,.teacher-grid select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,164,191,.14)}
+.session-state{margin-top:9px;min-height:20px;font-size:12px;color:var(--muted);font-weight:800}
+.session-state.good{color:#6cc58b}.session-state.bad{color:#dc7171}.session-state.wait{color:#d7b15b}
+.teacher-link{
+  margin-top:10px;background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;
+  cursor:pointer;font:800 12px/1.2 Inter,Arial,sans-serif
+}
+.teacher-link:hover{color:var(--ink)}
+.session-time-pill{display:none}.session-time-pill.on{display:block}
+
+/* teacher screen */
+.teacher-shell{max-width:1080px;margin:0 auto;padding:10px 0 40px}
+.teacher-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+.teacher-head h2{font-size:clamp(32px,5vw,56px);margin:4px 0 0}
+.teacher-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.teacher-card{
+  border:1px solid var(--line);background:linear-gradient(160deg,rgba(10,27,38,.94),rgba(5,15,22,.94));
+  border-radius:16px;padding:16px;min-width:0
+}
+.teacher-card.wide{grid-column:1/-1}
+.teacher-card h3{margin:0 0 12px;font-size:17px}
+.teacher-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.teacher-check{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:13px;font-weight:800}
+.teacher-check input{width:18px;height:18px}
+.session-code-big{
+  font:1000 clamp(38px,8vw,72px)/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.18em;color:var(--gold);margin:10px 0;text-shadow:0 0 24px rgba(215,177,91,.18)
+}
+.teacher-statusline{font:900 12px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);letter-spacing:.08em}
+.teacher-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.teacher-actions .btn{min-width:150px}
+.teacher-list{display:grid;gap:6px;max-height:230px;overflow:auto;padding-right:4px}
+.teacher-row{display:grid;grid-template-columns:1.4fr .7fr .7fr .7fr;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025);font-size:12px}
+.teacher-row.head{font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.ready-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#69c68b;box-shadow:0 0 10px rgba(105,198,139,.35);margin-right:7px}
+
+/* synchronized cold-war countdown */
+.launch-overlay{
+  position:fixed;inset:0;z-index:9990;display:none;place-items:center;padding:18px;
+  background:
+    radial-gradient(circle at center,rgba(102,31,31,.18),transparent 36%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 5px),
+    #050a0e;
+}
+.launch-overlay.show{display:grid}
+.launch-console{
+  width:min(720px,94vw);border:1px solid #493a2f;background:linear-gradient(180deg,#161918,#080d0f);
+  border-radius:18px;padding:22px;box-shadow:0 0 0 8px rgba(0,0,0,.32),0 40px 100px rgba(0,0,0,.65);
+  position:relative;overflow:hidden
+}
+.launch-console::before{
+  content:"";position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent 0 85%,rgba(197,64,58,.12) 88%,transparent 92%);
+  animation:launchSweep 3s linear infinite;pointer-events:none
+}
+@keyframes launchSweep{to{transform:rotate(1turn)}}
+.launch-top{display:flex;justify-content:space-between;gap:12px;position:relative;z-index:2;font:900 11px/1.2 ui-monospace,monospace;color:#9ca6a8;letter-spacing:.13em;text-transform:uppercase}
+.launch-label{color:#cc635d}
+.launch-clock{
+  position:relative;z-index:2;margin:22px auto 12px;border:1px solid #46372c;border-radius:12px;padding:18px 12px;
+  background:#030806;box-shadow:inset 0 0 35px rgba(0,0,0,.9);text-align:center
+}
+.launch-digits{
+  font:1000 clamp(56px,15vw,124px)/.9 ui-monospace,SFMono-Regular,Consolas,monospace;
+  color:#d55c51;letter-spacing:.06em;text-shadow:0 0 8px rgba(213,92,81,.72),0 0 28px rgba(213,92,81,.24);
+  font-variant-numeric:tabular-nums
+}
+.launch-sub{margin-top:11px;font:900 12px/1.4 ui-monospace,monospace;color:#b7a780;letter-spacing:.16em;text-transform:uppercase}
+.launch-bars{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-top:15px;position:relative;z-index:2}
+.launch-bars span{height:9px;border:1px solid #49352d;background:#20100f;border-radius:2px;transition:background .25s,box-shadow .25s}
+.launch-bars span.on{background:#c9544c;box-shadow:0 0 12px rgba(201,84,76,.35)}
+.launch-warning{position:relative;z-index:2;text-align:center;margin-top:14px;color:#92999b;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:900}
+
+/* teacher mini doomsday clock */
+.control-clock{
+  margin-top:12px;border:1px solid #493a2f;border-radius:12px;padding:13px;background:#050a0b;text-align:center
+}
+.control-clock .digits{font:1000 42px/1 ui-monospace,monospace;color:#d55c51;text-shadow:0 0 16px rgba(213,92,81,.32);letter-spacing:.06em}
+.control-clock small{display:block;margin-top:6px;color:var(--muted);font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+
+/* result exports */
+.export-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.export-row .btn{min-width:190px}
+@media(max-width:800px){
+  .teacher-grid{grid-template-columns:1fr}.teacher-card.wide{grid-column:auto}
+  .teacher-form-row,.session-fields{grid-template-columns:1fr}
+  .teacher-row{grid-template-columns:1.3fr .7fr .7fr}.teacher-row>*:nth-child(4){display:none}
+}
+@media print{
+  body{background:#fff!important;color:#000!important}
+  .topbar,.progressline,.mission-rail,.sound-toggle,.leaderboard,.teacher-note,.export-row,#restartAll{display:none!important}
+  #finish{display:block!important}.finalbox{border:0!important;background:#fff!important;color:#000!important;box-shadow:none!important}
+  .topic-chip,.profile-summary-card,.stat{color:#000!important;background:#fff!important;border:1px solid #bbb!important}
+}
+
 </style>
 </head>
 <body>
@@ -664,11 +768,90 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="pill">Fehler <span id="mistakes">0</span></div>
       <div class="pill">Serie <span id="combo">0</span></div>
       <div class="pill">Mission <span id="missionHud">0/8</span></div>
+      <div class="pill session-time-pill" id="sessionTimePill">Zeit <span id="sessionTime">15:00</span></div>
       <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="Ton ausschalten" title="Ton an/aus">🔊</button>
     </div>
   </div>
   <div class="progressline"><div class="progressfill" id="progressFill"></div></div>
   <div class="mission-rail" id="missionRail" aria-hidden="true"><span class="mission-dot" data-mission="1"></span><span class="mission-dot" data-mission="2"></span><span class="mission-dot" data-mission="3"></span><span class="mission-dot" data-mission="4"></span><span class="mission-dot" data-mission="5"></span><span class="mission-dot" data-mission="6"></span><span class="mission-dot" data-mission="7"></span><span class="mission-dot" data-mission="8"></span></div>
+
+
+  <section id="teacher" class="screen">
+    <div class="teacher-shell">
+      <div class="teacher-head">
+        <div>
+          <div class="kicker">Classroom Control</div>
+          <h2>Lehrersteuerung</h2>
+          <p style="color:var(--muted);max-width:760px">Session vorbereiten, Klasse sammeln und den Start zentral freigeben. Die Schüler können im Klassenmodus erst nach deiner Freigabe starten.</p>
+        </div>
+        <button class="btn btn-secondary" id="teacherBack" type="button">Zurück</button>
+      </div>
+
+      <div class="teacher-grid">
+        <div class="teacher-card">
+          <h3>1 · Einstellungen</h3>
+          <div class="teacher-form-row">
+            <div>
+              <label for="teacherDuration">Quizzeit</label>
+              <select id="teacherDuration">
+                <option value="600">10 Minuten</option>
+                <option value="900" selected>15 Minuten</option>
+                <option value="1200">20 Minuten</option>
+                <option value="1500">25 Minuten</option>
+              </select>
+            </div>
+            <div>
+              <label for="teacherCountdown">Start-Countdown</label>
+              <select id="teacherCountdown">
+                <option value="5">5 Sekunden</option>
+                <option value="10" selected>10 Sekunden</option>
+                <option value="15">15 Sekunden</option>
+                <option value="30">30 Sekunden</option>
+              </select>
+            </div>
+          </div>
+          <label class="teacher-check"><input type="checkbox" id="settingHighscore" checked> Klassenrangliste am Ende anzeigen</label>
+          <label class="teacher-check"><input type="checkbox" id="settingHints" checked> Hinweise nach Fehlern erlauben</label>
+          <label class="teacher-check"><input type="checkbox" id="settingSound" checked> Soundeffekte erlauben</label>
+          <button class="btn btn-primary" id="createSession" type="button" style="margin-top:14px">Neue Unterrichts-Session</button>
+        </div>
+
+        <div class="teacher-card">
+          <h3>2 · Session</h3>
+          <div class="teacher-statusline" id="teacherSessionStatus">Noch keine Session erstellt.</div>
+          <div class="session-code-big" id="teacherCode">------</div>
+          <div class="small" id="teacherJoinUrl">Der Klassen-Code erscheint hier.</div>
+          <div class="control-clock"><div class="digits" id="teacherClock">--:--</div><small id="teacherClockLabel">Warte auf Session</small></div>
+          <div class="teacher-actions">
+            <button class="btn btn-primary" id="releaseSession" type="button" disabled>START FREIGEBEN</button>
+            <button class="btn btn-secondary" id="resetSession" type="button" disabled>Zurück auf Warten</button>
+            <button class="btn btn-secondary" id="closeSession" type="button" disabled>Session schließen</button>
+          </div>
+        </div>
+
+        <div class="teacher-card">
+          <h3>Bereit gemeldet</h3>
+          <div class="teacher-statusline"><span id="readyCount">0</span> Schüler angemeldet</div>
+          <div class="teacher-list" id="readyList"><div class="small">Noch niemand bereit.</div></div>
+        </div>
+
+        <div class="teacher-card">
+          <h3>Abgegebene Ergebnisse</h3>
+          <div class="teacher-statusline"><span id="resultCount">0</span> Ergebnisse gespeichert</div>
+          <div class="teacher-list" id="teacherResults"><div class="small">Noch keine Ergebnisse.</div></div>
+        </div>
+
+        <div class="teacher-card wide">
+          <h3>Export</h3>
+          <p class="small">CSV enthält Name, Punkte, Fehler, beste Serie, Bearbeitungszeit und Fehler je Mission. Die Datei lässt sich direkt in Excel öffnen.</p>
+          <div class="teacher-actions">
+            <button class="btn btn-secondary" id="refreshTeacher" type="button" disabled>Aktualisieren</button>
+            <button class="btn btn-primary" id="exportClassCsv" type="button" disabled>Klassen-Ergebnisse als CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="start" class="screen active">
     <div class="hero">
@@ -678,13 +861,22 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <h1>Operation<br>Kalter Krieg</h1>
       <p>Teste zum Abschluss, was du über den Kalten Krieg noch weißt. Dich erwarten acht Runden mit Karten, Zuordnungen, Quellen und Zeitstrahlen.</p>
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:2"><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(90,145,199,.45);background:rgba(90,145,199,.10);font-weight:900;letter-spacing:.08em">WESTBLOCK</span><span style="padding:8px 12px;border-radius:999px;border:1px solid rgba(214,91,91,.45);background:rgba(214,91,91,.10);font-weight:900;letter-spacing:.08em">OSTBLOCK</span></div><div class="namecard">
-        <label for="playerName">Dein Name</label>
-        <input id="playerName" maxlength="24" autocomplete="off" placeholder="z. B. Mia">
-        <div class="small">Dein Name erscheint am Ende in der Rangliste.</div>
+        <div class="session-fields">
+          <div>
+            <label for="playerName">Dein Name</label>
+            <input id="playerName" maxlength="24" autocomplete="off" placeholder="z. B. Mia">
+          </div>
+          <div>
+            <label for="sessionCode">Klassen-Code</label>
+            <input id="sessionCode" maxlength="8" autocomplete="off" autocapitalize="characters" placeholder="z. B. A7F3C2">
+          </div>
+        </div>
+        <div class="small">Gib den Code ein, den deine Lehrkraft anzeigt. Danach meldest du dich bereit.</div>
         <div class="nameerror" id="nameError"></div>
+        <div class="session-state" id="sessionState">Noch nicht mit einer Unterrichts-Session verbunden.</div>
       </div>
       <div class="classified-stamp">Classified</div>
-      <button class="btn btn-primary" id="startBtn">Quiz starten</button>
+      <button class="btn btn-primary" id="startBtn">Bereit melden</button>
     <div style="margin-top:16px;text-align:center;color:var(--muted);font-size:14px;letter-spacing:.12em;text-transform:uppercase">Codename: Eiszeit</div>
     </div>
     <div class="start-side">
@@ -1130,6 +1322,10 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
         <div id="leaderboardRows"></div>
       </div>
       <div class="teacher-note" id="leaderboardNote"></div>
+      <div class="export-row">
+        <button class="btn btn-secondary" id="exportOwnCsv" type="button">Mein Ergebnis als CSV</button>
+        <button class="btn btn-secondary" id="printOwnResult" type="button">Ergebnis drucken / PDF</button>
+      </div>
       <button class="btn btn-primary" id="restartAll" style="margin-top:18px">Nochmal spielen</button>
     </div>
   </section>
@@ -1149,6 +1345,9 @@ const SUPABASE_URL = "https://fzqxnjhuvgpgovcovosl.supabase.co"; // Supabase pro
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV"; // public browser key
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
+let currentSessionCode="",sessionStartedAt=null,sessionDuration=900,sessionSettings={show_highscore:true,hints:true,sound:true};
+let sessionPoll=null,sessionClockTimer=null,sessionJoined=false,sessionStarted=false;
+let teacherSessionCode="",teacherKey="",teacherPoll=null,teacherResultsCache=[];
 const missionErrors=Array(9).fill(0); const weakTopics={};
 const completed=new Set();
 const motionOK=!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1206,18 +1405,22 @@ async function saveRemoteScore(entry){
       player_name:entry.name,
       score:entry.score,
       mistakes:entry.mistakes,
-      best_combo:entry.bestCombo
+      best_combo:entry.bestCombo,
+      session_code:entry.sessionCode||null,
+      elapsed_seconds:entry.elapsedSeconds||null,
+      topic_errors:entry.topicErrors||{}
     })
   });
   if(!r.ok) throw new Error("save-failed");
 }
 async function fetchRemoteScores(){
   if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) throw new Error("not-configured");
-  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at&order=score.desc,mistakes.asc,best_combo.desc&limit=20";
+  const filter=currentSessionCode?"&session_code=eq."+encodeURIComponent(currentSessionCode):"";
+  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at,session_code,elapsed_seconds,topic_errors&order=score.desc,mistakes.asc,best_combo.desc&limit=50"+filter;
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});
   if(!r.ok) throw new Error("fetch-failed");
   const rows=await r.json();
-  return rows.map(x=>({name:x.player_name,score:x.score,mistakes:x.mistakes,bestCombo:x.best_combo||0}));
+  return rows.map(x=>({name:x.player_name,score:x.score,mistakes:x.mistakes,bestCombo:x.best_combo||0,elapsedSeconds:x.elapsed_seconds||null,topicErrors:x.topic_errors||{},completedAt:x.completed_at,sessionCode:x.session_code||""}));
 }
 function renderLeaderboard(rows){
   const box=$("#leaderboardRows");box.innerHTML="";
@@ -1230,7 +1433,7 @@ function renderLeaderboard(rows){
   });
 }
 async function persistResult(){
-  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString()};
+  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString(),sessionCode:currentSessionCode,elapsedSeconds:sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):null,topicErrors:Object.fromEntries(Array.from({length:8},(_,i)=>[String(i+1),missionErrors[i+1]]))};
   $("#saveStatus").textContent="Ergebnis wird gespeichert …";
   if(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY){
     try{
@@ -1238,7 +1441,7 @@ async function persistResult(){
       const rows=await fetchRemoteScores();
       renderLeaderboard(rows);updateOnlineRank(rows,entry);
       $("#saveStatus").textContent="Ergebnis online gespeichert.";
-      $("#leaderboardNote").textContent="Gemeinsame Klassenrangliste · Punkte ↓ · Fehler ↑ · Best-Combo ↓";
+      $("#leaderboardNote").textContent=currentSessionCode?"Rangliste dieser Unterrichts-Session · Punkte ↓ · Fehler ↑ · Best-Combo ↓":"Gemeinsame Klassenrangliste · Punkte ↓ · Fehler ↑ · Best-Combo ↓"; if(sessionSettings.show_highscore===false){$(".leaderboard").style.display="none";$("#onlineRankCard").style.display="none";}
       return;
     }catch(e){
       console.warn("Supabase:",e);
@@ -1254,6 +1457,198 @@ async function persistResult(){
   $("#saveStatus").textContent="Ergebnis lokal gespeichert.";
   $("#leaderboardNote").textContent="Keine Online-Datenbank konfiguriert.";
 }
+
+async function rpc(name,body){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{
+    method:"POST",
+    headers:{"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify(body||{})
+  });
+  if(!r.ok){const t=await r.text().catch(()=>"");throw new Error(`${name}: ${r.status} ${t}`)}
+  const ct=r.headers.get("content-type")||"";
+  return ct.includes("application/json")?await r.json():null
+}
+async function fetchSession(code){
+  const u=`${SUPABASE_URL}/rest/v1/quiz_session_public?select=code,status,start_at,duration_seconds,settings,created_at&code=eq.${encodeURIComponent(code)}&limit=1`;
+  const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});
+  if(!r.ok)throw new Error("session-fetch");
+  const rows=await r.json();return rows[0]||null
+}
+async function joinSession(code,name){
+  return rpc("join_quiz_session",{p_code:code,p_player_name:name})
+}
+function setSessionState(text,kind=""){
+  const el=$("#sessionState");if(!el)return;el.className="session-state"+(kind?" "+kind:"");el.textContent=text
+}
+function applySessionSettings(s){
+  sessionSettings=Object.assign({show_highscore:true,hints:true,sound:true},s||{});
+  if(sessionSettings.sound===false){soundOn=false;localStorage.setItem("coldWarSound","off");$("#soundToggle").textContent="🔇";$("#soundToggle").disabled=true}
+}
+function startQuizClock(){
+  if(!sessionStartedAt)return;
+  $("#sessionTimePill").classList.add("on");
+  clearInterval(sessionClockTimer);
+  const tick=()=>{
+    const end=sessionStartedAt+sessionDuration*1000,remain=Math.max(0,Math.ceil((end-Date.now())/1000));
+    const m=String(Math.floor(remain/60)).padStart(2,"0"),s=String(remain%60).padStart(2,"0");
+    $("#sessionTime").textContent=`${m}:${s}`;
+    $("#sessionTimePill").style.borderColor=remain<=60?"rgba(214,91,91,.65)":"";
+  };
+  tick();sessionClockTimer=setInterval(tick,500)
+}
+function beginClassQuiz(){
+  if(sessionStarted)return;sessionStarted=true;clearInterval(sessionPoll);
+  $("#launchOverlay").classList.remove("show");
+  radioBurst(.42);unlockSound();startQuizClock();setTimeout(()=>enterMission(1),300)
+}
+function runLaunchCountdown(startAt){
+  const target=new Date(startAt).getTime();sessionStartedAt=target;
+  const overlay=$("#launchOverlay"),digits=$("#launchDigits"),sub=$("#launchSub"),bars=$$("#launchBars span");
+  overlay.classList.add("show");
+  const tick=()=>{
+    const ms=target-Date.now(),sec=Math.max(0,Math.ceil(ms/1000));
+    digits.textContent=`T–${String(sec).padStart(2,"0")}`;
+    sub.textContent=sec>0?"STARTFENSTER ARMED // WARTE AUF T–00":"FREIGABE // START";
+    bars.forEach((b,i)=>b.classList.toggle("on",i<Math.min(10,Math.max(0,10-sec))));
+    if(sec<=3&&sec>0)radarPing();
+    if(ms<=0){clearInterval(window.__launchTimer);vaultSound();setTimeout(beginClassQuiz,450)}
+  };
+  clearInterval(window.__launchTimer);tick();window.__launchTimer=setInterval(tick,140)
+}
+async function pollStudentSession(){
+  if(!currentSessionCode||sessionStarted)return;
+  try{
+    const s=await fetchSession(currentSessionCode);
+    if(!s){setSessionState("Session nicht gefunden.","bad");return}
+    sessionDuration=Number(s.duration_seconds)||900;applySessionSettings(s.settings||{});
+    if(s.status==="waiting"){setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","wait");return}
+    if(s.status==="closed"){setSessionState("Diese Session wurde geschlossen.","bad");clearInterval(sessionPoll);return}
+    if(s.status==="armed"&&s.start_at){
+      const target=new Date(s.start_at).getTime();
+      if(!sessionStartedAt||sessionStartedAt!==target)runLaunchCountdown(s.start_at)
+    }
+  }catch(e){console.warn(e);setSessionState("Verbindung zur Klassen-Session unterbrochen – neuer Versuch läuft.","bad")}
+}
+async function studentReady(){
+  const n=safeName($("#playerName").value),code=($("#sessionCode").value||"").trim().toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
+  if(n.length<2){$("#nameError").textContent="Bitte gib mindestens 2 Zeichen ein.";return}
+  if(code.length<4){$("#nameError").textContent="Bitte gib den Klassen-Code ein.";return}
+  $("#nameError").textContent="";playerName=n;currentSessionCode=code;$("#startBtn").disabled=true;$("#startBtn").textContent="Bereit gemeldet";
+  setSessionState("Prüfe Klassen-Code …","wait");
+  try{
+    const s=await fetchSession(code);
+    if(!s){throw new Error("not-found")}
+    if(s.status==="closed")throw new Error("closed");
+    await joinSession(code,n);sessionJoined=true;sessionDuration=Number(s.duration_seconds)||900;applySessionSettings(s.settings||{});
+    setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","good");
+    clearInterval(sessionPoll);await pollStudentSession();sessionPoll=setInterval(pollStudentSession,1250)
+  }catch(e){
+    $("#startBtn").disabled=false;$("#startBtn").textContent="Bereit melden";
+    setSessionState(e.message==="closed"?"Session ist bereits geschlossen.":"Klassen-Code nicht gefunden oder Supabase-Session noch nicht eingerichtet.","bad")
+  }
+}
+
+/* teacher control */
+function teacherStoreKey(code,key){localStorage.setItem("cwTeacherSession",JSON.stringify({code,key}))}
+function teacherLoadKey(){try{return JSON.parse(localStorage.getItem("cwTeacherSession")||"null")}catch(e){return null}}
+function teacherSettingsPayload(){
+  return {
+    show_highscore:$("#settingHighscore").checked,
+    hints:$("#settingHints").checked,
+    sound:$("#settingSound").checked,
+    countdown_seconds:Number($("#teacherCountdown").value)||10
+  }
+}
+async function createTeacherSession(){
+  $("#createSession").disabled=true;$("#teacherSessionStatus").textContent="Session wird erstellt …";
+  try{
+    const data=await rpc("create_quiz_session",{p_duration_seconds:Number($("#teacherDuration").value)||900,p_settings:teacherSettingsPayload()});
+    const row=Array.isArray(data)?data[0]:data;if(!row?.code||!row?.teacher_key)throw new Error("bad-response");
+    teacherSessionCode=row.code;teacherKey=row.teacher_key;teacherStoreKey(teacherSessionCode,teacherKey);
+    teacherActivateUI();await refreshTeacherPanel();startTeacherPolling()
+  }catch(e){console.warn(e);$("#teacherSessionStatus").textContent="Fehler: Bitte zuerst V15_SUPABASE_MIGRATION.sql ausführen."}
+  finally{$("#createSession").disabled=false}
+}
+function teacherActivateUI(){
+  $("#teacherCode").textContent=teacherSessionCode||"------";
+  $("#teacherJoinUrl").textContent=teacherSessionCode?`Schüler scannen den QR-Code und geben ${teacherSessionCode} ein.`:"Der Klassen-Code erscheint hier.";
+  ["releaseSession","resetSession","closeSession","refreshTeacher","exportClassCsv"].forEach(id=>$("#"+id).disabled=!teacherSessionCode)
+}
+async function controlTeacher(action){
+  if(!teacherSessionCode||!teacherKey)return;
+  const payload={
+    p_code:teacherSessionCode,p_teacher_key:teacherKey,p_action:action,
+    p_duration_seconds:Number($("#teacherDuration").value)||900,
+    p_countdown_seconds:Number($("#teacherCountdown").value)||10,
+    p_settings:teacherSettingsPayload()
+  };
+  try{await rpc("control_quiz_session",payload);await refreshTeacherPanel()}catch(e){console.warn(e);$("#teacherSessionStatus").textContent="Steuerbefehl fehlgeschlagen."}
+}
+function fmtSec(v){
+  if(v==null)return"–";const m=Math.floor(v/60),s=v%60;return `${m}:${String(s).padStart(2,"0")}`
+}
+async function fetchReady(code){
+  const u=`${SUPABASE_URL}/rest/v1/quiz_session_join_public?select=player_name,joined_at&session_code=eq.${encodeURIComponent(code)}&order=joined_at.asc`;
+  const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
+}
+async function fetchTeacherResults(code){
+  const u=`${SUPABASE_URL}/rest/v1/scores?select=player_name,score,mistakes,best_combo,elapsed_seconds,topic_errors,completed_at&session_code=eq.${encodeURIComponent(code)}&order=score.desc,mistakes.asc,best_combo.desc`;
+  const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
+}
+function renderReady(rows){
+  $("#readyCount").textContent=rows.length;const box=$("#readyList");
+  box.innerHTML=rows.length?rows.map(r=>`<div class="teacher-row"><div><span class="ready-dot"></span>${escapeHtml(r.player_name)}</div><div>bereit</div><div>${new Date(r.joined_at).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div><div>–</div></div>`).join(""):'<div class="small">Noch niemand bereit.</div>'
+}
+function renderTeacherResults(rows){
+  teacherResultsCache=rows;$("#resultCount").textContent=rows.length;const box=$("#teacherResults");
+  box.innerHTML=rows.length?'<div class="teacher-row head"><div>Name</div><div>Punkte</div><div>Fehler</div><div>Zeit</div></div>'+rows.map(r=>`<div class="teacher-row"><div>${escapeHtml(r.player_name)}</div><div>${r.score}</div><div>${r.mistakes}</div><div>${fmtSec(r.elapsed_seconds)}</div></div>`).join(""):'<div class="small">Noch keine Ergebnisse.</div>'
+}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function updateTeacherClock(session){
+  if(!session){$("#teacherClock").textContent="--:--";$("#teacherClockLabel").textContent="Warte auf Session";return}
+  const now=Date.now();
+  if(session.status==="waiting"){ $("#teacherClock").textContent="READY";$("#teacherClockLabel").textContent="Klasse sammelt sich";return }
+  if(session.status==="closed"){ $("#teacherClock").textContent="CLOSED";$("#teacherClockLabel").textContent="Session beendet";return }
+  if(session.status==="armed"&&session.start_at){
+    const start=new Date(session.start_at).getTime();
+    if(now<start){const s=Math.max(0,Math.ceil((start-now)/1000));$("#teacherClock").textContent=`T-${String(s).padStart(2,"0")}`;$("#teacherClockLabel").textContent="Startfreigabe läuft";return}
+    const end=start+(Number(session.duration_seconds)||900)*1000,rem=Math.max(0,Math.ceil((end-now)/1000));
+    $("#teacherClock").textContent=fmtSec(rem);$("#teacherClockLabel").textContent=rem?"Quizzeit läuft":"Zeitfenster abgelaufen";return
+  }
+}
+async function refreshTeacherPanel(){
+  if(!teacherSessionCode)return;
+  try{
+    const [s,joins,res]=await Promise.all([fetchSession(teacherSessionCode),fetchReady(teacherSessionCode),fetchTeacherResults(teacherSessionCode)]);
+    $("#teacherSessionStatus").textContent=s?`STATUS: ${s.status.toUpperCase()} · Dauer ${Math.round((s.duration_seconds||900)/60)} min`:"Session nicht gefunden.";
+    updateTeacherClock(s);renderReady(joins);renderTeacherResults(res)
+  }catch(e){console.warn(e)}
+}
+function startTeacherPolling(){clearInterval(teacherPoll);teacherPoll=setInterval(refreshTeacherPanel,2200)}
+function restoreTeacherSession(){
+  const x=teacherLoadKey();if(x?.code&&x?.key){teacherSessionCode=x.code;teacherKey=x.key;teacherActivateUI();refreshTeacherPanel();startTeacherPolling()}
+}
+function csvEscape(v){const s=String(v??"");return /[;"\n]/.test(s)?`"${s.replaceAll('"','""')}"`:s}
+function downloadText(filename,text,type="text/csv;charset=utf-8"){
+  const blob=new Blob(["\ufeff",text],{type}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},250)
+}
+function exportClassCSV(){
+  if(!teacherResultsCache.length)return;
+  const head=["Name","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Mission 1 Fehler","Mission 2 Fehler","Mission 3 Fehler","Mission 4 Fehler","Mission 5 Fehler","Mission 6 Fehler","Mission 7 Fehler","Mission 8 Fehler","Abgabe"];
+  const rows=teacherResultsCache.map(r=>{
+    const t=r.topic_errors||{};
+    return [r.player_name,r.score,r.mistakes,r.best_combo,r.elapsed_seconds,...Array.from({length:8},(_,i)=>t[String(i+1)]??0),r.completed_at]
+  });
+  downloadText(`Kalter_Krieg_${teacherSessionCode}_Ergebnisse.csv`,[head,...rows].map(r=>r.map(csvEscape).join(";")).join("\n"))
+}
+function exportOwnCSV(){
+  const strong=$("#strongTopic")?.textContent||"",weak=$("#revisitTopic")?.textContent||"";
+  const elapsed=sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):"";
+  const head=["Name","Session","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Stärkstes Thema","Wiederholen",...Array.from({length:8},(_,i)=>`Mission ${i+1} Fehler`)];
+  const row=[playerName,currentSessionCode,score,mistakes,bestCombo,elapsed,strong,weak,...Array.from({length:8},(_,i)=>missionErrors[i+1])];
+  downloadText(`Kalter_Krieg_${playerName.replace(/\s+/g,"_")}_Ergebnis.csv`,[head,row].map(r=>r.map(csvEscape).join(";")).join("\n"))
+}
+
 function animateNumber(el,from,to,duration=420){
   if(!el)return;if(!motionOK){el.textContent=to;return}
   const t0=performance.now();
@@ -1306,6 +1701,7 @@ const hintTexts={
   }
 };
 function maybeShowHint(n){
+  if(sessionSettings.hints===false)return;
   const e=missionErrors[n],h=hintTexts[n];
   if(!h)return;
   if(e>=3){
@@ -1345,9 +1741,11 @@ function playCompleteStamp(n){
 }
 function completeMission(n){if(!completed.has(n)){completed.add(n);addScore(200);playCompleteStamp(n)}$("#progressFill").style.width=(n/8*100)+"%";updateMissionRail(currentMission)}
 $("#startBtn").addEventListener("click",()=>{
-  const n=safeName($("#playerName").value);
-  if(n.length<2){$("#nameError").textContent="Bitte gib mindestens 2 Zeichen ein.";return}
-  playerName=n;$("#nameError").textContent="";radioBurst(.42);unlockSound();setTimeout(()=>enterMission(1),260);
+  if(new URLSearchParams(location.search).get("practice")==="1"){
+    const n=safeName($("#playerName").value);if(n.length<2){$("#nameError").textContent="Bitte gib mindestens 2 Zeichen ein.";return}
+    playerName=n;$("#nameError").textContent="";radioBurst(.42);unlockSound();sessionStartedAt=Date.now();setTimeout(()=>enterMission(1),260);return
+  }
+  studentReady()
 });
 
 function setupChoice(qid,onDone){
@@ -1850,7 +2248,7 @@ $("#next5").addEventListener("click",()=>{enterMission(6);initM6()});
 $("#next6").addEventListener("click",()=>enterMission(7));
 $("#next7").addEventListener("click",()=>enterMission(8));
 $("#playerName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#startBtn").click()});
-$("#restartAll").addEventListener("click",()=>location.reload());
+$("#restartAll").addEventListener("click",()=>{const q=currentSessionCode?`?session=${encodeURIComponent(currentSessionCode)}`:"";location.href=location.pathname+q});
 const soundBtn=$("#soundToggle");function syncSoundBtn(){soundBtn.textContent=soundOn?"🔊":"🔇";soundBtn.setAttribute("aria-pressed",String(soundOn));soundBtn.setAttribute("aria-label",soundOn?"Ton ausschalten":"Ton einschalten")}syncSoundBtn();soundBtn.addEventListener("click",()=>{soundOn=!soundOn;localStorage.setItem("coldWarSound",soundOn?"on":"off");syncSoundBtn();if(soundOn)unlockSound()});
 
 document.addEventListener("pointerdown",e=>{
@@ -1860,8 +2258,42 @@ document.addEventListener("pointerdown",e=>{
   sp.className="ui-ripple";sp.style.width=sp.style.height=s+"px";sp.style.left=(e.clientX-r.left-s/2)+"px";sp.style.top=(e.clientY-r.top-s/2)+"px";
   btn.appendChild(sp);setTimeout(()=>sp.remove(),760)
 });
+
+$("#teacherBack").addEventListener("click",()=>show("start"));
+$("#createSession").addEventListener("click",createTeacherSession);
+$("#releaseSession").addEventListener("click",()=>controlTeacher("arm"));
+$("#resetSession").addEventListener("click",()=>controlTeacher("reset"));
+$("#closeSession").addEventListener("click",()=>controlTeacher("close"));
+$("#refreshTeacher").addEventListener("click",refreshTeacherPanel);
+$("#exportClassCsv").addEventListener("click",exportClassCSV);
+$("#exportOwnCsv").addEventListener("click",exportOwnCSV);
+$("#printOwnResult").addEventListener("click",()=>window.print());
+
+const urlParams=new URLSearchParams(location.search),prefillSession=(urlParams.get("session")||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
+if(prefillSession)$("#sessionCode").value=prefillSession;
+if(urlParams.get("practice")==="1"){
+  $("#sessionCode").closest(".session-fields").children[1].style.display="none";
+  $("#startBtn").textContent="Quiz starten";
+  setSessionState("Übungsmodus ohne Lehrerfreigabe.","good")
+}
+if(urlParams.get("teacher")==="1"){show("teacher");restoreTeacherSession()}
 decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
 })();
 </script>
+
+<div class="launch-overlay" id="launchOverlay" aria-live="polite">
+  <div class="launch-console">
+    <div class="launch-top"><span>OPERATION EISZEIT // STARTFREIGABE</span><span class="launch-label">SIGNAL EMPFANGEN</span></div>
+    <div class="launch-clock">
+      <div class="launch-digits" id="launchDigits">T–10</div>
+      <div class="launch-sub" id="launchSub">Synchronisiere mit Klassen-Session</div>
+    </div>
+    <div class="launch-bars" id="launchBars">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="launch-warning">Freigabe durch Lehrkraft · Quiz startet automatisch bei T–00</div>
+  </div>
+</div>
+
 </body>
 </html>
