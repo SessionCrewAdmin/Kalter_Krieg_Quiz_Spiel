@@ -31,6 +31,11 @@
       "name": "Kalter Krieg",
       "short_name": "Kalter Krieg",
       "url": "tools/kalter-krieg/index.html"
+    },
+    {
+      "name": "Homework Vouchers",
+      "short_name": "Vouchers",
+      "url": "tools/homework-vouchers/"
     }
   ]
 }
