@@ -345,6 +345,314 @@ html,body{min-height:100%;overflow-x:hidden}
   #start .scorelegend{padding:10px 12px}
 }
 
+
+/* V13 CINEMATIC — motion layer */
+:root{--cinematic-red:#b5282f;--cinematic-blue:#4d85b7;--crt:rgba(255,255,255,.018)}
+body{position:relative}
+body::after{content:"";position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.28;background:repeating-linear-gradient(180deg,transparent 0 3px,var(--crt) 4px);mix-blend-mode:screen}
+body::before{content:"";position:fixed;left:0;right:0;top:-20%;height:18%;z-index:9996;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(107,183,201,.035),transparent);animation:globalScan 9s linear infinite}
+@keyframes globalScan{to{transform:translateY(700%)}}
+
+/* top controls + mission rail */
+.sound-toggle{min-width:44px;min-height:38px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:#0c1720;color:var(--ink);cursor:pointer;font-weight:900;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.sound-toggle:hover{border-color:var(--gold);background:#132530}.sound-toggle:active{transform:scale(.94)}
+.mission-rail{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:-8px 0 14px}
+.mission-dot{height:6px;border-radius:99px;background:#1c2b34;border:1px solid #2d414e;position:relative;overflow:hidden;transition:.3s ease}
+.mission-dot::after{content:"";position:absolute;inset:0;transform:translateX(-102%);background:linear-gradient(90deg,var(--blue),var(--gold));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.mission-dot.done::after,.mission-dot.current::after{transform:translateX(0)}
+.mission-dot.current{box-shadow:0 0 14px rgba(215,177,91,.35);height:8px;margin-top:-1px}
+
+/* start screen cinematic backdrop */
+#start .hero{isolation:isolate}
+.start-world{position:absolute;inset:-9% -8%;width:116%;height:118%;z-index:0;opacity:.16;pointer-events:none;filter:drop-shadow(0 0 14px rgba(107,183,201,.15));animation:startWorldDrift 18s ease-in-out infinite alternate}
+.start-world .sw-country{fill:#8ea1ab;stroke:#dce8ed;stroke-width:.35}
+.start-radar{position:absolute;left:50%;top:48%;width:min(70vw,620px);aspect-ratio:1;transform:translate(-50%,-50%);z-index:0;pointer-events:none;border-radius:50%;border:1px solid rgba(107,183,201,.13);box-shadow:0 0 0 70px rgba(107,183,201,.018),0 0 0 150px rgba(107,183,201,.012)}
+.start-radar::before,.start-radar::after{content:"";position:absolute;inset:15%;border-radius:50%;border:1px solid rgba(107,183,201,.12)}
+.start-radar::after{inset:32%}
+.start-sweep{position:absolute;left:50%;top:50%;width:min(35vw,310px);height:2px;z-index:0;transform-origin:left center;background:linear-gradient(90deg,rgba(107,183,201,.65),transparent);animation:startSweep 6s linear infinite;pointer-events:none}
+@keyframes startSweep{to{transform:rotate(360deg)}}
+@keyframes startWorldDrift{from{transform:scale(1.02) translateX(-1%)}to{transform:scale(1.06) translateX(1%)}}
+#start .hero>*:not(.start-world):not(.start-radar):not(.start-sweep){position:relative;z-index:2}
+
+/* button / card micro interactions */
+.btn,.choice,.token,.catbtn,.multi-item,.seq-item{transition:transform .16s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease,filter .2s ease}
+@media (hover:hover) and (pointer:fine){.btn:not(:disabled):hover,.choice:not(:disabled):hover,.token:not(:disabled):hover,.catbtn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2)}}
+.btn:not(:disabled):active,.choice:not(:disabled):active,.token:not(:disabled):active,.catbtn:not(:disabled):active{transform:scale(.985)}
+.choice.correct{animation:correctLock .46s cubic-bezier(.2,.9,.2,1)}
+@keyframes correctLock{0%{transform:scale(.985)}45%{transform:scale(1.018);box-shadow:0 0 0 5px rgba(92,179,124,.10),0 0 24px rgba(92,179,124,.20)}100%{transform:scale(1)}}
+
+/* verified + points */
+.verify-stamp{position:fixed;right:22px;top:92px;z-index:10020;pointer-events:none;opacity:0;transform:rotate(-8deg) scale(.72);border:3px solid rgba(92,179,124,.9);color:#a8e9bb;background:rgba(7,16,24,.88);padding:9px 13px;font-weight:1000;letter-spacing:.18em;text-transform:uppercase;border-radius:4px;box-shadow:0 0 22px rgba(92,179,124,.22)}
+.verify-stamp.show{animation:stampIn .72s cubic-bezier(.15,.85,.25,1)}
+@keyframes stampIn{0%{opacity:0;transform:rotate(-8deg) scale(1.5)}28%{opacity:1;transform:rotate(-8deg) scale(.94)}70%{opacity:1}100%{opacity:0;transform:rotate(-8deg) scale(1)}}
+.score-float{position:fixed;right:160px;top:91px;z-index:10020;pointer-events:none;color:var(--gold);font-size:22px;font-weight:1000;text-shadow:0 0 16px rgba(215,177,91,.4);animation:scoreFloat .9s ease forwards}
+@keyframes scoreFloat{0%{opacity:0;transform:translateY(12px) scale(.8)}20%{opacity:1;transform:translateY(0) scale(1.08)}100%{opacity:0;transform:translateY(-28px) scale(1)}}
+.pill.pulse{animation:hudPulse .42s ease}@keyframes hudPulse{50%{transform:scale(1.08);border-color:var(--gold);box-shadow:0 0 18px rgba(215,177,91,.22)}}
+
+/* analog error glitch */
+.feedback.bad{animation:none!important}
+.glitch-layer{position:fixed;inset:0;z-index:10010;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,rgba(214,91,91,.07) 0 2px,transparent 2px 8px)}
+body.glitching .glitch-layer{animation:glitchFlash .22s steps(2,end)}
+body.glitching .app{animation:appGlitch .22s steps(2,end)}
+@keyframes glitchFlash{0%{opacity:.75;transform:translateX(-5px)}35%{opacity:.25;transform:translateX(7px)}65%{opacity:.55;transform:translateX(-3px)}100%{opacity:0;transform:none}}
+@keyframes appGlitch{0%{filter:none}33%{filter:contrast(1.18) saturate(.65);transform:translateX(2px)}66%{filter:hue-rotate(-5deg);transform:translateX(-2px)}100%{filter:none;transform:none}}
+
+/* mission dossier transitions */
+.mission-transition{position:fixed;inset:0;z-index:10040;pointer-events:none;display:grid;place-items:center;opacity:0;visibility:hidden;background:rgba(4,10,14,.78);backdrop-filter:blur(3px)}
+.mission-transition.play{visibility:visible;animation:transitionFade .9s ease both}
+.dossier-card{width:min(86vw,720px);min-height:280px;background:linear-gradient(145deg,#e8dfc9,#cfc2a2);color:#211b12;border:1px solid #95876a;border-radius:5px;padding:28px;position:relative;box-shadow:0 28px 70px rgba(0,0,0,.5);transform:translateX(70vw) rotate(5deg)}
+.mission-transition.play .dossier-card{animation:dossierSlide .9s cubic-bezier(.15,.75,.25,1) both}
+.dossier-card::before{content:"TOP SECRET";position:absolute;right:24px;top:24px;border:4px solid rgba(142,34,34,.65);color:rgba(142,34,34,.75);padding:7px 11px;font-weight:1000;letter-spacing:.15em;transform:rotate(-7deg)}
+.dossier-label{font:900 12px/1.2 Inter,Arial,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#6e6049}.dossier-num{font:1000 clamp(58px,9vw,108px)/.9 Inter,Arial,sans-serif;margin:26px 0 8px}.dossier-title{font:900 clamp(24px,4vw,42px)/1.05 Georgia,serif}
+@keyframes dossierSlide{0%{transform:translateX(70vw) rotate(5deg)}28%,70%{transform:translateX(0) rotate(-1deg)}100%{transform:translateX(-70vw) rotate(-4deg)}}
+@keyframes transitionFade{0%{opacity:0}15%,76%{opacity:1}100%{opacity:0}}
+
+/* mission completed stamp */
+.mission-complete{position:fixed;inset:0;z-index:10030;pointer-events:none;display:grid;place-items:center;opacity:0;visibility:hidden;background:rgba(4,10,14,.48)}
+.mission-complete.show{visibility:visible;animation:completeFade 1.15s ease both}
+.complete-card{text-align:center;background:rgba(8,19,27,.94);border:1px solid var(--line);padding:24px 34px;border-radius:16px;box-shadow:0 22px 70px rgba(0,0,0,.42);transform:scale(.75)}
+.mission-complete.show .complete-card{animation:completePop 1.15s cubic-bezier(.2,.85,.2,1) both}
+.complete-stamp{display:inline-block;border:4px solid rgba(215,177,91,.82);color:var(--gold);padding:9px 14px;font-size:clamp(24px,5vw,48px);font-weight:1000;letter-spacing:.12em;text-transform:uppercase;transform:rotate(-4deg)}
+.complete-meta{margin-top:14px;color:var(--muted);font-weight:800}
+@keyframes completeFade{0%,100%{opacity:0}12%,80%{opacity:1}}
+@keyframes completePop{0%{transform:scale(1.35) rotate(6deg)}20%{transform:scale(.96) rotate(-2deg)}80%{transform:scale(1) rotate(-2deg)}100%{transform:scale(.96) rotate(-2deg)}}
+
+/* maps */
+.mapwrap{overflow:hidden}.mapwrap svg{transition:filter .25s ease}.mapwrap.map-hit{box-shadow:inset 0 0 0 2px rgba(92,179,124,.38),0 0 28px rgba(92,179,124,.12)}
+.mapwrap.signal-error::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;border:2px solid rgba(214,91,91,.95);border-radius:50%;transform:translate(-50%,-50%);animation:errorRadar .5s ease-out}
+@keyframes errorRadar{from{opacity:1;width:18px;height:18px}to{opacity:0;width:85%;height:85%}}
+.target-ping{fill:none;stroke:#75d796;stroke-width:4;vector-effect:non-scaling-stroke;transform-box:fill-box;transform-origin:center;animation:targetPing 1.1s ease-out 2}
+@keyframes targetPing{0%{opacity:1;transform:scale(.25)}100%{opacity:0;transform:scale(2.6)}}
+.target-line{stroke:#d7b15b;stroke-width:3;stroke-dasharray:8 7;fill:none;vector-effect:non-scaling-stroke;animation:dashFlow .8s linear infinite}
+@keyframes dashFlow{to{stroke-dashoffset:-30}}
+
+/* block filing animation */
+.token.filing{z-index:40;box-shadow:0 0 24px rgba(215,177,91,.35);animation:fileSettle .45s ease}
+@keyframes fileSettle{0%{filter:brightness(1.5)}100%{filter:none}}
+.bin.accepted{animation:binAccept .5s ease}@keyframes binAccept{50%{border-color:var(--gold);background:rgba(215,177,91,.07)}}
+
+/* timelines */
+.sequence{position:relative}.sequence.timeline-correct::before{content:"";position:absolute;left:26px;top:20px;bottom:20px;width:3px;background:linear-gradient(var(--blue),var(--gold),var(--red));transform-origin:top;animation:timelineDraw .9s cubic-bezier(.2,.8,.2,1) both;z-index:0}
+.sequence.timeline-correct .seq-item{position:relative;z-index:1;animation:timelineLock .45s ease both}
+.sequence.timeline-correct .seq-item:nth-child(2){animation-delay:.08s}.sequence.timeline-correct .seq-item:nth-child(3){animation-delay:.16s}.sequence.timeline-correct .seq-item:nth-child(4){animation-delay:.24s}.sequence.timeline-correct .seq-item:nth-child(5){animation-delay:.32s}
+.sequence.timeline-correct .seq-num{background:var(--gold);color:#17120b;box-shadow:0 0 18px rgba(215,177,91,.28)}
+@keyframes timelineDraw{from{transform:scaleY(0)}to{transform:scaleY(1)}}@keyframes timelineLock{50%{transform:translateX(7px);border-color:var(--gold)}}
+
+/* quote dossier / typewriter */
+.quotebox{position:relative;overflow:hidden}.quotebox::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 4px,rgba(45,31,15,.025) 5px);mix-blend-mode:multiply}
+.qt.typing::after{content:"▌";font-style:normal;animation:caret .65s steps(1,end) infinite}@keyframes caret{50%{opacity:0}}
+.speaker-choice{display:grid!important;grid-template-columns:48px 1fr;align-items:center;gap:11px}.speaker-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#0d1921;border:1px solid #506675;color:var(--gold);font-size:12px;font-weight:1000;letter-spacing:.03em}.speaker-choice.correct .speaker-avatar{border-color:var(--green);background:#163222;color:#c9f0d4}
+.revealnote.show{animation:revealFile .55s ease both}@keyframes revealFile{from{opacity:0;transform:translateY(-8px);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+
+/* Cuba crisis mode */
+.crisis-banner{display:none;align-items:center;justify-content:space-between;gap:14px;margin:0 0 10px;padding:9px 12px;border:1px solid rgba(214,91,91,.48);background:linear-gradient(90deg,rgba(110,24,30,.52),rgba(44,13,16,.32));border-radius:10px;font-size:12px;font-weight:1000;letter-spacing:.13em;text-transform:uppercase;overflow:hidden}
+#m5.active .crisis-banner{display:flex;animation:crisisIn .45s ease}.crisis-signal{width:9px;height:9px;border-radius:50%;background:#e75b61;box-shadow:0 0 16px #e75b61;animation:crisisBlink .85s steps(1,end) infinite}.crisis-clock{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#ffb5b8;font-size:15px}.crisis-track{flex:1;height:3px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}.crisis-track::after{content:"";position:absolute;inset:0;width:34%;background:linear-gradient(90deg,transparent,#e75b61,transparent);animation:crisisTrack 1.6s linear infinite}
+@keyframes crisisBlink{50%{opacity:.2}}@keyframes crisisTrack{from{transform:translateX(-120%)}to{transform:translateX(320%)}}@keyframes crisisIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+body.crisis-mode .topbar{box-shadow:0 8px 28px rgba(130,20,25,.22);border-bottom-color:rgba(214,91,91,.45)}
+body.crisis-mode #m5 .panel{border-color:rgba(126,55,58,.45)}
+body.crisis-mode #m5::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 50% 40%,rgba(165,29,34,.075),transparent 55%);animation:crisisAmbient 2.1s ease-in-out infinite alternate}
+@keyframes crisisAmbient{to{opacity:.45}}
+.defcon div{transition:background .35s ease,box-shadow .35s ease}.defcon div.pressure{background:#c34d4d!important;box-shadow:0 0 16px rgba(195,77,77,.35)}
+
+/* finale unlock */
+.finale-unlock{position:fixed;inset:0;z-index:10045;pointer-events:none;background:rgba(3,8,12,.92);display:none;place-items:center;overflow:hidden}
+.finale-unlock.show{display:grid;animation:finaleFade 1.45s ease both}.archive-core{position:relative;width:min(78vw,680px);height:360px}.archive-core-title{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.75);opacity:0;color:var(--gold);font-size:clamp(26px,5vw,54px);font-weight:1000;letter-spacing:.14em;text-align:center;text-transform:uppercase;animation:coreUnlock 1.45s .55s ease both}.archive-file{position:absolute;left:50%;top:50%;width:96px;height:62px;margin:-31px -48px;background:linear-gradient(145deg,#d8cdb2,#ae9f7e);border:1px solid #8f8062;color:#2e261a;border-radius:3px;padding:8px;font-size:10px;font-weight:1000;letter-spacing:.08em;box-shadow:0 12px 25px rgba(0,0,0,.35);transform:translate(var(--x),var(--y)) rotate(var(--r));animation:fileConverge 1.2s var(--d) cubic-bezier(.2,.8,.2,1) forwards}.archive-file b{display:block;font-size:22px}.archive-file::after{content:"FREIGEGEBEN";position:absolute;right:5px;bottom:5px;color:#8b2e2e;font-size:7px;border:1px solid #8b2e2e;padding:2px;transform:rotate(-5deg)}
+@keyframes fileConverge{70%,100%{transform:translate(0,0) rotate(0);opacity:.15}}@keyframes coreUnlock{0%{opacity:0;transform:translate(-50%,-50%) scale(.75)}60%,85%{opacity:1;transform:translate(-50%,-50%) scale(1);text-shadow:0 0 30px rgba(215,177,91,.38)}100%{opacity:0}}@keyframes finaleFade{0%,100%{opacity:0}10%,86%{opacity:1}}
+
+/* finish */
+.stats{grid-template-columns:repeat(5,1fr)}
+.stat strong.counting{animation:countPulse .55s ease}@keyframes countPulse{50%{transform:scale(1.08);color:#f3d58f}}
+.topic-profile{margin:18px auto 0;max-width:940px;text-align:left}.topic-profile h3{margin:0 0 10px}.topic-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.topic-chip{border:1px solid var(--line);background:#0b1720;border-radius:10px;padding:9px 10px;position:relative;overflow:hidden}.topic-chip::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:var(--w);background:var(--c);animation:topicFill .8s ease both}.topic-chip b{display:block;font-size:12px}.topic-chip span{font-size:11px;color:var(--muted)}@keyframes topicFill{from{width:0}}
+.lb-row{animation:lbIn .38s ease both}@keyframes lbIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.online-rank strong{transition:transform .3s ease}.online-rank.rank-pop strong{animation:rankPop .7s ease}@keyframes rankPop{50%{transform:scale(1.25);color:#f3d58f}}
+
+@media(max-width:800px){
+ .verify-stamp{right:10px;top:74px;font-size:11px;padding:7px 9px}.score-float{right:112px;top:74px;font-size:18px}
+ .dossier-card{min-height:220px;padding:22px}.dossier-card::before{right:15px;top:15px;font-size:10px}
+ .topic-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}
+ .mission-rail{gap:4px}.crisis-banner{font-size:10px}
+}
+@media(max-width:520px){.sound-toggle{min-width:40px;padding:6px 8px}.topic-grid{grid-template-columns:1fr 1fr}.archive-file{width:78px;height:54px;margin:-27px -39px}.start-radar{width:82vw}}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+ body::before,.start-sweep{display:none!important}.start-world{transform:none!important}.mission-transition,.mission-complete,.finale-unlock{backdrop-filter:none}
+}
+
+
+/* =========================================================
+   V14 ARCHIVE EDITION
+   ========================================================= */
+
+/* Longer cinematic timings */
+.mission-transition.play{animation-duration:2.5s!important}
+.mission-transition.play .dossier-card{animation-duration:2.5s!important}
+.mission-complete.show{animation-duration:2.25s!important}
+.mission-complete.show .complete-card{animation-duration:2.25s!important}
+.verify-stamp.show{animation-duration:1.45s!important}
+.score-float{animation-duration:1.55s!important}
+body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!important}
+.choice.correct{animation-duration:.85s!important}
+
+/* QR start card */
+.qr-card{
+  margin:10px 0 0;padding:12px 14px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(11,27,38,.88),rgba(8,18,26,.96));
+  border-radius:14px;display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;
+}
+.qr-frame{
+  width:92px;height:92px;border-radius:9px;background:#fff;padding:6px;
+  display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+}
+.qr-frame canvas{width:80px!important;height:80px!important;display:block}
+.qr-title{font-weight:1000;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+.qr-copy{font-size:12px;color:var(--muted);line-height:1.35;margin-top:4px}
+.qr-url{font:700 10px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--blue);word-break:break-all;margin-top:5px}
+@media(max-width:900px){.qr-card{display:none}}
+
+/* Authentic source dossier */
+.source-dossier{
+  position:relative;overflow:hidden;border:1px solid rgba(194,167,105,.42);
+  background:linear-gradient(145deg,#d9cfb7,#bcae8f);color:#221c13;
+  border-radius:8px;padding:0;box-shadow:0 22px 55px rgba(0,0,0,.28);
+}
+.source-dossier::before{
+  content:"GEHEIMAKTE";position:absolute;right:22px;top:18px;z-index:3;
+  border:3px solid rgba(135,31,31,.60);color:rgba(135,31,31,.74);
+  padding:5px 9px;font-weight:1000;letter-spacing:.14em;transform:rotate(-7deg)
+}
+.source-cover{
+  padding:22px;min-height:190px;display:flex;flex-direction:column;justify-content:center;
+  transition:transform 1.25s cubic-bezier(.2,.8,.2,1),opacity .8s ease;
+  transform-origin:top center;
+}
+.source-dossier.open .source-cover{transform:perspective(900px) rotateX(-86deg);opacity:0;pointer-events:none;position:absolute;inset:0}
+.source-body{
+  padding:22px;opacity:0;transform:translateY(18px);pointer-events:none;
+  transition:opacity 1.05s ease .45s,transform 1.05s ease .45s;
+}
+.source-dossier.open .source-body{opacity:1;transform:none;pointer-events:auto}
+.source-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.source-tag{
+  border:1px solid rgba(52,45,34,.35);padding:5px 8px;border-radius:4px;
+  font:900 10px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.09em;text-transform:uppercase
+}
+.source-quote{
+  margin:10px 0 16px;padding:16px 18px;border-left:5px solid rgba(120,32,32,.66);
+  background:rgba(255,255,255,.34);font:700 20px/1.45 Georgia,serif;min-height:82px
+}
+.source-link{font-size:12px;color:#493a27;text-decoration:underline;font-weight:800}
+.source-dossier .choice{background:rgba(255,255,255,.43);color:#201a12;border-color:rgba(44,37,27,.28)}
+.source-dossier .choice:hover{background:rgba(255,255,255,.68)}
+.source-dossier .feedback{color:#332a1e;background:rgba(255,255,255,.28);border-color:rgba(44,37,27,.20)}
+.source-dossier .feedback.good{color:#164c2c}
+.source-dossier .feedback.bad{color:#7d2424}
+
+/* Map expansion */
+.map-brief{
+  position:absolute;left:16px;bottom:16px;z-index:8;max-width:min(520px,calc(100% - 32px));
+  padding:11px 13px;border:1px solid rgba(215,177,91,.42);border-radius:10px;
+  background:rgba(5,16,23,.92);color:var(--ink);box-shadow:0 12px 34px rgba(0,0,0,.34);
+  opacity:0;transform:translateY(14px);animation:mapBriefIn 2.8s ease forwards
+}
+.map-brief b{color:var(--gold)}
+.map-brief small{display:block;color:var(--muted);margin-top:4px}
+@keyframes mapBriefIn{0%{opacity:0;transform:translateY(14px)}18%,86%{opacity:1;transform:none}100%{opacity:.88;transform:none}}
+.geo-link{fill:none;stroke:rgba(215,177,91,.82);stroke-width:3;stroke-linecap:round;stroke-dasharray:14 10;animation:geoDash 2.2s linear infinite}
+.geo-point{fill:#0b1a24;stroke:#d7b15b;stroke-width:4;filter:drop-shadow(0 0 8px rgba(215,177,91,.45))}
+.geo-point.target{stroke:#65c786;fill:#143423}
+.geo-label{font:900 18px/1 Inter,Arial,sans-serif;fill:#14222b;paint-order:stroke;stroke:#eef4f6;stroke-width:5;stroke-linejoin:round}
+@keyframes geoDash{to{stroke-dashoffset:-48}}
+.map-network-pulse{animation:netPulse 1.7s ease-in-out infinite}
+@keyframes netPulse{50%{opacity:.48}}
+
+/* Button ripple / tactile micro-interactions */
+.btn,.choice,.token,.catbtn,.multi-item,.move button{position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.ui-ripple{
+  position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);
+  background:rgba(255,255,255,.24);animation:rippleOut .72s ease-out forwards
+}
+@keyframes rippleOut{to{transform:scale(1);opacity:0}}
+.btn:focus-visible,.choice:focus-visible,.token:focus-visible,.catbtn:focus-visible{
+  outline:3px solid rgba(107,183,201,.55);outline-offset:2px
+}
+
+/* Finale archive code */
+.archive-code-panel{
+  margin:12px 0 16px;padding:14px;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(180deg,rgba(5,15,22,.86),rgba(11,27,38,.72))
+}
+.code-caption{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+.code-segments{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:11px}
+.code-seg{
+  height:13px;border:1px solid #304652;background:#111d25;border-radius:99px;position:relative;overflow:hidden;
+  transition:transform .6s ease,border-color .6s ease,box-shadow .6s ease
+}
+.code-seg::after{content:"";position:absolute;inset:0;transform:translateX(-102%);transition:transform 1.05s cubic-bezier(.2,.8,.2,1);background:linear-gradient(90deg,#47758d,#d7b15b)}
+.code-seg.unlocked{border-color:#d7b15b;box-shadow:0 0 18px rgba(215,177,91,.28);transform:scaleY(1.22)}
+.code-seg.unlocked::after{transform:translateX(0)}
+.code-seg.failed{border-color:#8b3e3e;background:rgba(95,28,28,.45);animation:failedPulse 1s ease}
+@keyframes failedPulse{50%{box-shadow:0 0 20px rgba(214,91,91,.28)}}
+.vault-status{margin-top:9px;font:900 12px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--gold);letter-spacing:.07em}
+
+/* Longer finale */
+.finale-unlock.show{animation-duration:4.6s!important}
+.finale-unlock.show .archive-core{animation-duration:4.6s!important}
+.archive-file{animation-duration:3.35s!important}
+
+/* Richer result profile */
+.profile-summary{
+  margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+.profile-summary-card{
+  border:1px solid var(--line);border-radius:13px;padding:13px 14px;background:rgba(9,24,34,.68)
+}
+.profile-summary-card span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.11em;font-weight:900}
+.profile-summary-card b{display:block;margin-top:5px;font-size:16px}
+.profile-summary-card.revisit{border-color:rgba(214,91,91,.32)}
+.profile-summary-card.strong{border-color:rgba(92,179,124,.32)}
+.topic-chip{animation:topicReveal 1.25s ease both}
+.topic-chip:nth-child(2){animation-delay:.12s}.topic-chip:nth-child(3){animation-delay:.24s}.topic-chip:nth-child(4){animation-delay:.36s}
+.topic-chip:nth-child(5){animation-delay:.48s}.topic-chip:nth-child(6){animation-delay:.60s}.topic-chip:nth-child(7){animation-delay:.72s}.topic-chip:nth-child(8){animation-delay:.84s}
+@keyframes topicReveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(max-width:620px){.profile-summary{grid-template-columns:1fr}.source-quote{font-size:17px}}
+
+/* Archive source footnotes */
+.archive-source-ref{margin-top:9px;font-size:11px;color:var(--muted)}
+.archive-source-ref a{color:var(--blue);font-weight:800}
+
+
+/* V14 source dossier compact closed state */
+.source-dossier .source-body{
+  max-height:0;overflow:hidden;padding:0 22px;opacity:0;transform:translateY(18px);
+  transition:max-height 1.35s cubic-bezier(.2,.8,.2,1),padding 1.0s ease,opacity 1.05s ease .45s,transform 1.05s ease .45s;
+}
+.source-dossier.open .source-body{
+  max-height:1100px;padding:22px;opacity:1;transform:none;pointer-events:auto
+}
+.mission-transition.play{pointer-events:auto}
+.finale-unlock.show{pointer-events:auto}
+
+
+/* V14.2 missile icons on strategic map routes */
+.missile-icon{
+  fill:#d7b15b;stroke:#0a141c;stroke-width:1.4;
+  filter:drop-shadow(0 0 8px rgba(215,177,91,.30));
+  opacity:0;
+}
+.missile-icon.alert{
+  fill:#d65b5b;filter:drop-shadow(0 0 10px rgba(214,91,91,.35));
+}
+.missile-trail{
+  fill:none;stroke:rgba(215,177,91,.60);stroke-width:2.2;stroke-dasharray:8 8;opacity:.85
+}
+.missile-group{
+  animation:missileFloat 2.4s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes missileFloat{
+  50%{transform:translateY(-4px)}
+}
+
 </style>
 </head>
 <body>
@@ -356,12 +664,16 @@ html,body{min-height:100%;overflow-x:hidden}
       <div class="pill">Fehler <span id="mistakes">0</span></div>
       <div class="pill">Serie <span id="combo">0</span></div>
       <div class="pill">Mission <span id="missionHud">0/8</span></div>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="Ton ausschalten" title="Ton an/aus">🔊</button>
     </div>
   </div>
   <div class="progressline"><div class="progressfill" id="progressFill"></div></div>
+  <div class="mission-rail" id="missionRail" aria-hidden="true"><span class="mission-dot" data-mission="1"></span><span class="mission-dot" data-mission="2"></span><span class="mission-dot" data-mission="3"></span><span class="mission-dot" data-mission="4"></span><span class="mission-dot" data-mission="5"></span><span class="mission-dot" data-mission="6"></span><span class="mission-dot" data-mission="7"></span><span class="mission-dot" data-mission="8"></span></div>
 
   <section id="start" class="screen active">
     <div class="hero">
+      <svg id="startWorld" class="start-world" viewBox="0 0 1400 720" aria-hidden="true"></svg>
+      <div class="start-radar" aria-hidden="true"></div><div class="start-sweep" aria-hidden="true"></div>
       <div class="kicker">Abschlussquiz</div>
       <h1>Operation<br>Kalter Krieg</h1>
       <p>Teste zum Abschluss, was du über den Kalten Krieg noch weißt. Dich erwarten acht Runden mit Karten, Zuordnungen, Quellen und Zeitstrahlen.</p>
@@ -381,6 +693,15 @@ html,body{min-height:100%;overflow-x:hidden}
       <b>ABLAUF:</b> 8 Runden · verschiedene Aufgabentypen · <span class="codeword">Finalrunde</span><br>
       <b>TIPP:</b> Lies genau. Bei einigen Aufgaben musst du Zusammenhänge erkennen und nicht nur Begriffe wiedergeben.<br>
       <b>HIGHSCORE:</b> <span id="dbStatus">Dein Ergebnis wird am Ende gespeichert.</span>
+    </div>
+
+    <div class="qr-card" id="qrCard">
+      <div class="qr-frame"><canvas id="qrCanvas" width="160" height="160" aria-label="QR-Code zum Quiz"></canvas></div>
+      <div>
+        <div class="qr-title">Direkt mit dem Handy öffnen</div>
+        <div class="qr-copy">Auf dem Beamer scannen und direkt ins Quiz einsteigen.</div>
+        <div class="qr-url" id="qrUrl">Adresse wird geladen …</div>
+      </div>
     </div>
     <details class="scorelegend">
       <summary>Punkteübersicht</summary>
@@ -578,6 +899,7 @@ html,body{min-height:100%;overflow-x:hidden}
   </section>
 
   <section id="m5" class="screen">
+    <div class="crisis-banner" aria-hidden="true"><span class="crisis-signal"></span><span>KRISENMODUS // HOTLINE AKTIV</span><span class="crisis-track"></span><span class="crisis-clock" id="crisisClock">13 TAGE</span></div>
     <div class="mission-head">
       <div><div class="mission-number">Mission 5 von 8</div><h2>Kuba-Krise</h2><p>13 Tage am Rand der Eskalation.</p></div>
       <div class="difficulty">SCHWIERIGKEIT ★★★★★</div>
@@ -590,9 +912,40 @@ html,body{min-height:100%;overflow-x:hidden}
       <div class="feedback" id="m5aFb">Finde den karibischen Inselstaat, auf dem 1962 sowjetische Raketen stationiert wurden.</div>
     </div>
 
+
+    <div class="panel task locked" id="m5sourcePanel">
+      <div class="tasktag">Originalquelle · Geheimakte</div>
+      <h3>5B · Geheimakte: 22. Oktober 1962</h3>
+      <div class="source-dossier" id="sourceDossier5">
+        <div class="source-cover">
+          <div style="font:900 12px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.18em;text-transform:uppercase">National Security File // Cuba</div>
+          <div style="font:1000 clamp(34px,7vw,72px)/1 Inter,Arial,sans-serif;margin:18px 0 8px">22·10·62</div>
+          <div style="font:800 18px/1.3 Georgia,serif">Fernsehansprache des US-Präsidenten</div>
+          <button class="btn btn-secondary" id="openSource5" style="align-self:flex-start;margin-top:18px">Geheimakte öffnen</button>
+        </div>
+        <div class="source-body" id="source5Body">
+          <div class="source-meta">
+            <span class="source-tag">John F. Kennedy</span>
+            <span class="source-tag">White House</span>
+            <span class="source-tag">22 Oct 1962</span>
+          </div>
+          <div class="source-quote" id="source5Quote">“This Government [...] has maintained the closest surveillance of the Soviet Military buildup on the island of Cuba.”</div>
+          <a class="source-link" href="https://microsites.jfklibrary.org/cmc/oct22/doc5.html" target="_blank" rel="noopener">Originalquelle · John F. Kennedy Presidential Library</a>
+          <h4 style="margin:18px 0 8px">Was lässt sich aus der Quelle für den Beginn der Krise ableiten?</h4>
+          <div class="choice-grid" data-q="m5source">
+            <button class="choice" data-correct="1">Die US-Regierung beobachtete den sowjetischen militärischen Aufbau auf Kuba und machte ihre Erkenntnisse öffentlich.</button>
+            <button class="choice">Die USA hatten Kuba bereits militärisch besetzt.</button>
+            <button class="choice">Die Sowjetunion hatte den Abzug ihrer Raketen bereits angekündigt.</button>
+            <button class="choice">Die Krise war zu diesem Zeitpunkt schon beendet.</button>
+          </div>
+          <div class="feedback" id="m5sourceFb">Ordne zuerst ein, was die Quelle tatsächlich belegt.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="panel task locked" id="m5bPanel">
       <div class="tasktag">Krisensimulation</div>
-      <h3>5B · Rekonstruiere die Eskalationslogik</h3>
+      <h3>5C · Rekonstruiere die Eskalationslogik</h3>
       <div class="defcon" id="defcon"><div class="on"></div><div class="on"></div><div></div><div></div><div></div></div>
       <div class="hotline"><div class="phone">☎</div><div><b>HOT LINE // WASHINGTON–MOSKAU</b><div class="small">Rekonstruiere die historische Eskalationslogik. Fehlentscheidungen erhöhen den Krisendruck.</div></div></div><div class="alert">Du sollst nicht „die beste politische Entscheidung“ treffen, sondern erkennen, was historisch tatsächlich geschah und warum die Lage gefährlich war.</div>
       <div id="cubaRounds"></div>
@@ -601,7 +954,7 @@ html,body{min-height:100%;overflow-x:hidden}
 
     <div class="panel task locked" id="m5cPanel">
       <div class="tasktag">Chronologie</div>
-      <h3>5C · Finale der Krise</h3>
+      <h3>5D · Finale der Krise</h3>
       <div class="sequence" id="cubaSeq"></div>
       <div class="navrow"><button class="btn btn-secondary" id="checkCubaSeq">Ablauf prüfen</button></div>
       <div class="feedback" id="m5cFb">Ordne die vier Schritte.</div>
@@ -733,13 +1086,20 @@ html,body{min-height:100%;overflow-x:hidden}
       </div>
     </div>
     <div class="panel task locked" id="m8bPanel">
-      <div class="tasktag">Boss-Finale · 6 Mischfragen</div>
+      <div class="tasktag">Finale · 4 adaptive Aktenfragen</div>
       <h3>8B · Der Archiv-Code</h3>
-      <p>Sechs schnelle Fragen aus der gesamten Einheit. Mindestens 5 von 6 müssen richtig sein. Bei weniger als 5 startet nur das Boss-Finale neu.</p>
-      <div class="timer" id="bossTimer">02:00</div>
+      <p>Vier Abschlussfragen aus der gesamten Einheit. Schwächere Themen aus deinen bisherigen Missionen werden bevorzugt. 4/4 = volle Freigabe, 3/4 = Archiv bestanden.</p>
+      <div class="archive-code-panel">
+        <div class="code-caption"><span>Entschlüsselung</span><span id="codeCounter">0 / 4</span></div>
+        <div class="code-segments" id="codeSegments">
+          <div class="code-seg"></div><div class="code-seg"></div><div class="code-seg"></div><div class="code-seg"></div>
+        </div>
+        <div class="vault-status" id="vaultStatus">ARCHIV-CODE // GESPERRT</div>
+      </div>
+      <div class="timer" id="bossTimer">01:30</div>
       <div id="bossArea"></div>
       <div class="feedback" id="bossFb">Bereit?</div>
-      <div class="navrow"><button class="btn btn-primary" id="startBoss">Boss-Finale starten</button></div>
+      <div class="navrow"><button class="btn btn-primary" id="startBoss">Archiv-Code entschlüsseln</button></div>
     </div>
     <div class="hintbox" id="hintSmall8"><span class="hintlabel">Hinweis freigeschaltet</span><span id="hintSmallText8"></span></div>
     <div class="hintbox big" id="hintBig8"><span class="hintlabel">Deutlicher Hinweis</span><span id="hintBigText8"></span></div>
@@ -754,9 +1114,15 @@ html,body{min-height:100%;overflow-x:hidden}
         <div class="stat"><strong id="finalMistakes">0</strong>Fehler</div>
         <div class="stat"><strong id="bestCombo">0</strong>Beste Serie</div>
         <div class="stat"><strong>8/8</strong>Missionen</div>
+        <div class="stat online-rank" id="onlineRankCard"><strong id="onlineRank">…</strong>Rang</div>
       </div>
       <div class="rank" id="rankText"></div><p id="agentResult" style="font-size:20px;font-weight:900"></p>
       <p id="finalText" style="color:var(--muted);font-size:19px;line-height:1.5"></p>
+      <div class="topic-profile"><h3>Dein Themenprofil</h3><div class="topic-grid" id="topicGrid"></div></div>
+      <div class="profile-summary" id="profileSummary">
+        <div class="profile-summary-card strong"><span>Stärkstes Thema</span><b id="strongTopic">–</b></div>
+        <div class="profile-summary-card revisit"><span>Noch einmal ansehen</span><b id="revisitTopic">–</b></div>
+      </div>
       <div class="save-status" id="saveStatus">Ergebnis wird gespeichert …</div>
       <div class="leaderboard">
         <h3>Highscore // Klassenrangliste</h3><div class="small" style="padding:0 18px 12px">Sortierung: Punkte ↓ · Fehler ↑ · Best-Combo ↓</div>
@@ -768,10 +1134,17 @@ html,body{min-height:100%;overflow-x:hidden}
     </div>
   </section>
 </div>
+<div class="glitch-layer" aria-hidden="true"></div>
+<div class="verify-stamp" id="verifyStamp" aria-hidden="true">VERIFIZIERT</div>
+<div class="mission-transition" id="missionTransition" aria-hidden="true"><div class="dossier-card"><div class="dossier-label">Archivakte // Freigabestufe Schüler</div><div class="dossier-num" id="transitionNum">01</div><div class="dossier-title" id="transitionTitle">Mission</div></div></div>
+<div class="mission-complete" id="missionComplete" aria-hidden="true"><div class="complete-card"><div class="complete-stamp" id="completeStamp">Akte abgeschlossen</div><div class="complete-meta" id="completeMeta"></div></div></div>
+<div class="finale-unlock" id="finaleUnlock" aria-hidden="true"><div class="archive-core" id="archiveCore"><div class="archive-core-title">8 Akten<br>werden entschlüsselt</div></div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
+/* Operation Kalter Krieg · V14 Archive Edition */
 (() => {
 const SUPABASE_URL = "https://fzqxnjhuvgpgovcovosl.supabase.co"; // Supabase project URL
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV"; // public browser key
@@ -779,35 +1152,35 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
 const missionErrors=Array(9).fill(0); const weakTopics={};
 const completed=new Set();
+const motionOK=!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let soundOn=localStorage.getItem("coldWarSound")!=="off",audioCtx=null,bossUnlockPlayed=false;
+const missionSnapshots=Array.from({length:9},()=>({score:0,mistakes:0}));
 
-function beep(ok=true){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type="sine";o.frequency.value=ok?720:180;g.gain.value=.035;
-    o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.08);
-  }catch(e){}
+function getAudio(){
+  if(!soundOn)return null;
+  try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();return audioCtx}catch(e){return null}
 }
-function alarmSound(){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    [0,.18,.36].forEach((delay,i)=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.type="square";o.frequency.value=i%2?410:280;g.gain.value=.025;
-      o.connect(g);g.connect(ctx.destination);
-      o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+.12);
-    });
-  }catch(e){}
+function tone(freq,dur=.08,type="sine",gain=.028,delay=0){
+  const ctx=getAudio();if(!ctx)return;
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=gain;o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+dur)
 }
-function unlockSound(){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    [520,660,820].forEach((f,i)=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=f;g.gain.value=.025;
-      o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+i*.08);o.stop(ctx.currentTime+i*.08+.12);
-    });
-  }catch(e){}
+function beep(ok=true){tone(ok?720:180,.08,ok?"sine":"sawtooth",.026)}
+function alarmSound(){[0,.18,.36].forEach((d,i)=>tone(i%2?410:280,.12,"square",.022,d))}
+function unlockSound(){[520,660,820].forEach((f,i)=>tone(f,.12,"sine",.022,i*.08))}
+function stampSound(){tone(120,.055,"square",.020);tone(540,.10,"sine",.017,.075);tone(760,.08,"sine",.010,.16)}
+function radarPing(){tone(880,.10,"sine",.022);tone(1180,.17,"sine",.012,.13)}
+function typeTap(){tone(1600,.018,"square",.006)}
+function vaultSound(){[110,145,190,260,360,520].forEach((f,i)=>tone(f,.16,"sine",.018,i*.18))}
+function radioBurst(dur=.38){
+  const ctx=getAudio();if(!ctx)return;
+  const len=Math.max(1,Math.floor(ctx.sampleRate*dur)),buf=ctx.createBuffer(1,len,ctx.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len);
+  const src=ctx.createBufferSource(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
+  filter.type="bandpass";filter.frequency.value=1200;filter.Q.value=.7;g.gain.value=.018;
+  src.buffer=buf;src.connect(filter);filter.connect(g);g.connect(ctx.destination);src.start();
 }
+function paperSound(){radioBurst(.20);tone(420,.07,"triangle",.012,.08)}
+function uiClickSound(){tone(420,.025,"sine",.007)}
 function safeName(v){
   return (v||"").replace(/[<>]/g,"").trim().replace(/\s+/g," ").slice(0,24);
 }
@@ -852,6 +1225,7 @@ function renderLeaderboard(rows){
   rows.slice(0,20).forEach((r,i)=>{
     const row=document.createElement("div");
     row.className="lb-row"+(r.name===playerName&&r.score===score?" lb-me":"");
+    row.style.animationDelay=(i*.035)+"s";
     row.innerHTML=`<div class="lb-rank">${i+1}</div><div>${r.name}</div><div><b>${r.score}</b></div><div>${r.mistakes}</div>`;
     box.appendChild(row);
   });
@@ -863,33 +1237,40 @@ async function persistResult(){
     try{
       await saveRemoteScore(entry);
       const rows=await fetchRemoteScores();
-      renderLeaderboard(rows);
+      renderLeaderboard(rows);updateOnlineRank(rows,entry);
       $("#saveStatus").textContent="Ergebnis online gespeichert.";
       $("#leaderboardNote").textContent="Gemeinsame Klassenrangliste · Punkte ↓ · Fehler ↑ · Best-Combo ↓";
       return;
     }catch(e){
       console.warn("Supabase:",e);
       const rows=saveLocalScore(entry);
-      renderLeaderboard(rows);
+      renderLeaderboard(rows);updateOnlineRank(rows,entry);
       $("#saveStatus").textContent="Online-Speicherung fehlgeschlagen – Ergebnis wurde lokal gesichert.";
       $("#leaderboardNote").textContent="Prüfe in Supabase, ob die Tabelle 'scores' und die RLS-Policies eingerichtet sind.";
       return;
     }
   }
   const rows=saveLocalScore(entry);
-  renderLeaderboard(rows);
+  renderLeaderboard(rows);updateOnlineRank(rows,entry);
   $("#saveStatus").textContent="Ergebnis lokal gespeichert.";
   $("#leaderboardNote").textContent="Keine Online-Datenbank konfiguriert.";
 }
-function addScore(n){score+=n;combo++;bestCombo=Math.max(bestCombo,combo);$("#score").textContent=score;$("#combo").textContent=combo;beep(true)}
+function animateNumber(el,from,to,duration=420){
+  if(!el)return;if(!motionOK){el.textContent=to;return}
+  const t0=performance.now();
+  const step=t=>{const p=Math.min(1,(t-t0)/duration),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)
+}
+function scoreFx(n){
+  const f=document.createElement("div");f.className="score-float";f.textContent=(n>=0?"+":"")+n;document.body.appendChild(f);setTimeout(()=>f.remove(),950);
+  const pill=$("#score")?.closest(".pill");if(pill){pill.classList.remove("pulse");void pill.offsetWidth;pill.classList.add("pulse");setTimeout(()=>pill.classList.remove("pulse"),500)}
+}
+function verifyFx(){const s=$("#verifyStamp");if(!s)return;s.classList.remove("show");void s.offsetWidth;s.classList.add("show");stampSound()}
+function glitchFx(){if(!motionOK)return;document.body.classList.remove("glitching");void document.body.offsetWidth;document.body.classList.add("glitching");setTimeout(()=>document.body.classList.remove("glitching"),240)}
+function addScore(n){const old=score;score+=n;combo++;bestCombo=Math.max(bestCombo,combo);animateNumber($("#score"),old,score);$("#combo").textContent=combo;scoreFx(n);beep(true);const cp=$("#combo")?.closest(".pill");if(cp){cp.classList.remove("pulse");void cp.offsetWidth;cp.classList.add("pulse")}}
 function miss(fb,msg){
   mistakes++;combo=0;$("#mistakes").textContent=mistakes;$("#combo").textContent=combo;
-  if(currentMission>=1&&currentMission<=8){
-    missionErrors[currentMission]++;
-    weakTopics[currentMission]=(weakTopics[currentMission]||0)+1;
-    maybeShowHint(currentMission);
-  }
-  fb.className="feedback bad";fb.textContent=msg;beep(false)
+  if(currentMission>=1&&currentMission<=8){missionErrors[currentMission]++;weakTopics[currentMission]=(weakTopics[currentMission]||0)+1;maybeShowHint(currentMission)}
+  fb.className="feedback bad";fb.textContent=msg;glitchFx();beep(false)
 }
 const hintTexts={
   1:{
@@ -937,36 +1318,37 @@ function maybeShowHint(n){
     if(box&&txt){txt.textContent=h.big;box.classList.add("show")}
   }
 }
-function good(fb,msg){fb.className="feedback good";fb.textContent=msg}
+function good(fb,msg){fb.className="feedback good";fb.textContent=msg;verifyFx()}
+function typeQuote(panel){
+  const qt=panel?.querySelector(".qt");if(!qt||qt.dataset.typed)return;qt.dataset.typed="1";const full=qt.textContent.trim();
+  if(!motionOK){qt.textContent=full;return}qt.textContent="";qt.classList.add("typing");let i=0;
+  const tick=()=>{qt.textContent=full.slice(0,i++);if(i%5===0)typeTap();if(i<=full.length)setTimeout(tick,28+Math.random()*24);else qt.classList.remove("typing")};tick()
+}
 function unlock(id){
-  const next=$("#"+id);
-  if(!next)return;
-  next.classList.remove("locked");
-  const screen=next.closest(".screen");
-  if(screen){
-    [...screen.querySelectorAll(".panel")].forEach(p=>{
-      if(p!==next && !p.classList.contains("locked")) p.classList.add("completed-step");
-    });
-  }
-  next.classList.remove("completed-step");
-  requestAnimationFrame(()=>next.scrollIntoView({behavior:"smooth",block:"start"}));
+  const next=$("#"+id);if(!next)return;next.classList.remove("locked");
+  const screen=next.closest(".screen");if(screen){[...screen.querySelectorAll(".panel")].forEach(p=>{if(p!==next&&!p.classList.contains("locked"))p.classList.add("completed-step")})}
+  next.classList.remove("completed-step");if(id==="m3cPanel"||id==="m7cPanel")setTimeout(()=>typeQuote(next),220);
+  requestAnimationFrame(()=>next.scrollIntoView({behavior:motionOK?"smooth":"auto",block:"start"}))
 }
-function show(id){$$(".screen").forEach(s=>s.classList.remove("active"));$("#"+id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function updateMissionRail(n){$$('.mission-dot').forEach(d=>{const m=Number(d.dataset.mission);d.classList.toggle('done',completed.has(m));d.classList.toggle('current',m===n)})}
+function show(id){$$('.screen').forEach(s=>s.classList.remove('active'));$("#"+id).classList.add('active');document.body.classList.toggle('crisis-mode',id==='m5');window.scrollTo({top:0,behavior:motionOK?'smooth':'auto'})}
+function playMissionTransition(n,title){
+  const o=$("#missionTransition");if(!o||!motionOK)return;$("#transitionNum").textContent=String(n).padStart(2,'0');$("#transitionTitle").textContent=title;o.classList.remove('play');void o.offsetWidth;o.classList.add('play');setTimeout(()=>o.classList.remove('play'),2520)
+}
 function enterMission(n){
-  currentMission=n;$("#missionHud").textContent=n+"/8";$("#progressFill").style.width=((n-1)/8*100)+"%";show("m"+n);
-  const el=$("#m"+n);
-  const available=[...el.querySelectorAll(".panel")].filter(p=>!p.classList.contains("locked"));
-  if(available.length){
-    available.forEach((p,i)=>p.classList.toggle("completed-step",i!==available.length-1));
-  }
-  el.classList.remove("unlockflash");void el.offsetWidth;el.classList.add("unlockflash");unlockSound();
-  if(n===5){el.classList.add("alarmPulse");alarmSound();setTimeout(()=>el.classList.remove("alarmPulse"),2200)}
+  currentMission=n;missionSnapshots[n]={score,mistakes};$("#missionHud").textContent=n+"/8";$("#progressFill").style.width=((n-1)/8*100)+"%";show("m"+n);
+  const el=$("#m"+n),title=el.querySelector('.mission-head h2')?.textContent||('Mission '+n);updateMissionRail(n);playMissionTransition(n,title);
+  const available=[...el.querySelectorAll('.panel')].filter(p=>!p.classList.contains('locked'));if(available.length)available.forEach((p,i)=>p.classList.toggle('completed-step',i!==available.length-1));
+  el.classList.remove('unlockflash');void el.offsetWidth;el.classList.add('unlockflash');unlockSound();if(n===5){el.classList.add('alarmPulse');alarmSound();radioBurst(.28);setTimeout(()=>el.classList.remove('alarmPulse'),3600)}
 }
-function completeMission(n){if(!completed.has(n)){completed.add(n);addScore(200)}$("#progressFill").style.width=(n/8*100)+"%"}
+function playCompleteStamp(n){
+  const o=$("#missionComplete");if(!o)return;const snap=missionSnapshots[n]||{score:0,mistakes:0};$("#completeStamp").textContent='Akte '+String(n).padStart(2,'0')+' abgeschlossen';$("#completeMeta").textContent='+'+(score-snap.score)+' Punkte · '+(mistakes-snap.mistakes)+' Fehler';o.classList.remove('show');void o.offsetWidth;o.classList.add('show');setTimeout(()=>o.classList.remove('show'),2280)
+}
+function completeMission(n){if(!completed.has(n)){completed.add(n);addScore(200);playCompleteStamp(n)}$("#progressFill").style.width=(n/8*100)+"%";updateMissionRail(currentMission)}
 $("#startBtn").addEventListener("click",()=>{
   const n=safeName($("#playerName").value);
   if(n.length<2){$("#nameError").textContent="Bitte gib mindestens 2 Zeichen ein.";return}
-  playerName=n;$("#nameError").textContent="";unlockSound();enterMission(1);
+  playerName=n;$("#nameError").textContent="";radioBurst(.42);unlockSound();setTimeout(()=>enterMission(1),260);
 });
 
 function setupChoice(qid,onDone){
@@ -1000,6 +1382,152 @@ function checkMulti(containerId,fbId,onDone){
  } else {miss(fb,"Noch nicht vollständig richtig. Prüfe sowohl fehlende als auch zu viel ausgewählte Aussagen.");return false}
 }
 
+function mapSignalError(svgSel){const w=$(svgSel)?.closest('.mapwrap');if(!w)return;w.classList.remove('signal-error');void w.offsetWidth;w.classList.add('signal-error');radioBurst(.14);setTimeout(()=>w.classList.remove('signal-error'),920)}
+function animateMapTarget(svgSel,pathNode,returnWorld=false){
+  const svg=d3.select(svgSel),node=svg.node(),bbox=pathNode.getBBox(),pad=Math.max(24,Math.min(bbox.width,bbox.height)*.7),vb=[Math.max(0,bbox.x-pad),Math.max(0,bbox.y-pad),Math.min(1400,bbox.width+pad*2),Math.min(720,bbox.height+pad*2)];
+  const cx=bbox.x+bbox.width/2,cy=bbox.y+bbox.height/2,r=Math.max(10,Math.min(30,Math.max(bbox.width,bbox.height)*.35));
+  svg.append('circle').attr('class','target-ping').attr('cx',cx).attr('cy',cy).attr('r',r);
+  const wrap=node.closest('.mapwrap');wrap?.classList.add('map-hit');radarPing();
+  if(motionOK){svg.transition().duration(950).attr('viewBox',vb.join(' ')).on('end',()=>{if(returnWorld)svg.transition().delay(850).duration(1050).attr('viewBox','0 0 1400 720')})}
+  setTimeout(()=>{svg.selectAll('.target-ping').remove();wrap?.classList.remove('map-hit')},returnWorld?3500:2600)
+}
+
+const geoNetworks={
+  superpowers:{
+    title:"Bipolare Weltordnung",
+    note:"Die beiden Machtzentren prägten die internationale Politik des Kalten Krieges – inklusive nuklearer Abschreckung durch Langstreckenraketen.",
+    source:"bpb",
+    points:[
+      {name:"Washington",coord:[-77.0369,38.9072],target:true},
+      {name:"Moskau",coord:[37.6173,55.7558],target:true}
+    ],
+    links:[[0,1]],
+    missiles:[{linkIndex:0,alert:false}]
+  },
+  Cuba:{
+    title:"Krisenraum im globalen Systemkonflikt",
+    note:"Kuba lag nur rund 150 km vor Florida; die Raketenkrise machte nukleare Bedrohung und globale Eskalationsgefahr unmittelbar sichtbar.",
+    source:"JFK Library",
+    points:[
+      {name:"Kuba",coord:[-79.5,21.8],target:true},
+      {name:"Washington",coord:[-77.0369,38.9072]},
+      {name:"Moskau",coord:[37.6173,55.7558]}
+    ],
+    links:[[0,1],[0,2]],
+    missiles:[{linkIndex:0,alert:true},{linkIndex:1,alert:true}]
+  },
+  Vietnam:{
+    title:"Regionaler Krieg – globale Verflechtung",
+    note:"Nordvietnam wurde von China und der Sowjetunion unterstützt; die USA griffen auf Seiten Südvietnams massiv ein.",
+    source:"bpb",
+    points:[
+      {name:"Vietnam",coord:[108.3,14.1],target:true},
+      {name:"Washington",coord:[-77.0369,38.9072]},
+      {name:"Moskau",coord:[37.6173,55.7558]},
+      {name:"Peking",coord:[116.4074,39.9042]}
+    ],
+    links:[[0,1],[0,2],[0,3]],
+    missiles:[{linkIndex:1,alert:false}]
+  }
+};
+
+function addMissileIcon(svg,x,y,angle=0,alert=false,delay=0){
+  const g=svg.append('g').attr('class','missile-group').attr('transform',`translate(${x},${y}) rotate(${angle}) scale(0.9)`);
+  g.append('path').attr('class','missile-trail'+(alert?' alert':'')).attr('d','M -24 0 L -5 0');
+  g.append('path').attr('class','missile-icon'+(alert?' alert':'')).attr('d','M -1 -4 L 10 -4 L 16 0 L 10 4 L -1 4 L -6 0 Z');
+  g.append('path').attr('class','missile-icon'+(alert?' alert':'')).attr('d','M -8 -6 L -2 -3 L -2 3 L -8 6 Z');
+  g.style('opacity',0).transition().delay(delay).duration(900).style('opacity',1);
+  return g;
+}
+
+function showMapNetwork(svgSel,key){
+  const cfg=geoNetworks[key];if(!cfg)return;
+  const svg=d3.select(svgSel),proj=d3.geoNaturalEarth1().fitExtent([[24,18],[1376,702]],{type:"Sphere"});
+  svg.selectAll('.geo-link,.geo-point,.geo-label,.missile-group').remove();
+  cfg.links.forEach(([a,b],i)=>{
+    const p1=proj(cfg.points[a].coord),p2=proj(cfg.points[b].coord);
+    const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2-55;
+    svg.append('path').attr('class','geo-link').attr('d',`M${p1[0]},${p1[1]} Q${mx},${my} ${p2[0]},${p2[1]}`)
+      .style('opacity',0).transition().delay(i*260).duration(800).style('opacity',1);
+    if(cfg.missiles){
+      const missCfg = cfg.missiles.find(m=>m.linkIndex===i);
+      if(missCfg){
+        const tx = p1[0]*0.62 + p2[0]*0.38;
+        const ty = p1[1]*0.62 + p2[1]*0.38 - 18;
+        const angle = Math.atan2((p2[1]-p1[1]),(p2[0]-p1[0]))*180/Math.PI;
+        addMissileIcon(svg, tx, ty, angle, !!missCfg.alert, 680+i*260);
+      }
+    }
+  });
+  cfg.points.forEach((p,i)=>{
+    const [x,y]=proj(p.coord);
+    svg.append('circle').attr('class','geo-point map-network-pulse'+(p.target?' target':'')).attr('cx',x).attr('cy',y).attr('r',7).style('opacity',0)
+      .transition().delay(450+i*170).duration(700).style('opacity',1);
+    svg.append('text').attr('class','geo-label').attr('x',x+11).attr('y',y-10).text(p.name).style('opacity',0)
+      .transition().delay(600+i*170).duration(700).style('opacity',1);
+  });
+  const wrap=$(svgSel)?.closest('.mapwrap');if(wrap){
+    wrap.querySelector('.map-brief')?.remove();
+    const d=document.createElement('div');d.className='map-brief';d.innerHTML=`<b>${cfg.title}</b><div>${cfg.note}</div><small>Quelle: ${cfg.source}</small>`;wrap.appendChild(d)
+  }
+  setTimeout(()=>svg.selectAll('.geo-link,.geo-point,.geo-label,.missile-group').transition().duration(650).style('opacity',0).remove(),5200);
+}
+
+function flyToBin(token,bin){
+  const from=token.getBoundingClientRect();bin.appendChild(token);const to=token.getBoundingClientRect();if(motionOK&&token.animate){token.animate([{transform:`translate(${from.left-to.left}px,${from.top-to.top}px) scale(1.04)`},{transform:'translate(0,0) scale(1)'}],{duration:760,easing:'cubic-bezier(.2,.8,.2,1)'})}token.classList.add('filing');bin.classList.add('accepted');setTimeout(()=>{token.classList.remove('filing');bin.classList.remove('accepted')},880)
+}
+function sealTimeline(id){const el=$("#"+id);if(!el)return;el.classList.remove('timeline-correct');void el.offsetWidth;el.classList.add('timeline-correct')}
+
+function initQR(){
+  const canvas=$("#qrCanvas"),label=$("#qrUrl");if(!canvas||!label)return;
+  const clean=location.href.split("#")[0].split("?")[0];
+  if(location.protocol==="file:"){
+    label.textContent="Nach dem Upload auf GitHub Pages wird hier automatisch der echte Quiz-Link als QR-Code erzeugt.";
+    canvas.style.opacity=".18";return
+  }
+  label.textContent=clean.replace(/^https?:\/\//,"");
+  if(window.QRCode&&QRCode.toCanvas){
+    QRCode.toCanvas(canvas,clean,{width:160,margin:1,errorCorrectionLevel:"M"},err=>{
+      if(err){label.textContent="QR-Code konnte nicht erzeugt werden – Link direkt öffnen."}
+    })
+  }else label.textContent="QR-Bibliothek nicht geladen – Link direkt öffnen."
+}
+
+function drawStartWorld(){
+  const svg=d3.select('#startWorld');if(svg.empty())return;const proj=d3.geoNaturalEarth1().fitExtent([[28,20],[1372,700]],{type:'Sphere'}),path=d3.geoPath(proj);ensureWorld(features=>{svg.selectAll('path.sw-country').data(features).join('path').attr('class','sw-country').attr('d',path)},'#dbStatus')
+}
+function decorateSpeakerChoices(){
+  const initials={'Harry S. Truman':'HST','John F. Kennedy':'JFK','Ronald Reagan':'RR','Michail Gorbatschow':'MG','Willy Brandt':'WB'};
+  ['m3cWho','m7cWho'].forEach(q=>{document.querySelectorAll(`[data-q="${q}"] .choice`).forEach(b=>{const name=b.textContent.trim();b.classList.add('speaker-choice');b.innerHTML=`<span class="speaker-avatar" aria-hidden="true">${initials[name]||'?'}</span><span>${name}</span>`})})
+}
+function setCrisisPressure(level){$$('#defcon div').forEach((d,i)=>d.classList.toggle('pressure',i<level))}
+function playFinaleUnlock(done){
+  if(bossUnlockPlayed||!motionOK){bossUnlockPlayed=true;done();return}
+  bossUnlockPlayed=true;
+  const o=$('#finaleUnlock'),core=$('#archiveCore');core.querySelectorAll('.archive-file').forEach(x=>x.remove());
+  const pos=[[-250,-120,-8],[-85,-145,4],[90,-140,-4],[245,-100,7],[-245,100,6],[-80,125,-5],[90,120,3],[245,90,-7]];
+  pos.forEach((p,i)=>{const f=document.createElement('div');f.className='archive-file';f.style.setProperty('--x',p[0]+'px');f.style.setProperty('--y',p[1]+'px');f.style.setProperty('--r',p[2]+'deg');f.style.setProperty('--d',(i*.12)+'s');f.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b>AKTE`;core.appendChild(f)});
+  o.classList.add('show');radioBurst(.36);setTimeout(vaultSound,650);setTimeout(unlockSound,2500);
+  setTimeout(()=>{o.classList.remove('show');done()},4680)
+}
+function animateCounter(el,to,duration=900){const from=0;if(!motionOK){el.textContent=to;return}el.classList.add('counting');const t0=performance.now();const tick=t=>{const p=Math.min(1,(t-t0)/duration),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(tick);else setTimeout(()=>el.classList.remove('counting'),250)};requestAnimationFrame(tick)}
+function renderTopicProfile(){
+  const names=['Weltordnung','Blockbildung','Feindbilder','Deutschland','Kuba-Krise','Vietnam','Entspannung','Ende des Kalten Krieges'];
+  const box=$('#topicGrid');box.innerHTML='';
+  const rows=[];
+  for(let n=1;n<=8;n++){
+    const e=missionErrors[n],level=e===0?'sehr sicher':e<=2?'solide':'noch prüfen',w=e===0?'100%':e===1?'82%':e===2?'68%':e===3?'52%':'36%',c=e===0?'#5cb37c':e<=2?'#d7b15b':'#d65b5b';
+    rows.push({n,name:names[n-1],e});
+    const d=document.createElement('div');d.className='topic-chip';d.style.setProperty('--w',w);d.style.setProperty('--c',c);
+    d.innerHTML=`<b>${n}. ${names[n-1]}</b><span>${e} Fehler · ${level}</span>`;box.appendChild(d)
+  }
+  const min=Math.min(...rows.map(x=>x.e)),max=Math.max(...rows.map(x=>x.e));
+  const strong=rows.filter(x=>x.e===min).slice(0,2).map(x=>x.name);
+  const weak=rows.filter(x=>x.e===max&&x.e>0).slice(0,2).map(x=>x.name);
+  $("#strongTopic").textContent=strong.join(" & ");
+  $("#revisitTopic").textContent=weak.length?weak.join(" & "):"Kein Schwerpunkt – alle Missionen ohne Fehler";
+}
+function updateOnlineRank(rows,entry){const idx=rows.findIndex(r=>r.name===entry.name&&r.score===entry.score&&r.mistakes===entry.mistakes),el=$('#onlineRank'),card=$('#onlineRankCard');el.textContent=idx>=0?'#'+(idx+1):'20+';card.classList.remove('rank-pop');void card.offsetWidth;card.classList.add('rank-pop')}
 function ensureWorld(cb,loading){
  if(worldFeatures){cb(worldFeatures);return}
  fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json").then(r=>r.json()).then(world=>{
@@ -1013,8 +1541,14 @@ function drawSingleMap(svgSel,loadSel,target,fbSel,onCorrect){
  ensureWorld(features=>{
   svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).on("click",function(e,d){
    const name=d.properties.name,fb=$(fbSel);
-   if(name===target){d3.select(this).classed("hit",true);svg.selectAll(".country").style("pointer-events","none");addScore(110);good(fb,"Treffer: "+target+".");onCorrect()}
-   else{d3.select(this).classed("miss",true);setTimeout(()=>d3.select(this).classed("miss",false),300);miss(fb,"Falsch lokalisiert. Versuch es erneut.")}
+   if(name===target){
+     d3.select(this).classed("hit",true);svg.selectAll(".country").style("pointer-events","none");
+     animateMapTarget(svgSel,this,true);addScore(110);good(fb,"Treffer: "+target+". Analyse der Verbindungen läuft …");
+     setTimeout(()=>showMapNetwork(svgSel,target),2850);
+     setTimeout(()=>{good(fb,"Treffer bestätigt. Die Karte zeigt nun die globale Verflechtung des Konflikts.");onCorrect()},5600);
+   } else {
+     d3.select(this).classed("miss",true);mapSignalError(svgSel);setTimeout(()=>d3.select(this).classed("miss",false),650);miss(fb,"Falsch lokalisiert. Versuch es erneut.")
+   }
   });
   $(loadSel).classList.add("hidden");
  },loadSel);
@@ -1026,7 +1560,7 @@ function seqGame(containerId,items){
   row.innerHTML=`<div class="seq-num">${i+1}</div><div><b>${it.title}</b>${it.note?`<div class="small">${it.note}</div>`:""}</div><div class="move"><button ${i===0?"disabled":""} data-d="-1">↑</button><button ${i===state.length-1?"disabled":""} data-d="1">↓</button></div>`;
   row.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{const j=i+Number(b.dataset.d);[state[i],state[j]]=[state[j],state[i]];render()}));el.appendChild(row);
  })}
- render();return()=>state.every((x,i)=>x.order===i+1);
+ render();return()=>{const ok=state.every((x,i)=>x.order===i+1);if(ok)sealTimeline(containerId);return ok};
 }
 
 // M1
@@ -1038,10 +1572,15 @@ let m1step=0;
  ensureWorld(features=>{
   svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).on("click",function(e,d){
    const target=m1step===0?"United States of America":"Russia",fb=$("#m1aFb");
-   if(d.properties.name===target){d3.select(this).classed("hit",true).style("pointer-events","none");addScore(100);m1step++;
-    if(m1step===1)good(fb,"Erstes Machtzentrum gefunden. Jetzt das heutige Kerngebiet der zweiten Supermacht mit Hauptstadt Moskau.");
-    else{good(fb,"Beide Machtzentren lokalisiert.");unlock("m1bPanel")}
-   }else{miss(fb,m1step===0?"Nicht korrekt. Denke an die westliche Supermacht nach 1945.":"Nicht korrekt. Gesucht ist das heutige Kerngebiet der damaligen UdSSR mit Hauptstadt Moskau.")}
+   if(d.properties.name===target){
+    d3.select(this).classed("hit",true).style("pointer-events","none");animateMapTarget("#map1",this,true);addScore(100);m1step++;
+    if(m1step===1)good(fb,"Erstes Machtzentrum gefunden. Die Karte fährt zurück – danach folgt Moskau als zweites Zentrum.");
+    else{
+      good(fb,"Beide Machtzentren lokalisiert. Jetzt wird die historische Verbindung Washington ↔ Moskau eingeblendet …");
+      setTimeout(()=>showMapNetwork("#map1","superpowers"),2850);
+      setTimeout(()=>unlock("m1bPanel"),5600)
+    }
+   }else{mapSignalError("#map1");miss(fb,m1step===0?"Nicht korrekt. Denke an die westliche Supermacht nach 1945.":"Nicht korrekt. Gesucht ist das heutige Kerngebiet der damaligen UdSSR mit Hauptstadt Moskau.")}
   });$("#load1").classList.add("hidden");
  },"#load1");
 })();
@@ -1062,7 +1601,7 @@ let selToken=null,bcount=0;
 blocks.forEach(([t,s])=>{const b=document.createElement("button");b.className="token";b.textContent=t;b.dataset.side=s;b.addEventListener("click",()=>{$$(".token").forEach(x=>x.classList.remove("selected"));selToken=b;b.classList.add("selected")});$("#blockPool").appendChild(b)});
 $$(".drop").forEach(b=>b.addEventListener("click",()=>{
  const fb=$("#m2aFb");if(!selToken){fb.textContent="Wähle zuerst einen Begriff.";return}
- if(selToken.dataset.side===b.dataset.bin){selToken.disabled=true;selToken.classList.remove("selected");$("#"+b.dataset.bin+"Bin").appendChild(selToken);selToken=null;bcount++;addScore(45);good(fb,bcount+" von 12 richtig.");if(bcount===12)unlock("m2bPanel")}
+ if(selToken.dataset.side===b.dataset.bin){const token=selToken,targetBin=$("#"+b.dataset.bin+"Bin");token.disabled=true;token.classList.remove("selected");flyToBin(token,targetBin);selToken=null;bcount++;addScore(45);good(fb,bcount+" von 12 richtig.");if(bcount===12)unlock("m2bPanel")}
  else miss(fb,"Diese Einordnung passt nicht.")
 }));
 setupChoice("m2b",()=>{completeMission(2);$("#next2").disabled=false});
@@ -1088,7 +1627,7 @@ feind.slice(0,5).forEach(([txt,ans],i)=>{
  d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(55);good($("#m3Fb"),fdone+" von 5 richtig.");if(fdone===5)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));$("#feindCases").appendChild(d)
 });
 $("#checkM3multi").addEventListener("click",()=>checkMulti("m3multi","m3bFb",()=>unlock("m3cPanel")));
-setupChoice("m3cWho",()=>{$("#m3cReveal").classList.add("show");$("#m3cInterpretBox").classList.remove("hidden")});
+setupChoice("m3cWho",()=>{$("#m3cReveal").classList.add("show");$("#m3cInterpretBox").classList.remove("hidden");$("#m3cInterpretBox").animate?.([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:360,easing:"ease"})});
 setupChoice("m3cInterpret",()=>{completeMission(3);$("#next3").disabled=false});
 
 // M4
@@ -1107,12 +1646,24 @@ const germanyCheck=seqGame("germanySeq",[
 ]);
 $("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(140);good($("#m4bFb"),"Chronologie korrekt.");unlock("m4cPanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Denke an die Entwicklung von Nachkriegszeit über Teilung und Mauer bis zur Annäherung und schließlich 1989.")});
 setupChoice("m4c",()=>{completeMission(4);$("#next4").disabled=false});
-setupChoice("m7cWho",()=>{$("#m7cReveal").classList.add("show");$("#m7cInterpretBox").classList.remove("hidden")});
+setupChoice("m7cWho",()=>{$("#m7cReveal").classList.add("show");$("#m7cInterpretBox").classList.remove("hidden");$("#m7cInterpretBox").animate?.([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:360,easing:"ease"})});
 setupChoice("m7cInterpret",()=>{completeMission(7);$("#next7").disabled=false});
 
 // M5
 let m5init=false;
-function initM5(){if(m5init)return;m5init=true;drawSingleMap("#map5","#load5","Cuba","#m5aFb",()=>unlock("m5bPanel"))}
+function initM5(){if(m5init)return;m5init=true;drawSingleMap("#map5","#load5","Cuba","#m5aFb",()=>unlock("m5sourcePanel"))}
+
+function typeSourceQuote(){
+  const el=$("#source5Quote");if(!el||el.dataset.typed)return;el.dataset.typed="1";const full=el.textContent.trim();
+  if(!motionOK){el.textContent=full;return}
+  el.textContent="";let i=0;
+  const tick=()=>{el.textContent=full.slice(0,i++);if(i%4===0)typeTap();if(i<=full.length)setTimeout(tick,31+Math.random()*28)};
+  tick()
+}
+$("#openSource5").addEventListener("click",()=>{
+  const d=$("#sourceDossier5");d.classList.add("open");paperSound();setTimeout(typeSourceQuote,520)
+});
+setupChoice("m5source",()=>{stampSound();setTimeout(()=>unlock("m5bPanel"),1650)});
 const cubaPhases=[
  {q:"US-Aufklärungsflugzeuge entdecken sowjetische Raketenstellungen auf Kuba. Was geschieht historisch als zentrale Reaktion der USA?",a:"Die USA verhängen eine Seeblockade („Quarantäne“) um Kuba.",wrong:["Die USA erklären der UdSSR sofort den Krieg.","Die USA ziehen sich vollständig aus der Krise zurück."]},
  {q:"Warum war die Situation so gefährlich?",a:"Weil Entscheidungen oder Fehlkalkulationen zu einem direkten militärischen Zusammenstoß der Supermächte führen konnten.",wrong:["Weil Kuba über keine strategische Bedeutung verfügte.","Weil Atomwaffen ausdrücklich keine Rolle spielten."]},
@@ -1120,6 +1671,7 @@ const cubaPhases=[
 ];
 let cPhase=0;
 function renderCubaPhase(){
+ setCrisisPressure(Math.min(5,cPhase+2));
  const area=$("#cubaRounds");area.innerHTML="";const p=cubaPhases[cPhase];const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>Phase ${cPhase+1}/3</b><p>${p.q}</p><div class="choice-grid"></div>`;const opts=[p.a,...p.wrong].sort(()=>Math.random()-.5);
  opts.forEach(t=>{const b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",()=>{if(t===p.a){b.classList.add("correct");addScore(90);cPhase++;good($("#m5bFb"),"Phase korrekt.");if(cPhase<3){setTimeout(renderCubaPhase,350)}else{unlock("m5cPanel");$("#m5bFb").textContent="Alle drei Phasen korrekt rekonstruiert."}}else{b.classList.add("wrong");b.disabled=true;miss($("#m5bFb"),"Nicht korrekt. Rekonstruiere, was historisch tatsächlich geschah.")}});d.querySelector(".choice-grid").appendChild(b)});area.appendChild(d)
 }
@@ -1235,39 +1787,73 @@ function buildAdaptiveBoss(){
   for(const tag of ranked){
     const candidates=bossPool.filter(q=>q.tag===tag && !chosen.includes(q));
     if(candidates.length) chosen.push(candidates[Math.floor(Math.random()*candidates.length)]);
-    if(chosen.length>=4) break;
+    if(chosen.length>=3) break;
   }
   const rest=bossPool.filter(q=>!chosen.includes(q)).sort(()=>Math.random()-.5);
-  while(chosen.length<6 && rest.length) chosen.push(rest.shift());
-  bossQs=chosen.slice(0,6);
+  while(chosen.length<4 && rest.length) chosen.push(rest.shift());
+  bossQs=chosen.slice(0,4);
   const weakNames={1:"Weltordnung",2:"Blockbildung",3:"Feindbilder",4:"Deutschland",5:"Kuba-Krise",6:"Vietnam",7:"Entspannung",8:"Ende des Kalten Krieges"};
-  const labels=ranked.slice(0,3).map(n=>weakNames[n]).filter(Boolean);
+  const labels=ranked.slice(0,2).map(n=>weakNames[n]).filter(Boolean);
   const fb=$("#bossFb");
-  if(labels.length) fb.innerHTML="Adaptives Finale: besonders berücksichtigt werden <span class='weakness'>"+labels.join("</span><span class='weakness'>")+"</span>.";
+  if(labels.length) fb.innerHTML="Adaptive Auswahl: stärker gewichtet werden <span class='weakness'>"+labels.join("</span><span class='weakness'>")+"</span>.";
+}
+function setCodeSegment(index,ok){
+  const seg=$$("#codeSegments .code-seg")[index];if(!seg)return;
+  seg.classList.remove("unlocked","failed");void seg.offsetWidth;seg.classList.add(ok?"unlocked":"failed");
+  $("#codeCounter").textContent=`${Math.min(index+1,4)} / 4`;
+  $("#vaultStatus").textContent=ok?"CODE-FRAGMENT VERIFIZIERT":"CODE-FRAGMENT FEHLERHAFT";
+  if(ok)radarPing();else radioBurst(.18)
+}
+function resetCodeSegments(){
+  $$("#codeSegments .code-seg").forEach(s=>s.classList.remove("unlocked","failed"));
+  $("#codeCounter").textContent="0 / 4";$("#vaultStatus").textContent="ARCHIV-CODE // GESPERRT"
 }
 function renderBoss(){
  const area=$("#bossArea");area.innerHTML="";
  if(bossIndex>=bossQs.length){finishBoss();return}
- const q=bossQs[bossIndex],card=document.createElement("div");card.className="bosscard";card.innerHTML=`<h4>Frage ${bossIndex+1}/6</h4><p>${q.q}</p><div class="choice-grid"></div>`;
- [q.a,...q.o].sort(()=>Math.random()-.5).forEach(t=>{const b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",()=>{if(t===q.a){bossRight++;addScore(100);b.classList.add("correct")}else{miss($("#bossFb"),"Falsch im Boss-Finale.");b.classList.add("wrong")}bossIndex++;setTimeout(renderBoss,300)});card.querySelector(".choice-grid").appendChild(b)});area.appendChild(card)
+ const q=bossQs[bossIndex],card=document.createElement("div");card.className="bosscard";card.innerHTML=`<h4>Aktenfrage ${bossIndex+1}/4</h4><p>${q.q}</p><div class="choice-grid"></div>`;
+ [q.a,...q.o].sort(()=>Math.random()-.5).forEach(t=>{
+   const b=document.createElement("button");b.className="choice";b.textContent=t;
+   b.addEventListener("click",()=>{
+     card.querySelectorAll(".choice").forEach(x=>x.disabled=true);
+     const ok=t===q.a;
+     if(ok){bossRight++;addScore(100);b.classList.add("correct");good($("#bossFb"),"Code-Fragment bestätigt.")}
+     else{miss($("#bossFb"),"Dieses Fragment passt nicht zum Archiv-Code.");b.classList.add("wrong")}
+     setCodeSegment(bossIndex,ok);bossIndex++;setTimeout(renderBoss,1250)
+   });
+   card.querySelector(".choice-grid").appendChild(b)
+ });
+ area.appendChild(card)
 }
 function finishBoss(){
  clearInterval(bossTimer);$("#startBoss").disabled=false;
- if(bossRight>=5){good($("#bossFb"),`Boss-Finale bestanden: ${bossRight}/6 richtig.`);completeMission(8);setTimeout(finishGame,600)}
- else{miss($("#bossFb"),`Boss-Finale nicht bestanden: ${bossRight}/6. Du brauchst mindestens 5/6. Versuch es erneut.`);$("#startBoss").textContent="Boss-Finale wiederholen";$("#bossArea").innerHTML=""}
+ if(bossRight>=3){
+   const perfect=bossRight===4;
+   $("#vaultStatus").textContent=perfect?"ARCHIV-CODE // VOLLE FREIGABE":"ARCHIV-CODE // TEILFREIGABE";
+   good($("#bossFb"),perfect?"4/4 – Archiv vollständig entschlüsselt.":"3/4 – Archiv bestanden. Ein Fragment blieb unsicher.");
+   vaultSound();completeMission(8);setTimeout(finishGame,3000)
+ } else {
+   miss($("#bossFb"),`${bossRight}/4 – Für die Archivfreigabe brauchst du mindestens 3 richtige Antworten.`);
+   $("#vaultStatus").textContent="ARCHIV-CODE // ZUGRIFF VERWEIGERT";
+   $("#startBoss").textContent="Archiv-Code erneut versuchen";$("#bossArea").innerHTML="";
+ }
 }
 $("#startBoss").addEventListener("click",()=>{
- buildAdaptiveBoss();bossIndex=0;bossRight=0;bossSeconds=120;$("#bossTimer").textContent="02:00";$("#startBoss").disabled=true;$("#bossFb").className="feedback";$("#bossFb").textContent="Boss-Finale läuft.";
- renderBoss();clearInterval(bossTimer);bossTimer=setInterval(()=>{bossSeconds--;const m=String(Math.floor(bossSeconds/60)).padStart(2,"0"),s=String(bossSeconds%60).padStart(2,"0");$("#bossTimer").textContent=`${m}:${s}`;if(bossSeconds<=0){clearInterval(bossTimer);bossIndex=99;finishBoss()}},1000)
+ const launch=()=>{
+   buildAdaptiveBoss();bossIndex=0;bossRight=0;bossSeconds=90;resetCodeSegments();
+   $("#bossTimer").textContent="01:30";$("#startBoss").disabled=true;$("#bossFb").className="feedback";$("#bossFb").textContent="Entschlüsselung läuft …";
+   renderBoss();clearInterval(bossTimer);bossTimer=setInterval(()=>{
+     bossSeconds--;const m=String(Math.floor(bossSeconds/60)).padStart(2,"0"),s=String(bossSeconds%60).padStart(2,"0");$("#bossTimer").textContent=`${m}:${s}`;
+     if(bossSeconds<=0){clearInterval(bossTimer);bossIndex=99;finishBoss()}
+   },1000)
+ };
+ playFinaleUnlock(launch)
 });
 
 function finishGame(){
- $("#progressFill").style.width="100%";$("#missionHud").textContent="8/8";$("#finalScore").textContent=score;$("#finalMistakes").textContent=mistakes;$("#bestCombo").textContent=bestCombo;
- let rank,text;
- if(mistakes<=4){rank="Archivstufe: EXZELLENT";text="Sehr sichere Stoffbeherrschung: Räume, Chronologie, Ursachen und Zusammenhänge sitzen."}
- else if(mistakes<=10){rank="Archivstufe: SICHER";text="Guter Gesamtüberblick. Einzelne Details oder Zuordnungen können noch nachgeschärft werden."}
- else{rank="Archivstufe: BESTANDEN";text="Alle Missionen gelöst. Deine Fehler zeigen ziemlich genau, welche Teilthemen du noch einmal wiederholen solltest."}
- $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}: ${score} Punkte · ${mistakes} Fehler · Combo ${bestCombo}`;$("#finalText").textContent=text;show("finish");unlockSound();persistResult();
+ $("#progressFill").style.width="100%";$("#missionHud").textContent="8/8";updateMissionRail(8);
+ let rank,text;if(mistakes<=4){rank="Archivstufe: EXZELLENT";text="Sehr sichere Stoffbeherrschung: Räume, Chronologie, Ursachen und Zusammenhänge sitzen."}else if(mistakes<=10){rank="Archivstufe: SICHER";text="Guter Gesamtüberblick. Einzelne Details oder Zuordnungen können noch nachgeschärft werden."}else{rank="Archivstufe: BESTANDEN";text="Alle Missionen gelöst. Deine Fehler zeigen ziemlich genau, welche Teilthemen du noch einmal wiederholen solltest."}
+ $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}: ${score} Punkte · ${mistakes} Fehler · Serie ${bestCombo}`;$("#finalText").textContent=text;show("finish");animateCounter($("#finalScore"),score,2100);animateCounter($("#finalMistakes"),mistakes,1500);animateCounter($("#bestCombo"),bestCombo,1700);renderTopicProfile();unlockSound();persistResult();
 }
 
 // nav
@@ -1280,6 +1866,16 @@ $("#next6").addEventListener("click",()=>enterMission(7));
 $("#next7").addEventListener("click",()=>enterMission(8));
 $("#playerName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#startBtn").click()});
 $("#restartAll").addEventListener("click",()=>location.reload());
+const soundBtn=$("#soundToggle");function syncSoundBtn(){soundBtn.textContent=soundOn?"🔊":"🔇";soundBtn.setAttribute("aria-pressed",String(soundOn));soundBtn.setAttribute("aria-label",soundOn?"Ton ausschalten":"Ton einschalten")}syncSoundBtn();soundBtn.addEventListener("click",()=>{soundOn=!soundOn;localStorage.setItem("coldWarSound",soundOn?"on":"off");syncSoundBtn();if(soundOn)unlockSound()});
+
+document.addEventListener("pointerdown",e=>{
+  const btn=e.target.closest(".btn,.choice,.token,.catbtn,.move button");if(!btn||btn.disabled)return;
+  uiClickSound();
+  const r=btn.getBoundingClientRect(),s=Math.max(r.width,r.height)*1.55,sp=document.createElement("span");
+  sp.className="ui-ripple";sp.style.width=sp.style.height=s+"px";sp.style.left=(e.clientX-r.left-s/2)+"px";sp.style.top=(e.clientY-r.top-s/2)+"px";
+  btn.appendChild(sp);setTimeout(()=>sp.remove(),760)
+});
+initQR();decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
 })();
 </script>
 </body>

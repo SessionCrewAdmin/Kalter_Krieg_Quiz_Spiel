@@ -1,11 +1,11 @@
-# V12 – kompakter Anmeldebildschirm
+# V14.2 – Missile Icons auf den Karten
 
-Neu:
-- Startseite auf Desktop zweispaltig
-- Titel + Name links
-- Ziel/Ablauf/Highscore + Punkteübersicht rechts
-- deutlich weniger Höhe und damit auf Laptop/Beamer meist ohne Scrollen
-- auf Tablet/Handy automatisch wieder einspaltig
-- auf niedrigen Laptop-Auflösungen zusätzliche Kompaktregeln
+Geändert:
+- Kleine stilisierte Langstreckenraketen/ICBM-Icons wurden in die Karten-Netzwerke eingebaut.
+- Mission 1: Raketen-Icon entlang der Verbindung Washington ↔ Moskau.
+- Kuba-Krise: rote Raketen-Icons entlang der Verbindungen Kuba ↔ Washington und Kuba ↔ Moskau.
+- Vietnam: dezentes Raketen-Icon im globalen Konfliktnetzwerk.
+- Keine Cartoon-Optik, sondern zurückhaltende taktische Karten-Symbole.
+- Die technische Ziellinie aus dem letzten Fix bleibt weiterhin entfernt.
 
-Alle bisherigen Quiz-, Highscore-, Supabase- und Responsive-Funktionen bleiben erhalten.
+Alle übrigen V14.1-Funktionen bleiben unverändert.
