@@ -1,4 +1,4 @@
-const CACHE='kathleen-v21-3-live-poll-classlists-20260918';
+const CACHE='kathleen-v21-4-surprise-reveal-20260918';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
