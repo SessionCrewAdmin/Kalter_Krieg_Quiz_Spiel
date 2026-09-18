@@ -1,0 +1,22 @@
+{
+  "name": "Kathleens magische Tool und Aufgaben Kiste",
+  "short_name": "Kathleens Kiste",
+  "description": "Kathleens Unterrichtszentrale für interaktive Tools, Quizze und Aufgaben.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff9fc",
+  "theme_color": "#d58eb4",
+  "lang": "de",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {"src":"./assets/icons/kathleen-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./assets/icons/kathleen-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Geschichte","short_name":"Geschichte","url":"./?view=library&subject=Geschichte"},
+    {"name":"English","short_name":"English","url":"./?view=library&subject=Englisch"}
+  ]
+}
