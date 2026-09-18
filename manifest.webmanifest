@@ -36,6 +36,16 @@
       "name": "Homework Vouchers",
       "short_name": "Vouchers",
       "url": "tools/homework-vouchers/"
+    },
+    {
+      "name": "Live Poll",
+      "short_name": "Live Poll",
+      "url": "tools/live-poll/"
+    },
+    {
+      "name": "Klassenlisten",
+      "short_name": "Klassen",
+      "url": "tools/class-lists/"
     }
   ]
 }
