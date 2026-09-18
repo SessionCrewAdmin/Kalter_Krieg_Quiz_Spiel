@@ -250,7 +250,7 @@ syncMobileBrowserClearance();window.addEventListener('resize',syncMobileBrowserC
 let deferredInstallPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e});
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>showView(b.dataset.view));
 document.querySelectorAll('[data-back-home]').forEach(b=>b.onclick=()=>showView('home'));
-$('[data-go-subject]').forEach(b=>b.onclick=()=>{activeSubject=b.dataset.goSubject;activeGrade='all';tag='all';showView('library');render()});
+document.querySelectorAll('[data-go-subject]').forEach(b=>b.onclick=()=>{activeSubject=b.dataset.goSubject;activeGrade='all';tag='all';showView('library');render()});
 document.querySelectorAll('[data-go-view]').forEach(b=>b.onclick=()=>showView(b.dataset.goView));
 $('#sortBtn').onclick=()=>ensureAdmin(async()=>{sortMode=!sortMode;$('#sortBtn').textContent=sortMode?'✓ Sortiermodus beenden':'↕ Kacheln sortieren';showView('library');render();toast(sortMode?'Sortiermodus aktiv: Kacheln ziehen':'Sortiermodus beendet')});
 $('#detailClose').onclick=()=>$('#detailModal').classList.remove('show');
