@@ -1,8 +1,9 @@
-const CACHE='kathleen-v21-2-classroom-tools-20260918';
+const CACHE='kathleen-v21-3-live-poll-classlists-20260918';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
   './tools/classroom-tools-shared.js','./tools/randomizer/index.html','./tools/classroom-timer/index.html','./tools/team-generator/index.html',
+  './tools/class-lists/index.html','./tools/live-poll/index.html','./tools/live-poll/student.html',
   './tools/kalter-krieg/index.html','./tools/kalter-krieg/lehrer.html',
   './assets/covers/cold-war.svg','./assets/covers/english-world.svg',
   './assets/icons/app-180.png','./assets/icons/app-512.png'
