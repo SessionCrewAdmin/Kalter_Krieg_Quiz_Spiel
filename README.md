@@ -1,35 +1,41 @@
-# V15 – Classroom Control
+# Operation Kalter Krieg – V16 Adaptive Classroom
 
-## Neu
-- Lehrersteuerung direkt im Quiz
-- Unterrichts-Session mit 6-stelligem Klassen-Code
-- Schüler melden sich mit Name + Klassen-Code bereit
-- Quiz startet erst nach Lehrerfreigabe
-- synchronisierter Cold-War-Startcountdown auf allen Geräten
-- 10/15/20/25 Minuten Quizzeit auswählbar
-- 5/10/15/30 Sekunden Startcountdown
-- Lehrer kann Highscore, Hinweise und Sound für die Session einstellen
-- Lehrer sieht bereit gemeldete Schüler und eingegangene Ergebnisse
-- Klassen-Ergebnisse als CSV exportierbar
-- Schüler kann eigenes Ergebnis als CSV exportieren oder als PDF drucken
-- Score-Daten enthalten Session-Code, Bearbeitungszeit und Fehler pro Mission
-- Session-Rangliste zeigt nur Ergebnisse dieser Unterrichts-Session
+## Zeitmodi
+Bei allen 8 aktivierten Themenfeldern:
 
-## Wichtig
-Vor dem Upload von V15 einmal `V15_SUPABASE_MIGRATION.sql` im Supabase SQL Editor ausführen.
+| Modus | Aufgabenblöcke |
+| --- | ---: |
+| 5 Minuten | ca. 8 |
+| 10 Minuten | ca. 16 |
+| 15 Minuten | ca. 18 |
+| 20 Minuten | kompletter Umfang, ca. 23 |
+| Ohne Zeitlimit | kompletter Umfang, ca. 23 |
 
-## Ablauf im Unterricht
-1. Lehrkraft öffnet `https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/?teacher=1`.
-2. Einstellungen wählen und „Neue Unterrichts-Session“ drücken.
-3. 6-stelligen Klassen-Code am Beamer zeigen.
-4. Schüler scannen den festen QR-Code und geben Name + Klassen-Code ein.
-5. Schüler drücken „Bereit melden“.
-6. Lehrkraft sieht die Bereit-Liste.
-7. „START FREIGEBEN“ drücken.
-8. Auf allen Geräten läuft synchron der Cold-War-Countdown.
-9. Bei T–00 startet das Quiz automatisch.
+Die Zahlen sind Aufgabenblöcke. Mehrstufige Quellen-, Karten- oder Krisenaufgaben können innerhalb eines Blocks mehrere Interaktionen enthalten.
 
-Der Lehrer-Schlüssel wird pro Session zufällig auf dem Server erzeugt und nur im Lehrerbrowser gespeichert. Schüler erhalten nur den Klassen-Code.
+## Themenauswahl
+Im Lehrermodus können Mission 1–8 einzeln an- oder abgewählt werden.
+Der Umfang wird automatisch neu berechnet. Mindestens ein Themenfeld muss aktiv sein.
 
+## Wenn die Zeit abläuft
+- Bei 60 Sekunden wird die Uhr rot.
+- Die letzten 10 Sekunden erhalten akustische Radar-Pings.
+- Bei 00:00 werden weitere Eingaben gesperrt.
+- Für ca. 4,5 Sekunden erscheint „ZEITFENSTER GESCHLOSSEN“.
+- Der aktuelle Stand wird automatisch gespeichert.
+- Danach öffnet sich die persönliche Auswertung.
+- Nicht beantwortete Aufgaben geben 0 Punkte, zählen aber NICHT als Fehler.
 
-Der Lehrermodus ist auf der Schüler-Startseite absichtlich nicht verlinkt.
+## Ohne Zeitlimit
+- Vollständiger Umfang der ausgewählten Missionen.
+- HUD zeigt ∞.
+- Kein automatisches Ende.
+
+## Supabase
+Vor Nutzung von V16 einmal `V16_SUPABASE_MIGRATION.sql` im SQL Editor ausführen.
+V15 muss vorher bereits eingerichtet sein.
+
+## Lehrer
+`https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/?teacher=1`
+
+Der bestehende Klassen-Code-, Lehrerfreigabe-, Cold-War-Countdown-, Export- und Highscore-Workflow bleibt erhalten.

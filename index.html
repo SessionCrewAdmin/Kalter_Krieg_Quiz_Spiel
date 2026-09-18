@@ -757,6 +757,41 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
   .topic-chip,.profile-summary-card,.stat{color:#000!important;background:#fff!important;border:1px solid #bbb!important}
 }
 
+
+/* =========================================================
+   V16 ADAPTIVE TIME MODES + MISSION SELECTION
+   ========================================================= */
+.mission-select-wrap{margin-top:14px}
+.mission-select-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+.mission-select-head b{font-size:12px;text-transform:uppercase;letter-spacing:.10em}
+.mission-select-actions{display:flex;gap:6px}
+.mission-select-actions button{border:1px solid var(--line);background:#091822;color:var(--muted);border-radius:8px;padding:6px 8px;cursor:pointer;font:800 11px/1 Inter,Arial,sans-serif}
+.mission-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.mission-pick{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px;background:rgba(255,255,255,.025);cursor:pointer;min-width:0}
+.mission-pick input{width:18px;height:18px;margin:1px 0 0;flex:0 0 auto}
+.mission-pick span{min-width:0;font-size:12px;font-weight:850;line-height:1.25}
+.mission-pick small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.scope-preview{margin-top:10px;border:1px solid rgba(215,177,91,.25);background:rgba(215,177,91,.055);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--muted)}
+.scope-preview b{color:var(--gold)}
+.scope-preview.bad{border-color:rgba(214,91,91,.35);color:#dc7171;background:rgba(214,91,91,.055)}
+.mission-dot.disabled{opacity:.22;filter:grayscale(1)}
+.mission-dot.disabled::after{content:"×";position:absolute;inset:auto -3px -5px auto;font-size:10px;color:var(--muted)}
+.plan-skipped{display:none!important}
+.time-expired-overlay{position:fixed;inset:0;z-index:9995;display:none;place-items:center;background:#04080b;padding:18px;overflow:hidden}
+.time-expired-overlay.show{display:grid}
+.time-expired-overlay::before{content:"";position:absolute;inset:-25%;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 5px),radial-gradient(circle at center,rgba(173,45,40,.20),transparent 38%);animation:expiredScan 1.2s linear infinite}
+@keyframes expiredScan{to{transform:translateY(12px)}}
+.expired-card{width:min(760px,94vw);position:relative;z-index:2;border:1px solid #5b302d;border-radius:16px;background:linear-gradient(180deg,#161414,#080b0c);padding:24px;text-align:center;box-shadow:0 0 0 8px rgba(0,0,0,.3),0 40px 100px rgba(0,0,0,.7)}
+.expired-kicker{font:900 11px/1.2 ui-monospace,monospace;color:#c25d58;letter-spacing:.16em;text-transform:uppercase}
+.expired-title{margin:14px 0 8px;font:1000 clamp(42px,10vw,82px)/.95 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d85e55;text-shadow:0 0 10px rgba(216,94,85,.6),0 0 36px rgba(216,94,85,.22)}
+.expired-sub{font:800 14px/1.5 Inter,Arial,sans-serif;color:#b2a99e}
+.expired-bar{height:8px;border:1px solid #5a3732;background:#1a0b0a;border-radius:99px;margin-top:18px;overflow:hidden}
+.expired-bar::after{content:"";display:block;height:100%;width:100%;background:#c9544c;animation:expiredDrain 4.5s linear forwards}
+@keyframes expiredDrain{to{width:0}}
+.mode-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.mode-badge strong{color:var(--gold)}
+@media(max-width:700px){.mission-picker{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -794,10 +829,11 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
             <div>
               <label for="teacherDuration">Quizzeit</label>
               <select id="teacherDuration">
-                <option value="600">10 Minuten</option>
-                <option value="900" selected>15 Minuten</option>
-                <option value="1200">20 Minuten</option>
-                <option value="1500">25 Minuten</option>
+                <option value="300">5 Minuten · Blitzrunde</option>
+                <option value="600">10 Minuten · Kompakt</option>
+                <option value="900" selected>15 Minuten · Standard</option>
+                <option value="1200">20 Minuten · Vollständig</option>
+                <option value="0">Ohne Zeitlimit · Vollständig</option>
               </select>
             </div>
             <div>
@@ -813,12 +849,34 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
           <label class="teacher-check"><input type="checkbox" id="settingHighscore" checked> Klassenrangliste am Ende anzeigen</label>
           <label class="teacher-check"><input type="checkbox" id="settingHints" checked> Hinweise nach Fehlern erlauben</label>
           <label class="teacher-check"><input type="checkbox" id="settingSound" checked> Soundeffekte erlauben</label>
-          <button class="btn btn-primary" id="createSession" type="button" style="margin-top:14px">Neue Unterrichts-Session</button>
+          
+          <div class="mission-select-wrap">
+            <div class="mission-select-head">
+              <b>Themenfelder</b>
+              <div class="mission-select-actions">
+                <button type="button" id="selectAllMissions">Alle</button>
+                <button type="button" id="selectNoMissions">Keine</button>
+              </div>
+            </div>
+            <div class="mission-picker" id="missionPicker">
+              <label class="mission-pick"><input type="checkbox" value="1" checked><span>1 · Weltordnung<small>Supermächte & Bipolarität</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="2" checked><span>2 · Blockbildung<small>West, Ost & Blockfreie</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="3" checked><span>3 · Feindbilder<small>Propaganda & Abschreckung</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="4" checked><span>4 · Deutschland<small>BRD, DDR & Berlin</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="5" checked><span>5 · Kuba-Krise<small>Eskalation & Geheimakte</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="6" checked><span>6 · Vietnam<small>Regionaler Krieg & Systemkonflikt</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="7" checked><span>7 · Entspannung<small>Ostpolitik & Konfrontation</small></span></label>
+              <label class="mission-pick"><input type="checkbox" value="8" checked><span>8 · Ende des Kalten Krieges<small>Umbrüche & Archiv-Finale</small></span></label>
+            </div>
+            <div class="scope-preview" id="scopePreview"></div>
+          </div>
+<button class="btn btn-primary" id="createSession" type="button" style="margin-top:14px">Neue Unterrichts-Session</button>
         </div>
 
         <div class="teacher-card">
           <h3>2 · Session</h3>
           <div class="teacher-statusline" id="teacherSessionStatus">Noch keine Session erstellt.</div>
+          <div class="mode-badge" id="teacherModeBadge">Modus: <strong>15 Min.</strong></div>
           <div class="session-code-big" id="teacherCode">------</div>
           <div class="small" id="teacherJoinUrl">Der Klassen-Code erscheint hier.</div>
           <div class="control-clock"><div class="digits" id="teacherClock">--:--</div><small id="teacherClockLabel">Warte auf Session</small></div>
@@ -1345,9 +1403,12 @@ const SUPABASE_URL = "https://fzqxnjhuvgpgovcovosl.supabase.co"; // Supabase pro
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV"; // public browser key
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
-let currentSessionCode="",sessionStartedAt=null,sessionDuration=900,sessionSettings={show_highscore:true,hints:true,sound:true};
-let sessionPoll=null,sessionClockTimer=null,sessionJoined=false,sessionStarted=false;
-let teacherSessionCode="",teacherKey="",teacherPoll=null,teacherResultsCache=[];
+let currentSessionCode="",sessionStartedAt=null,sessionDuration=900,sessionSettings={show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8]};
+let sessionPoll=null,sessionClockTimer=null,sessionJoined=false,sessionStarted=false,gameFinished=false,endedByTime=false;
+let teacherSessionCode="",teacherKey="",teacherPoll=null,teacherResultsCache=[],teacherUiHydratedCode="";
+let activeMissions=[1,2,3,4,5,6,7,8],allowedPanels=new Set(),quizModeSeconds=900;
+const missionPanelOrder={1:["m1bPanel","m1cPanel"],2:["m2bPanel"],3:["m3bPanel","m3cPanel"],4:["m4bPanel","m4cPanel"],5:["m5sourcePanel","m5bPanel","m5cPanel"],6:["m6bPanel","m6cPanel"],7:["m7bPanel","m7cPanel"],8:["m8bPanel"]};
+const missionTitles={1:"Weltordnung",2:"Blockbildung",3:"Feindbilder",4:"Deutschland",5:"Kuba-Krise",6:"Vietnam",7:"Entspannung",8:"Ende des Kalten Krieges"};
 const missionErrors=Array(9).fill(0); const weakTopics={};
 const completed=new Set();
 const motionOK=!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1408,7 +1469,10 @@ async function saveRemoteScore(entry){
       best_combo:entry.bestCombo,
       session_code:entry.sessionCode||null,
       elapsed_seconds:entry.elapsedSeconds||null,
-      topic_errors:entry.topicErrors||{}
+      topic_errors:entry.topicErrors||{},
+      completion_status:entry.completionStatus||"complete",
+      selected_missions:entry.selectedMissions||[],
+      time_mode_seconds:entry.timeMode??null
     })
   });
   if(!r.ok) throw new Error("save-failed");
@@ -1416,11 +1480,11 @@ async function saveRemoteScore(entry){
 async function fetchRemoteScores(){
   if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) throw new Error("not-configured");
   const filter=currentSessionCode?"&session_code=eq."+encodeURIComponent(currentSessionCode):"";
-  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at,session_code,elapsed_seconds,topic_errors&order=score.desc,mistakes.asc,best_combo.desc&limit=50"+filter;
+  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at,session_code,elapsed_seconds,topic_errors,completion_status,selected_missions,time_mode_seconds&order=score.desc,mistakes.asc,best_combo.desc&limit=50"+filter;
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});
   if(!r.ok) throw new Error("fetch-failed");
   const rows=await r.json();
-  return rows.map(x=>({name:x.player_name,score:x.score,mistakes:x.mistakes,bestCombo:x.best_combo||0,elapsedSeconds:x.elapsed_seconds||null,topicErrors:x.topic_errors||{},completedAt:x.completed_at,sessionCode:x.session_code||""}));
+  return rows.map(x=>({name:x.player_name,score:x.score,mistakes:x.mistakes,bestCombo:x.best_combo||0,elapsedSeconds:x.elapsed_seconds||null,topicErrors:x.topic_errors||{},completedAt:x.completed_at,sessionCode:x.session_code||"",completionStatus:x.completion_status||"complete",selectedMissions:x.selected_missions||[],timeMode:x.time_mode_seconds}));
 }
 function renderLeaderboard(rows){
   const box=$("#leaderboardRows");box.innerHTML="";
@@ -1432,8 +1496,8 @@ function renderLeaderboard(rows){
     box.appendChild(row);
   });
 }
-async function persistResult(){
-  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString(),sessionCode:currentSessionCode,elapsedSeconds:sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):null,topicErrors:Object.fromEntries(Array.from({length:8},(_,i)=>[String(i+1),missionErrors[i+1]]))};
+async function persistResult(reason="complete"){
+  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString(),sessionCode:currentSessionCode,elapsedSeconds:sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):null,topicErrors:Object.fromEntries(Array.from({length:8},(_,i)=>[String(i+1),missionErrors[i+1]])),completionStatus:reason==="timeout"?"timeout":"complete",selectedMissions:[...activeMissions],timeMode:sessionDuration};
   $("#saveStatus").textContent="Ergebnis wird gespeichert …";
   if(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY){
     try{
@@ -1480,26 +1544,106 @@ async function joinSession(code,name){
 function setSessionState(text,kind=""){
   const el=$("#sessionState");if(!el)return;el.className="session-state"+(kind?" "+kind:"");el.textContent=text
 }
+
+function maxTaskBlocks(n){return 1+(missionPanelOrder[n]?.length||0)}
+function quotaForMode(seconds,n){
+  if(seconds===300)return 1;
+  if(seconds===600)return Math.min(2,maxTaskBlocks(n));
+  if(seconds===900){
+    const q={1:3,2:2,3:2,4:3,5:2,6:2,7:2,8:2};
+    return Math.min(q[n]||2,maxTaskBlocks(n))
+  }
+  return maxTaskBlocks(n);
+}
+function taskCountFor(seconds,missions){return missions.reduce((sum,n)=>sum+quotaForMode(seconds,n),0)}
+function modeLabel(seconds){
+  if(seconds===0)return"Ohne Zeitlimit";
+  if(seconds===300)return"5 Min. · Blitzrunde";
+  if(seconds===600)return"10 Min. · Kompakt";
+  if(seconds===900)return"15 Min. · Standard";
+  if(seconds===1200)return"20 Min. · Vollständig";
+  return `${Math.round(seconds/60)} Min.`
+}
+function normalizeMissions(arr){
+  const a=(Array.isArray(arr)?arr:[]).map(Number).filter(n=>n>=1&&n<=8);
+  return [...new Set(a)].sort((a,b)=>a-b)
+}
+function configureQuizPlan(){
+  activeMissions=normalizeMissions(sessionSettings.active_missions);
+  if(!activeMissions.length)activeMissions=[1,2,3,4,5,6,7,8];
+  quizModeSeconds=Number(sessionDuration)||0;
+  allowedPanels=new Set();
+  for(const n of activeMissions){
+    const extra=Math.max(0,quotaForMode(quizModeSeconds,n)-1);
+    (missionPanelOrder[n]||[]).slice(0,extra).forEach(id=>allowedPanels.add(id))
+  }
+  Object.entries(missionPanelOrder).forEach(([n,ids])=>{
+    ids.forEach(id=>$("#"+id)?.classList.toggle("plan-skipped",!allowedPanels.has(id)))
+  });
+  $$(".mission-dot").forEach(d=>d.classList.toggle("disabled",!activeMissions.includes(Number(d.dataset.mission))));
+}
+function nextActiveMission(after){return activeMissions.find(n=>n>after)||null}
+function missionPosition(n){const i=activeMissions.indexOf(n);return i<0?0:i+1}
+function finishMissionEarly(n){
+  completeMission(n);
+  const nextBtn=$("#next"+n);
+  if(nextBtn){
+    nextBtn.disabled=false;
+    const next=nextActiveMission(n);
+    nextBtn.textContent=next?`Mission ${next} freigeben`:"Auswertung öffnen"
+  }else if(n===8){setTimeout(()=>finishGame("complete"),1200)}
+}
+function unlockPlanned(id){
+  if(allowedPanels.has(id))return false;
+  const m=Number((id.match(/^m(\d+)/)||[])[1]);if(!m)return false;
+  const order=missionPanelOrder[m]||[],idx=order.indexOf(id);
+  const later=order.slice(idx+1).find(x=>allowedPanels.has(x));
+  if(later){unlock(later);return true}
+  finishMissionEarly(m);return true
+}
+function goNextMission(from){
+  const next=nextActiveMission(from);
+  if(next){enterMission(next);if(next===5)initM5();if(next===6)initM6()}
+  else finishGame("complete")
+}
+
 function applySessionSettings(s){
-  sessionSettings=Object.assign({show_highscore:true,hints:true,sound:true},s||{});
+  sessionSettings=Object.assign({show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8]},s||{});
+  activeMissions=normalizeMissions(sessionSettings.active_missions);
+  if(!activeMissions.length)activeMissions=[1,2,3,4,5,6,7,8];
+  configureQuizPlan();
   if(sessionSettings.sound===false){soundOn=false;localStorage.setItem("coldWarSound","off");$("#soundToggle").textContent="🔇";$("#soundToggle").disabled=true}
 }
 function startQuizClock(){
   if(!sessionStartedAt)return;
-  $("#sessionTimePill").classList.add("on");
   clearInterval(sessionClockTimer);
+  if(Number(sessionDuration)===0){
+    $("#sessionTimePill").classList.add("on");$("#sessionTime").textContent="∞";$("#sessionTimePill").style.borderColor="rgba(215,177,91,.38)";
+    return
+  }
+  $("#sessionTimePill").classList.add("on");
+  let lastWarn=-1;
   const tick=()=>{
+    if(gameFinished){clearInterval(sessionClockTimer);return}
     const end=sessionStartedAt+sessionDuration*1000,remain=Math.max(0,Math.ceil((end-Date.now())/1000));
-    const m=String(Math.floor(remain/60)).padStart(2,"0"),s=String(remain%60).padStart(2,"0");
-    $("#sessionTime").textContent=`${m}:${s}`;
-    $("#sessionTimePill").style.borderColor=remain<=60?"rgba(214,91,91,.65)":"";
+    const mm=String(Math.floor(remain/60)).padStart(2,"0"),ss=String(remain%60).padStart(2,"0");
+    $("#sessionTime").textContent=`${mm}:${ss}`;
+    $("#sessionTimePill").style.borderColor=remain<=60?"rgba(214,91,91,.75)":"";
+    if(remain<=10&&remain>0&&remain!==lastWarn){lastWarn=remain;radarPing()}
+    if(remain<=0){clearInterval(sessionClockTimer);timeExpired()}
   };
-  tick();sessionClockTimer=setInterval(tick,500)
+  tick();sessionClockTimer=setInterval(tick,250)
+}
+function timeExpired(){
+  if(gameFinished||endedByTime)return;endedByTime=true;
+  document.querySelector(".screen.active")?.querySelectorAll(".btn,.choice,.token,.catbtn,.multi-item button,.move button").forEach(x=>x.disabled=true);
+  const o=$("#timeExpiredOverlay");o.classList.add("show");radioBurst(.5);alarmSound();
+  setTimeout(()=>{vaultSound();o.classList.remove("show");finishGame("timeout")},4600)
 }
 function beginClassQuiz(){
   if(sessionStarted)return;sessionStarted=true;clearInterval(sessionPoll);
   $("#launchOverlay").classList.remove("show");
-  radioBurst(.42);unlockSound();startQuizClock();setTimeout(()=>enterMission(1),300)
+  radioBurst(.42);unlockSound();startQuizClock();setTimeout(()=>goNextMission(0),300)
 }
 function runLaunchCountdown(startAt){
   const target=new Date(startAt).getTime();sessionStartedAt=target;
@@ -1520,7 +1664,7 @@ async function pollStudentSession(){
   try{
     const s=await fetchSession(currentSessionCode);
     if(!s){setSessionState("Session nicht gefunden.","bad");return}
-    sessionDuration=Number(s.duration_seconds)||900;applySessionSettings(s.settings||{});
+    sessionDuration=Number(s.duration_seconds);if(!Number.isFinite(sessionDuration))sessionDuration=900;applySessionSettings(s.settings||{});
     if(s.status==="waiting"){setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","wait");return}
     if(s.status==="closed"){setSessionState("Diese Session wurde geschlossen.","bad");clearInterval(sessionPoll);return}
     if(s.status==="armed"&&s.start_at){
@@ -1539,8 +1683,8 @@ async function studentReady(){
     const s=await fetchSession(code);
     if(!s){throw new Error("not-found")}
     if(s.status==="closed")throw new Error("closed");
-    await joinSession(code,n);sessionJoined=true;sessionDuration=Number(s.duration_seconds)||900;applySessionSettings(s.settings||{});
-    setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","good");
+    await joinSession(code,n);sessionJoined=true;sessionDuration=Number(s.duration_seconds);if(!Number.isFinite(sessionDuration))sessionDuration=900;applySessionSettings(s.settings||{});
+    setSessionState(`Bereit gemeldet · ${activeMissions.length} Themenfeld${activeMissions.length===1?"":"er"} · Warte auf Freigabe durch die Lehrkraft.`,"good");
     clearInterval(sessionPoll);await pollStudentSession();sessionPoll=setInterval(pollStudentSession,1250)
   }catch(e){
     $("#startBtn").disabled=false;$("#startBtn").textContent="Bereit melden";
@@ -1551,18 +1695,30 @@ async function studentReady(){
 /* teacher control */
 function teacherStoreKey(code,key){localStorage.setItem("cwTeacherSession",JSON.stringify({code,key}))}
 function teacherLoadKey(){try{return JSON.parse(localStorage.getItem("cwTeacherSession")||"null")}catch(e){return null}}
+function getTeacherSelectedMissions(){return $$("#missionPicker input[type=checkbox]:checked").map(x=>Number(x.value)).sort((a,b)=>a-b)}
 function teacherSettingsPayload(){
   return {
     show_highscore:$("#settingHighscore").checked,
     hints:$("#settingHints").checked,
     sound:$("#settingSound").checked,
-    countdown_seconds:Number($("#teacherCountdown").value)||10
+    countdown_seconds:Number($("#teacherCountdown").value)||10,
+    active_missions:getTeacherSelectedMissions()
   }
 }
+function updateScopePreview(){
+  const missions=getTeacherSelectedMissions(),seconds=Number($("#teacherDuration").value),box=$("#scopePreview"),badge=$("#teacherModeBadge");
+  const count=taskCountFor(seconds,missions);
+  badge.innerHTML=`Modus: <strong>${modeLabel(seconds)}</strong>`;
+  if(!missions.length){box.className="scope-preview bad";box.innerHTML="<b>Keine Mission ausgewählt.</b> Bitte mindestens ein Themenfeld aktivieren.";return false}
+  box.className="scope-preview";
+  box.innerHTML=`<b>${missions.length} Themenfeld${missions.length===1?"":"er"} · ca. ${count} Aufgabenblöcke</b><br>${seconds===0?"Kein Zeitablauf – vollständiger Umfang der ausgewählten Missionen.":`${modeLabel(seconds)} – Umfang wird automatisch an die Zeit angepasst.`}`;
+  return true
+}
 async function createTeacherSession(){
+  if(!updateScopePreview())return;
   $("#createSession").disabled=true;$("#teacherSessionStatus").textContent="Session wird erstellt …";
   try{
-    const data=await rpc("create_quiz_session",{p_duration_seconds:Number($("#teacherDuration").value)||900,p_settings:teacherSettingsPayload()});
+    const data=await rpc("create_quiz_session",{p_duration_seconds:Number($("#teacherDuration").value),p_settings:teacherSettingsPayload()});
     const row=Array.isArray(data)?data[0]:data;if(!row?.code||!row?.teacher_key)throw new Error("bad-response");
     teacherSessionCode=row.code;teacherKey=row.teacher_key;teacherStoreKey(teacherSessionCode,teacherKey);
     teacherActivateUI();await refreshTeacherPanel();startTeacherPolling()
@@ -1578,7 +1734,7 @@ async function controlTeacher(action){
   if(!teacherSessionCode||!teacherKey)return;
   const payload={
     p_code:teacherSessionCode,p_teacher_key:teacherKey,p_action:action,
-    p_duration_seconds:Number($("#teacherDuration").value)||900,
+    p_duration_seconds:Number($("#teacherDuration").value),
     p_countdown_seconds:Number($("#teacherCountdown").value)||10,
     p_settings:teacherSettingsPayload()
   };
@@ -1592,7 +1748,7 @@ async function fetchReady(code){
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
 }
 async function fetchTeacherResults(code){
-  const u=`${SUPABASE_URL}/rest/v1/scores?select=player_name,score,mistakes,best_combo,elapsed_seconds,topic_errors,completed_at&session_code=eq.${encodeURIComponent(code)}&order=score.desc,mistakes.asc,best_combo.desc`;
+  const u=`${SUPABASE_URL}/rest/v1/scores?select=player_name,score,mistakes,best_combo,elapsed_seconds,topic_errors,completed_at,completion_status,selected_missions,time_mode_seconds&session_code=eq.${encodeURIComponent(code)}&order=score.desc,mistakes.asc,best_combo.desc`;
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
 }
 function renderReady(rows){
@@ -1601,7 +1757,7 @@ function renderReady(rows){
 }
 function renderTeacherResults(rows){
   teacherResultsCache=rows;$("#resultCount").textContent=rows.length;const box=$("#teacherResults");
-  box.innerHTML=rows.length?'<div class="teacher-row head"><div>Name</div><div>Punkte</div><div>Fehler</div><div>Zeit</div></div>'+rows.map(r=>`<div class="teacher-row"><div>${escapeHtml(r.player_name)}</div><div>${r.score}</div><div>${r.mistakes}</div><div>${fmtSec(r.elapsed_seconds)}</div></div>`).join(""):'<div class="small">Noch keine Ergebnisse.</div>'
+  box.innerHTML=rows.length?'<div class="teacher-row head"><div>Name</div><div>Punkte</div><div>Fehler</div><div>Status</div></div>'+rows.map(r=>`<div class="teacher-row"><div>${escapeHtml(r.player_name)}</div><div>${r.score}</div><div>${r.mistakes}</div><div>${r.completion_status==="timeout"?"Zeit":"Fertig"}</div></div>`).join(""):'<div class="small">Noch keine Ergebnisse.</div>'
 }
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function updateTeacherClock(session){
@@ -1612,7 +1768,8 @@ function updateTeacherClock(session){
   if(session.status==="armed"&&session.start_at){
     const start=new Date(session.start_at).getTime();
     if(now<start){const s=Math.max(0,Math.ceil((start-now)/1000));$("#teacherClock").textContent=`T-${String(s).padStart(2,"0")}`;$("#teacherClockLabel").textContent="Startfreigabe läuft";return}
-    const end=start+(Number(session.duration_seconds)||900)*1000,rem=Math.max(0,Math.ceil((end-now)/1000));
+    if(Number(session.duration_seconds)===0){$("#teacherClock").textContent="∞";$("#teacherClockLabel").textContent="Ohne Zeitlimit";return}
+    const end=start+Number(session.duration_seconds)*1000,rem=Math.max(0,Math.ceil((end-now)/1000));
     $("#teacherClock").textContent=fmtSec(rem);$("#teacherClockLabel").textContent=rem?"Quizzeit läuft":"Zeitfenster abgelaufen";return
   }
 }
@@ -1620,7 +1777,18 @@ async function refreshTeacherPanel(){
   if(!teacherSessionCode)return;
   try{
     const [s,joins,res]=await Promise.all([fetchSession(teacherSessionCode),fetchReady(teacherSessionCode),fetchTeacherResults(teacherSessionCode)]);
-    $("#teacherSessionStatus").textContent=s?`STATUS: ${s.status.toUpperCase()} · Dauer ${Math.round((s.duration_seconds||900)/60)} min`:"Session nicht gefunden.";
+    $("#teacherSessionStatus").textContent=s?`STATUS: ${s.status.toUpperCase()} · ${Number(s.duration_seconds)===0?"ohne Zeitlimit":`Dauer ${Math.round(s.duration_seconds/60)} min`}`:"Session nicht gefunden.";
+    if(s&&teacherUiHydratedCode!==teacherSessionCode){
+      teacherUiHydratedCode=teacherSessionCode;
+      $("#teacherDuration").value=String(Number(s.duration_seconds));
+      const st=s.settings||{},active=normalizeMissions(st.active_missions?.length?st.active_missions:[1,2,3,4,5,6,7,8]);
+      $$("#missionPicker input").forEach(x=>x.checked=active.includes(Number(x.value)));
+      if(typeof st.show_highscore==="boolean")$("#settingHighscore").checked=st.show_highscore;
+      if(typeof st.hints==="boolean")$("#settingHints").checked=st.hints;
+      if(typeof st.sound==="boolean")$("#settingSound").checked=st.sound;
+      if(st.countdown_seconds)$("#teacherCountdown").value=String(st.countdown_seconds);
+      updateScopePreview()
+    }
     updateTeacherClock(s);renderReady(joins);renderTeacherResults(res)
   }catch(e){console.warn(e)}
 }
@@ -1634,18 +1802,18 @@ function downloadText(filename,text,type="text/csv;charset=utf-8"){
 }
 function exportClassCSV(){
   if(!teacherResultsCache.length)return;
-  const head=["Name","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Mission 1 Fehler","Mission 2 Fehler","Mission 3 Fehler","Mission 4 Fehler","Mission 5 Fehler","Mission 6 Fehler","Mission 7 Fehler","Mission 8 Fehler","Abgabe"];
+  const head=["Name","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Mission 1 Fehler","Mission 2 Fehler","Mission 3 Fehler","Mission 4 Fehler","Mission 5 Fehler","Mission 6 Fehler","Mission 7 Fehler","Mission 8 Fehler","Abgabe"];
   const rows=teacherResultsCache.map(r=>{
     const t=r.topic_errors||{};
-    return [r.player_name,r.score,r.mistakes,r.best_combo,r.elapsed_seconds,...Array.from({length:8},(_,i)=>t[String(i+1)]??0),r.completed_at]
+    return [r.player_name,r.score,r.mistakes,r.best_combo,r.elapsed_seconds,r.completion_status||"complete",r.time_mode_seconds??"",Array.isArray(r.selected_missions)?r.selected_missions.join(","):"",...Array.from({length:8},(_,i)=>t[String(i+1)]??0),r.completed_at]
   });
   downloadText(`Kalter_Krieg_${teacherSessionCode}_Ergebnisse.csv`,[head,...rows].map(r=>r.map(csvEscape).join(";")).join("\n"))
 }
 function exportOwnCSV(){
   const strong=$("#strongTopic")?.textContent||"",weak=$("#revisitTopic")?.textContent||"";
   const elapsed=sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):"";
-  const head=["Name","Session","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Stärkstes Thema","Wiederholen",...Array.from({length:8},(_,i)=>`Mission ${i+1} Fehler`)];
-  const row=[playerName,currentSessionCode,score,mistakes,bestCombo,elapsed,strong,weak,...Array.from({length:8},(_,i)=>missionErrors[i+1])];
+  const head=["Name","Session","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Stärkstes Thema","Wiederholen",...Array.from({length:8},(_,i)=>`Mission ${i+1} Fehler`)];
+  const row=[playerName,currentSessionCode,score,mistakes,bestCombo,elapsed,endedByTime?"timeout":"complete",sessionDuration,activeMissions.join(","),strong,weak,...Array.from({length:8},(_,i)=>missionErrors[i+1])];
   downloadText(`Kalter_Krieg_${playerName.replace(/\s+/g,"_")}_Ergebnis.csv`,[head,row].map(r=>r.map(csvEscape).join(";")).join("\n"))
 }
 
@@ -1720,30 +1888,41 @@ function typeQuote(panel){
   const tick=()=>{qt.textContent=full.slice(0,i++);if(i%5===0)typeTap();if(i<=full.length)setTimeout(tick,28+Math.random()*24);else qt.classList.remove("typing")};tick()
 }
 function unlock(id){
+  if(!allowedPanels.has(id)&&Object.values(missionPanelOrder).some(list=>list.includes(id))){if(unlockPlanned(id))return}
   const next=$("#"+id);if(!next)return;next.classList.remove("locked");
   const screen=next.closest(".screen");if(screen){[...screen.querySelectorAll(".panel")].forEach(p=>{if(p!==next&&!p.classList.contains("locked"))p.classList.add("completed-step")})}
   next.classList.remove("completed-step");if(id==="m3cPanel"||id==="m7cPanel")setTimeout(()=>typeQuote(next),220);
   requestAnimationFrame(()=>next.scrollIntoView({behavior:motionOK?"smooth":"auto",block:"start"}))
 }
-function updateMissionRail(n){$$('.mission-dot').forEach(d=>{const m=Number(d.dataset.mission);d.classList.toggle('done',completed.has(m));d.classList.toggle('current',m===n)})}
+function updateMissionRail(n){$$('.mission-dot').forEach(d=>{const m=Number(d.dataset.mission);d.classList.toggle('done',completed.has(m));d.classList.toggle('current',m===n);d.classList.toggle('disabled',!activeMissions.includes(m))})}
 function show(id){$$('.screen').forEach(s=>s.classList.remove('active'));$("#"+id).classList.add('active');document.body.classList.toggle('crisis-mode',id==='m5');window.scrollTo({top:0,behavior:motionOK?'smooth':'auto'})}
 function playMissionTransition(n,title){
   const o=$("#missionTransition");if(!o||!motionOK)return;$("#transitionNum").textContent=String(n).padStart(2,'0');$("#transitionTitle").textContent=title;o.classList.remove('play');void o.offsetWidth;o.classList.add('play');setTimeout(()=>o.classList.remove('play'),2520)
 }
 function enterMission(n){
-  currentMission=n;missionSnapshots[n]={score,mistakes};$("#missionHud").textContent=n+"/8";$("#progressFill").style.width=((n-1)/8*100)+"%";show("m"+n);
+  if(!activeMissions.includes(n)){goNextMission(n);return}
+  currentMission=n;missionSnapshots[n]={score,mistakes};
+  const pos=missionPosition(n),total=activeMissions.length;
+  $("#missionHud").textContent=pos+"/"+total;$("#progressFill").style.width=((pos-1)/Math.max(1,total)*100)+"%";show("m"+n);
   const el=$("#m"+n),title=el.querySelector('.mission-head h2')?.textContent||('Mission '+n);updateMissionRail(n);playMissionTransition(n,title);
-  const available=[...el.querySelectorAll('.panel')].filter(p=>!p.classList.contains('locked'));if(available.length)available.forEach((p,i)=>p.classList.toggle('completed-step',i!==available.length-1));
-  el.classList.remove('unlockflash');void el.offsetWidth;el.classList.add('unlockflash');unlockSound();if(n===5){el.classList.add('alarmPulse');alarmSound();radioBurst(.28);setTimeout(()=>el.classList.remove('alarmPulse'),3600)}
+  const available=[...el.querySelectorAll('.panel')].filter(p=>!p.classList.contains('locked')&&!p.classList.contains('plan-skipped'));
+  if(available.length)available.forEach((p,i)=>p.classList.toggle('completed-step',i!==available.length-1));
+  const nav=$("#next"+n);if(nav){const nx=nextActiveMission(n);nav.textContent=nx?`Mission ${nx} freigeben`:"Auswertung öffnen"}
+  el.classList.remove('unlockflash');void el.offsetWidth;el.classList.add('unlockflash');unlockSound();
+  if(n===5){el.classList.add('alarmPulse');alarmSound();radioBurst(.28);setTimeout(()=>el.classList.remove('alarmPulse'),3600)}
 }
 function playCompleteStamp(n){
   const o=$("#missionComplete");if(!o)return;const snap=missionSnapshots[n]||{score:0,mistakes:0};$("#completeStamp").textContent='Akte '+String(n).padStart(2,'0')+' abgeschlossen';$("#completeMeta").textContent='+'+(score-snap.score)+' Punkte · '+(mistakes-snap.mistakes)+' Fehler';o.classList.remove('show');void o.offsetWidth;o.classList.add('show');setTimeout(()=>o.classList.remove('show'),2280)
 }
-function completeMission(n){if(!completed.has(n)){completed.add(n);addScore(200);playCompleteStamp(n)}$("#progressFill").style.width=(n/8*100)+"%";updateMissionRail(currentMission)}
+function completeMission(n){
+  if(!completed.has(n)){completed.add(n);addScore(200);playCompleteStamp(n)}
+  const done=activeMissions.filter(x=>completed.has(x)).length;
+  $("#progressFill").style.width=(done/Math.max(1,activeMissions.length)*100)+"%";updateMissionRail(currentMission)
+}
 $("#startBtn").addEventListener("click",()=>{
   if(new URLSearchParams(location.search).get("practice")==="1"){
     const n=safeName($("#playerName").value);if(n.length<2){$("#nameError").textContent="Bitte gib mindestens 2 Zeichen ein.";return}
-    playerName=n;$("#nameError").textContent="";radioBurst(.42);unlockSound();sessionStartedAt=Date.now();setTimeout(()=>enterMission(1),260);return
+    playerName=n;$("#nameError").textContent="";radioBurst(.42);unlockSound();sessionStartedAt=Date.now();sessionDuration=0;sessionSettings.active_missions=[1,2,3,4,5,6,7,8];configureQuizPlan();setTimeout(()=>goNextMission(0),260);return
   }
   studentReady()
 });
@@ -1896,19 +2075,23 @@ function playFinaleUnlock(done){
 function animateCounter(el,to,duration=900){const from=0;if(!motionOK){el.textContent=to;return}el.classList.add('counting');const t0=performance.now();const tick=t=>{const p=Math.min(1,(t-t0)/duration),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(tick);else setTimeout(()=>el.classList.remove('counting'),250)};requestAnimationFrame(tick)}
 function renderTopicProfile(){
   const names=['Weltordnung','Blockbildung','Feindbilder','Deutschland','Kuba-Krise','Vietnam','Entspannung','Ende des Kalten Krieges'];
-  const box=$('#topicGrid');box.innerHTML='';
-  const rows=[];
+  const box=$('#topicGrid');box.innerHTML='';const rows=[];
   for(let n=1;n<=8;n++){
+    const selected=activeMissions.includes(n);
+    if(!selected){
+      const d=document.createElement('div');d.className='topic-chip';d.style.setProperty('--w','0%');d.style.setProperty('--c','#53606a');
+      d.innerHTML=`<b>${n}. ${names[n-1]}</b><span>nicht ausgewählt</span>`;box.appendChild(d);continue
+    }
     const e=missionErrors[n],level=e===0?'sehr sicher':e<=2?'solide':'noch prüfen',w=e===0?'100%':e===1?'82%':e===2?'68%':e===3?'52%':'36%',c=e===0?'#5cb37c':e<=2?'#d7b15b':'#d65b5b';
     rows.push({n,name:names[n-1],e});
     const d=document.createElement('div');d.className='topic-chip';d.style.setProperty('--w',w);d.style.setProperty('--c',c);
     d.innerHTML=`<b>${n}. ${names[n-1]}</b><span>${e} Fehler · ${level}</span>`;box.appendChild(d)
   }
+  if(!rows.length){$("#strongTopic").textContent="–";$("#revisitTopic").textContent="–";return}
   const min=Math.min(...rows.map(x=>x.e)),max=Math.max(...rows.map(x=>x.e));
-  const strong=rows.filter(x=>x.e===min).slice(0,2).map(x=>x.name);
+  $("#strongTopic").textContent=rows.filter(x=>x.e===min).slice(0,2).map(x=>x.name).join(" & ");
   const weak=rows.filter(x=>x.e===max&&x.e>0).slice(0,2).map(x=>x.name);
-  $("#strongTopic").textContent=strong.join(" & ");
-  $("#revisitTopic").textContent=weak.length?weak.join(" & "):"Kein Schwerpunkt – alle Missionen ohne Fehler";
+  $("#revisitTopic").textContent=weak.length?weak.join(" & "):"Kein Schwerpunkt – alle gespielten Missionen ohne Fehler";
 }
 function updateOnlineRank(rows,entry){const idx=rows.findIndex(r=>r.name===entry.name&&r.score===entry.score&&r.mistakes===entry.mistakes),el=$('#onlineRank'),card=$('#onlineRankCard');el.textContent=idx>=0?'#'+(idx+1):'20+';card.classList.remove('rank-pop');void card.offsetWidth;card.classList.add('rank-pop')}
 function ensureWorld(cb,loading){
@@ -2233,20 +2416,31 @@ $("#startBoss").addEventListener("click",()=>{
  playFinaleUnlock(launch)
 });
 
-function finishGame(){
- $("#progressFill").style.width="100%";$("#missionHud").textContent="8/8";updateMissionRail(8);
- let rank,text;if(mistakes<=4){rank="Archivstufe: EXZELLENT";text="Sehr sichere Stoffbeherrschung: Räume, Chronologie, Ursachen und Zusammenhänge sitzen."}else if(mistakes<=10){rank="Archivstufe: SICHER";text="Guter Gesamtüberblick. Einzelne Details oder Zuordnungen können noch nachgeschärft werden."}else{rank="Archivstufe: BESTANDEN";text="Alle Missionen gelöst. Deine Fehler zeigen ziemlich genau, welche Teilthemen du noch einmal wiederholen solltest."}
- $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}: ${score} Punkte · ${mistakes} Fehler · Serie ${bestCombo}`;$("#finalText").textContent=text;show("finish");animateCounter($("#finalScore"),score,2100);animateCounter($("#finalMistakes"),mistakes,1500);animateCounter($("#bestCombo"),bestCombo,1700);renderTopicProfile();unlockSound();persistResult();
+function finishGame(reason="complete"){
+ if(gameFinished)return;gameFinished=true;clearInterval(sessionClockTimer);clearInterval(sessionPoll);
+ const played=activeMissions.length,done=activeMissions.filter(n=>completed.has(n)).length;
+ $("#progressFill").style.width=reason==="complete"?"100%":`${Math.min(100,done/Math.max(1,played)*100)}%`;
+ $("#missionHud").textContent=done+"/"+played;updateMissionRail(0);
+ let rank,text;
+ if(reason==="timeout"){
+   rank="ZEITFENSTER BEENDET";
+   text=`${done} von ${played} ausgewählten Missionen abgeschlossen. Nicht bearbeitete Aufgaben geben 0 Punkte, werden aber nicht als Fehler gezählt.`;
+ }else if(mistakes<=4){rank="Archivstufe: EXZELLENT";text="Sehr sichere Stoffbeherrschung: Räume, Chronologie, Ursachen und Zusammenhänge sitzen."}
+ else if(mistakes<=10){rank="Archivstufe: SICHER";text="Guter Gesamtüberblick. Einzelne Details oder Zuordnungen können noch nachgeschärft werden."}
+ else{rank="Archivstufe: BESTANDEN";text="Die ausgewählten Missionen sind abgeschlossen. Deine Fehler zeigen, welche Teilthemen du noch einmal wiederholen solltest."}
+ $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}: ${score} Punkte · ${mistakes} Fehler · Serie ${bestCombo}`;
+ $("#finalText").textContent=text;show("finish");animateCounter($("#finalScore"),score,2100);animateCounter($("#finalMistakes"),mistakes,1500);animateCounter($("#bestCombo"),bestCombo,1700);
+ renderTopicProfile();unlockSound();persistResult(reason);
 }
 
 // nav
-$("#next1").addEventListener("click",()=>enterMission(2));
-$("#next2").addEventListener("click",()=>enterMission(3));
-$("#next3").addEventListener("click",()=>enterMission(4));
-$("#next4").addEventListener("click",()=>{enterMission(5);initM5()});
-$("#next5").addEventListener("click",()=>{enterMission(6);initM6()});
-$("#next6").addEventListener("click",()=>enterMission(7));
-$("#next7").addEventListener("click",()=>enterMission(8));
+$("#next1").addEventListener("click",()=>goNextMission(1));
+$("#next2").addEventListener("click",()=>goNextMission(2));
+$("#next3").addEventListener("click",()=>goNextMission(3));
+$("#next4").addEventListener("click",()=>goNextMission(4));
+$("#next5").addEventListener("click",()=>goNextMission(5));
+$("#next6").addEventListener("click",()=>goNextMission(6));
+$("#next7").addEventListener("click",()=>goNextMission(7));
 $("#playerName").addEventListener("keydown",e=>{if(e.key==="Enter")$("#startBtn").click()});
 $("#restartAll").addEventListener("click",()=>{const q=currentSessionCode?`?session=${encodeURIComponent(currentSessionCode)}`:"";location.href=location.pathname+q});
 const soundBtn=$("#soundToggle");function syncSoundBtn(){soundBtn.textContent=soundOn?"🔊":"🔇";soundBtn.setAttribute("aria-pressed",String(soundOn));soundBtn.setAttribute("aria-label",soundOn?"Ton ausschalten":"Ton einschalten")}syncSoundBtn();soundBtn.addEventListener("click",()=>{soundOn=!soundOn;localStorage.setItem("coldWarSound",soundOn?"on":"off");syncSoundBtn();if(soundOn)unlockSound()});
@@ -2261,6 +2455,11 @@ document.addEventListener("pointerdown",e=>{
 
 $("#teacherBack").addEventListener("click",()=>show("start"));
 $("#createSession").addEventListener("click",createTeacherSession);
+$("#teacherDuration").addEventListener("change",updateScopePreview);
+$("#missionPicker").addEventListener("change",updateScopePreview);
+$("#selectAllMissions").addEventListener("click",()=>{$$("#missionPicker input").forEach(x=>x.checked=true);updateScopePreview()});
+$("#selectNoMissions").addEventListener("click",()=>{$$("#missionPicker input").forEach(x=>x.checked=false);updateScopePreview()});
+updateScopePreview();
 $("#releaseSession").addEventListener("click",()=>controlTeacher("arm"));
 $("#resetSession").addEventListener("click",()=>controlTeacher("reset"));
 $("#closeSession").addEventListener("click",()=>controlTeacher("close"));
@@ -2292,6 +2491,16 @@ decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
       <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
     <div class="launch-warning">Freigabe durch Lehrkraft · Quiz startet automatisch bei T–00</div>
+  </div>
+</div>
+
+
+<div class="time-expired-overlay" id="timeExpiredOverlay" aria-live="assertive">
+  <div class="expired-card">
+    <div class="expired-kicker">Operation Eiszeit // Zeitkontrolle</div>
+    <div class="expired-title">ZEITFENSTER<br>GESCHLOSSEN</div>
+    <div class="expired-sub">Weitere Eingaben wurden gesperrt.<br>Der aktuelle Stand wird gesichert und die persönliche Auswertung geöffnet.</div>
+    <div class="expired-bar"></div>
   </div>
 </div>
 
