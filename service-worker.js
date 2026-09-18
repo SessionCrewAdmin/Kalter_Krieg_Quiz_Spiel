@@ -1,4 +1,4 @@
-const CACHE='kathleen-v21-4-surprise-reveal-20260918-2';
+const CACHE='kathleen-v21-5-secure-class-vault-20260918';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
