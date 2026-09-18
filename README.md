@@ -1,9 +1,7 @@
-# V14.3 – QR-Code fest eingebunden
+# V14.4 – QR-Link korrigiert
 
-Geändert:
-- QR-Code ist jetzt direkt als SVG in die HTML-Datei eingebettet.
-- Keine externe QR-Bibliothek mehr nötig.
-- Der QR-Code funktioniert dadurch auch dann, wenn das QR-Skript nicht geladen wird.
-- Festes Ziel:
-  https://sessioncrewadmin.github.io/world-map-quiz/
-- Alle Funktionen aus V14.2 bleiben erhalten.
+Der fest eingebettete QR-Code verweist jetzt auf:
+
+https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/
+
+Alle übrigen Funktionen aus V14.3 bleiben unverändert.
