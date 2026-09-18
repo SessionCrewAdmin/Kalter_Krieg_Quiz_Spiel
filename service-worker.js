@@ -1,7 +1,7 @@
-const CACHE='kathleen-v21-20260918-5';
+const CACHE='kathleen-v21-1-vouchers-20260918';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
-  './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html',
+  './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
   './tools/kalter-krieg/index.html','./tools/kalter-krieg/lehrer.html',
   './assets/covers/cold-war.svg','./assets/covers/english-world.svg',
   './assets/icons/app-180.png','./assets/icons/app-512.png'
@@ -9,6 +9,7 @@ const CORE=[
 const REMOTE=[
   'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js',
   'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js',
+  'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
   'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json',
   'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
 ];
