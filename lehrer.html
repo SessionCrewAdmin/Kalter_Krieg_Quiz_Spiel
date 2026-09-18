@@ -6,301 +6,336 @@
 <title>Kathleens magische Tool und Aufgaben Kiste</title>
 <style>
 :root{
-  --bg:#fff8fc;--panel:rgba(255,255,255,.86);--ink:#4d3b50;--muted:#8a758c;--line:#eadde9;
-  --pink:#f4a8c7;--pink2:#ffd0e2;--lilac:#c9b5ef;--lilac2:#ebe2ff;
-  --mint:#bfe6d8;--peach:#ffd4b7;--berry:#a45a82;--deep:#684d72;
-  --shadow:0 18px 50px rgba(125,78,119,.12)
+ --bg:#fff9fc;--panel:rgba(255,255,255,.88);--ink:#503d51;--muted:#8d788f;--line:#eadde9;
+ --pink:#eda4c6;--pink2:#ffe0ed;--lilac:#bca9e8;--lilac2:#eee7ff;--mint:#bfe4d7;--peach:#ffd3b7;
+ --berry:#a25d83;--deep:#6f5276;--green:#68aa90;--amber:#d59d61;--shadow:0 18px 54px rgba(116,76,112,.12)
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:Inter,ui-rounded,"SF Pro Rounded",Arial,sans-serif;color:var(--ink);background:
- radial-gradient(circle at 10% 0%,#ffe8f2 0,transparent 30%),
- radial-gradient(circle at 88% 8%,#ece5ff 0,transparent 28%),
- linear-gradient(180deg,#fffafd,#fff8fc 48%,#faf8ff)}
-button,input{font:inherit}
-button{cursor:pointer}
+ radial-gradient(circle at 8% 0%,#ffe7f1 0,transparent 28%),
+ radial-gradient(circle at 90% 4%,#ece5ff 0,transparent 27%),
+ linear-gradient(180deg,#fffafd,#fff8fc 52%,#faf8ff)}
+button,input,select,textarea{font:inherit} button{cursor:pointer}
 .sparkles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-.sparkles i{position:absolute;font-style:normal;color:#e8a0c0;opacity:.30;animation:float 8s ease-in-out infinite}
-.sparkles i:nth-child(1){left:4%;top:8%;font-size:24px}
-.sparkles i:nth-child(2){left:89%;top:12%;font-size:30px;animation-delay:-2s;color:#bca7e7}
-.sparkles i:nth-child(3){left:76%;top:63%;font-size:21px;animation-delay:-5s;color:#e8b394}
-.sparkles i:nth-child(4){left:14%;top:71%;font-size:18px;animation-delay:-3s;color:#9fd7c5}
-@keyframes float{50%{transform:translateY(-12px) rotate(8deg);opacity:.5}}
-.shell{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:24px}
-.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}
+.sparkles i{position:absolute;font-style:normal;color:#e9a3c1;opacity:.28;animation:float 8s ease-in-out infinite}
+.sparkles i:nth-child(1){left:4%;top:8%;font-size:24px} .sparkles i:nth-child(2){left:90%;top:13%;font-size:30px;animation-delay:-2s;color:#bca8e6}
+.sparkles i:nth-child(3){left:77%;top:68%;font-size:21px;animation-delay:-5s;color:#e7b28f} .sparkles i:nth-child(4){left:13%;top:75%;font-size:18px;animation-delay:-3s;color:#9dd4c2}
+@keyframes float{50%{transform:translateY(-12px) rotate(8deg);opacity:.48}}
+.shell{position:relative;z-index:1;max-width:1520px;margin:0 auto;padding:22px}
+.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
 .title-wrap{display:flex;gap:14px;align-items:center;min-width:0}
-.magic-icon{width:58px;height:58px;flex:0 0 58px;border-radius:18px;background:linear-gradient(145deg,#f7a9cb,#c5b0ed);display:grid;place-items:center;font-size:28px;box-shadow:0 12px 30px rgba(196,126,168,.22);transform:rotate(-3deg)}
-h1{font-size:clamp(29px,4vw,48px);line-height:1.02;margin:0;letter-spacing:-.04em;color:#654765}
-.subtitle{margin:7px 0 0;color:var(--muted);font-size:14px}
+.magic-icon{width:58px;height:58px;flex:0 0 58px;border-radius:18px;background:linear-gradient(145deg,#f2a5c8,#bba7e8);display:grid;place-items:center;font-size:28px;box-shadow:0 12px 30px rgba(190,121,164,.20);transform:rotate(-3deg)}
+h1{font-size:clamp(28px,4vw,47px);line-height:1.02;margin:0;letter-spacing:-.045em;color:#674969}
+.subtitle{margin:6px 0 0;color:var(--muted);font-size:13px} .small{font-size:11px;color:var(--muted)}
 .hero-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.btn{border:1px solid var(--line);background:rgba(255,255,255,.90);color:var(--ink);border-radius:12px;padding:10px 13px;font-weight:850;box-shadow:0 3px 10px rgba(116,82,114,.04);transition:.16s}
-.btn:hover{transform:translateY(-1px);border-color:#d6c4d7}
-.btn.primary{background:linear-gradient(135deg,#d997b9,#ad91df);border:0;color:#fff}
-.panel{background:var(--panel);backdrop-filter:blur(12px);border:1px solid rgba(232,217,230,.9);border-radius:20px;box-shadow:var(--shadow)}
-.subjects{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.subject{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#fff;padding:17px 18px;text-align:left;color:var(--ink);min-height:94px;transition:.18s}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--ink);border-radius:12px;padding:10px 13px;font-weight:850;transition:.16s}
+.btn:hover{transform:translateY(-1px);border-color:#d6c3d7} .btn.primary{background:linear-gradient(135deg,#d58eb4,#a98bdd);border:0;color:#fff}
+.btn.danger{color:#a8556a;border-color:#edc8d2;background:#fff8fb}
+.panel{background:var(--panel);backdrop-filter:blur(12px);border:1px solid rgba(232,217,230,.92);border-radius:20px;box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.stat{padding:13px 14px} .stat span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.stat b{display:block;margin-top:4px;font-size:21px} .stat em{font-style:normal;color:var(--muted);font-size:10px}
+.sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:#d8aa68} .sync-dot.ok{background:#75b69d} .sync-dot.bad{background:#d86c7f}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+.quick-panel{padding:14px} .quick-title{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}
+.quick-title h2{font-size:16px;margin:0} .quick-list{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px}
+.quick-item{min-width:210px;display:grid;grid-template-columns:54px 1fr;gap:9px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:8px;background:#fff;cursor:pointer}
+.quick-thumb{height:54px;border-radius:10px;background-size:cover;background-position:center} .quick-item b{display:block;font-size:12px} .quick-item span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.subjects{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px}
+.subject{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#fff;padding:15px 17px;text-align:left;color:var(--ink);min-height:88px;transition:.18s}
 .subject::after{content:"";position:absolute;width:135px;height:135px;border-radius:50%;right:-35px;top:-48px;background:var(--wash);opacity:.72}
-.subject strong{display:block;font-size:21px;position:relative;z-index:1}
-.subject span{display:block;font-size:12px;color:var(--muted);margin-top:5px;position:relative;z-index:1}
-.subject .emoji{font-size:24px;position:absolute;right:18px;bottom:13px;z-index:1}
-.subject.history{--wash:#ffe0ec} .subject.english{--wash:#e9e1ff}
-.subject.active{border-color:#d6a6c3;box-shadow:0 0 0 3px rgba(238,174,205,.15)}
-.subject.active strong{color:#915b7a}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 13px;flex-wrap:wrap}
-.search{flex:1;max-width:560px;position:relative}
-.search input{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.86);border-radius:14px;padding:12px 14px 12px 40px;outline:none;color:var(--ink)}
-.search input:focus{border-color:#d6a8c7;box-shadow:0 0 0 4px rgba(239,181,210,.13)}
-.search::before{content:"⌕";position:absolute;left:14px;top:8px;font-size:24px;color:#b494aa}
-.grades{display:flex;gap:7px;flex-wrap:wrap}
-.grade{position:relative;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;transition:.16s}
-.grade.active{background:#745a79;color:#fff;border-color:#745a79}
-.grade.drop-target{transform:translateY(-3px);box-shadow:0 8px 20px rgba(160,102,139,.18);border-color:#d591b7}
-.grade .drop-dot{position:absolute;inset:auto 6px -5px auto;width:9px;height:9px;border-radius:50%;background:#ef96be;display:none}
-.grade.drop-target .drop-dot{display:block}
-.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 2px 10px}
-.section-title h2{margin:0;font-size:19px;letter-spacing:-.02em}
-.section-title span{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;min-height:190px}
-.card{position:relative;min-height:315px;border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s}
-.card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(120,76,117,.17);border-color:#d9c4d9}
-.card.dragging{opacity:.45;transform:scale(.98)}
-.card-art{height:155px;background-size:cover;background-position:center;position:relative}
-.card-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(41,30,42,.52))}
-.card-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2;flex-wrap:wrap}
-.badge{background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.75);backdrop-filter:blur(8px);border-radius:999px;padding:5px 8px;font-size:10px;font-weight:950;color:#6e536f}
-.card-menu{position:absolute;right:12px;top:12px;z-index:4;width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.88);color:#735d74;font-size:20px;line-height:1}
-.card-body{padding:15px 16px 16px;display:flex;flex:1;flex-direction:column}
-.card-body h3{font-size:20px;margin:0 0 5px;letter-spacing:-.02em}
-.card-body p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
-.grade-tags{display:flex;gap:5px;flex-wrap:wrap;margin:11px 0}
-.grade-tag{font-size:10px;font-weight:950;color:#745777;background:#f8edf4;border:1px solid #efd6e4;border-radius:999px;padding:5px 7px}
-.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px}
-.open{border:0;border-radius:12px;padding:10px 12px;background:linear-gradient(135deg,#d790b5,#aa8cde);color:#fff;font-weight:950}
-.drag-hint{color:var(--muted);font-size:10px;font-weight:800}
-.empty{grid-column:1/-1;padding:42px 20px;border:1px dashed #dfcede;border-radius:18px;text-align:center;color:var(--muted);background:rgba(255,255,255,.50)}
-.empty b{display:block;color:#765e78;font-size:17px;margin-bottom:5px}
-.notice{margin-top:14px;padding:11px 13px;border:1px solid #eadbe7;border-radius:13px;background:rgba(255,255,255,.62);color:var(--muted);font-size:11px}
-.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(61,44,63,.28);backdrop-filter:blur(6px)}
-.modal.show{display:grid}
-.modal-card{width:min(520px,94vw);background:#fff;border-radius:22px;border:1px solid var(--line);box-shadow:0 28px 90px rgba(76,50,77,.25);padding:20px}
-.modal-card h3{margin:0;font-size:21px}
-.modal-card p{color:var(--muted);font-size:13px;line-height:1.5}
-.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
-.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
-.check{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fffafd}
-.check input{width:18px;height:18px}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);z-index:120;background:#684d72;color:#fff;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:850;opacity:0;pointer-events:none;transition:.24s}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:760px){
- .shell{padding:14px}.hero{flex-direction:column}.hero-actions{justify-content:flex-start}
- .subjects{grid-template-columns:1fr}.toolbar{align-items:stretch}.search{max-width:none;width:100%}
- .grades{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.grade{white-space:nowrap}
- .card{min-height:300px}.drag-hint{display:none}
-}
+.subject strong{display:block;font-size:20px;position:relative;z-index:1} .subject span{display:block;font-size:11px;color:var(--muted);margin-top:4px;position:relative;z-index:1}
+.subject .emoji{font-size:23px;position:absolute;right:18px;bottom:12px;z-index:1} .subject.history{--wash:#ffe0ec} .subject.english{--wash:#e9e1ff}
+.subject.active{border-color:#d5a4c0;box-shadow:0 0 0 3px rgba(238,174,205,.14)} .subject.active strong{color:#915b7a}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 10px;flex-wrap:wrap}
+.search{flex:1;max-width:520px;position:relative} .search input{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.88);border-radius:14px;padding:12px 14px 12px 40px;outline:none;color:var(--ink)}
+.search input:focus{border-color:#d6a8c7;box-shadow:0 0 0 4px rgba(239,181,210,.13)} .search::before{content:"⌕";position:absolute;left:14px;top:8px;font-size:24px;color:#b494aa}
+.filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center} .filter-select{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:11px;padding:9px 10px;font-size:11px;font-weight:800}
+.grades{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px} .grade{position:relative;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;transition:.16s}
+.grade.active{background:#735a79;color:#fff;border-color:#735a79} .grade.drop-target{transform:translateY(-3px);box-shadow:0 8px 20px rgba(160,102,139,.18);border-color:#d591b7}
+.grade .drop-dot{position:absolute;right:6px;bottom:-5px;width:9px;height:9px;border-radius:50%;background:#ef96be;display:none} .grade.drop-target .drop-dot{display:block}
+.tagbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px} .tagbtn{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:7px 9px;font-size:10px;font-weight:900}
+.tagbtn.active{background:#f6e8f1;color:#8c5a78;border-color:#e7c9dc}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:14px 2px 9px} .section-title h2{margin:0;font-size:18px} .section-title span{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:15px;min-height:190px}
+.card{position:relative;min-height:320px;border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s}
+.card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(120,76,117,.16);border-color:#d9c4d9} .card.dragging{opacity:.42;transform:scale(.98)} .card.sort-target{outline:3px solid rgba(224,145,185,.30);outline-offset:2px}
+.card-art{height:155px;background-size:cover;background-position:center;position:relative} .card-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 32%,rgba(41,30,42,.52))}
+.card-badges{position:absolute;top:11px;left:11px;display:flex;gap:5px;z-index:2;flex-wrap:wrap} .badge{background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(8px);border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;color:#6e536f}
+.status-ready{color:#4d9278} .status-draft{color:#b47f48} .status-archived{color:#9a778a}
+.card-tools{position:absolute;right:11px;top:11px;z-index:4;display:flex;gap:5px} .iconbtn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.90);color:#735d74;font-size:18px;line-height:1;display:grid;place-items:center}
+.iconbtn.favorite{color:#d98aaf} .iconbtn.favorite.on{background:#fff0f7;color:#c85e91}
+.card-body{padding:14px 15px 15px;display:flex;flex:1;flex-direction:column} .card-body h3{font-size:19px;margin:0 0 5px;letter-spacing:-.02em} .card-body p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.grade-tags,.tag-tags{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0 0} .grade-tag,.mini-tag{font-size:9px;font-weight:950;color:#745777;background:#f8edf4;border:1px solid #efd6e4;border-radius:999px;padding:4px 6px} .mini-tag{color:#65716e;background:#eef8f4;border-color:#d6ebe3}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px} .open{border:0;border-radius:12px;padding:10px 12px;background:linear-gradient(135deg,#d790b5,#aa8cde);color:#fff;font-weight:950}
+.drag-hint{color:var(--muted);font-size:9px;font-weight:800} .empty{grid-column:1/-1;padding:42px 20px;border:1px dashed #dfcede;border-radius:18px;text-align:center;color:var(--muted);background:rgba(255,255,255,.50)} .empty b{display:block;color:#765e78;font-size:16px;margin-bottom:5px}
+.notice{margin-top:13px;padding:10px 12px;border:1px solid #eadbe7;border-radius:13px;background:rgba(255,255,255,.62);color:var(--muted);font-size:10px}
+.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(61,44,63,.28);backdrop-filter:blur(6px)} .modal.show{display:grid}
+.modal-card{width:min(620px,95vw);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;border:1px solid var(--line);box-shadow:0 28px 90px rgba(76,50,77,.25);padding:19px} .modal-card h3{margin:0;font-size:20px} .modal-card p{color:var(--muted);font-size:12px;line-height:1.5}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px} .form-grid .wide{grid-column:1/-1} .field label{display:block;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:11px;background:#fffafd;padding:10px;color:var(--ink);outline:none} .field textarea{min-height:82px;resize:vertical}
+.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px} .check{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:11px;padding:9px;background:#fffafd;font-size:11px} .check input{width:17px;height:17px}
+.menu-list{display:grid;gap:6px;margin-top:12px} .menu-list button{text-align:left;border:1px solid var(--line);background:#fffafd;color:var(--ink);border-radius:11px;padding:10px;font-weight:800}
+.syncbox{padding:12px;border:1px solid var(--line);border-radius:13px;background:#fffafd;margin-top:10px} .sync-key{font:700 10px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;word-break:break-all;color:#7f687f}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);z-index:120;background:#684d72;color:#fff;border-radius:999px;padding:10px 14px;font-size:11px;font-weight:850;opacity:0;pointer-events:none;transition:.24s} .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hidden{display:none!important}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.quick{grid-template-columns:1fr}}
+@media(max-width:760px){.shell{padding:13px}.hero{flex-direction:column}.hero-actions{justify-content:flex-start}.subjects{grid-template-columns:1fr}.toolbar{align-items:stretch}.search{max-width:none;width:100%}.grades{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.grade{white-space:nowrap}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.drag-hint{display:none}}
 </style>
 </head>
 <body>
 <div class="sparkles" aria-hidden="true"><i>✦</i><i>✧</i><i>✿</i><i>✦</i></div>
 <main class="shell">
-  <header class="hero">
-    <div class="title-wrap">
-      <div class="magic-icon">🪄</div>
-      <div>
-        <h1>Kathleens magische Tool und Aufgaben Kiste</h1>
-        <p class="subtitle">Unterrichts-Tools, Quizze und Aufgaben an einem Ort – sortiert nach Fach und Klassenstufe ✨</p>
-      </div>
-    </div>
-    <div class="hero-actions">
-      <span class="status" id="saveStatus">Änderungen lokal gespeichert</span>
-      <button class="btn" id="resetLayout" type="button">Ansicht zurücksetzen</button>
-    </div>
-  </header>
+<header class="hero">
+  <div class="title-wrap"><div class="magic-icon">🪄</div><div><h1>Kathleens magische Tool und Aufgaben Kiste</h1><p class="subtitle">Kathleens Unterrichtszentrale · Tools, Quizze und Aufgaben schnell wiederfinden, sortieren und starten ✨</p></div></div>
+  <div class="hero-actions"><button class="btn" id="importBtn" type="button">Import</button><button class="btn" id="exportBtn" type="button">Backup</button><button class="btn" id="settingsBtn" type="button">Einstellungen</button><button class="btn primary" id="newModuleBtn" type="button">＋ Neues Tool</button></div>
+</header>
 
-  <section class="subjects" aria-label="Fach auswählen">
-    <button class="subject history active" data-subject="Geschichte" type="button"><strong>Geschichte</strong><span>Quizze, Wiederholungen & historische Missionen</span><span class="emoji">📚</span></button>
-    <button class="subject english" data-subject="Englisch" type="button"><strong>English</strong><span>Language games, countries, vocabulary & more</span><span class="emoji">💬</span></button>
-  </section>
+<section class="stats">
+  <div class="panel stat"><span>Module</span><b id="statModules">2</b><em>aktive Tools</em></div>
+  <div class="panel stat"><span>Favoriten</span><b id="statFav">2</b><em>deine Schnellzugriffe</em></div>
+  <div class="panel stat"><span>Aktive Session</span><b id="statSession">–</b><em id="sessionHint">keine</em></div>
+  <div class="panel stat"><span>Cloud Sync</span><b id="statSync"><span class="sync-dot"></span>lokal</b><em id="syncHint">Supabase wird geprüft</em></div>
+</section>
 
-  <div class="toolbar">
-    <div class="search"><input id="search" type="search" placeholder="Tool oder Aufgabe suchen …" autocomplete="off"></div>
-    <div class="grades" id="grades" aria-label="Klassenstufe">
-      <button class="grade active" data-grade="all" type="button">Alle</button>
-      <button class="grade" data-grade="7" type="button">7. Klasse<span class="drop-dot"></span></button>
-      <button class="grade" data-grade="8" type="button">8. Klasse<span class="drop-dot"></span></button>
-      <button class="grade" data-grade="9" type="button">9. Klasse<span class="drop-dot"></span></button>
-      <button class="grade" data-grade="10" type="button">10. Klasse<span class="drop-dot"></span></button>
-      <button class="grade" data-grade="none" type="button">Nicht zugeordnet<span class="drop-dot"></span></button>
-    </div>
+<section class="quick">
+  <div class="panel quick-panel"><div class="quick-title"><h2>★ Favoriten</h2><span class="small" id="favCount"></span></div><div class="quick-list" id="favoritesList"></div></div>
+  <div class="panel quick-panel"><div class="quick-title"><h2>Zuletzt verwendet</h2><span class="small">max. 5</span></div><div class="quick-list" id="recentList"></div></div>
+</section>
+
+<section class="subjects" aria-label="Fach auswählen">
+  <button class="subject history active" data-subject="Geschichte" type="button"><strong>Geschichte</strong><span>Historische Quizze, Wiederholungen & Missionen</span><span class="emoji">📚</span></button>
+  <button class="subject english" data-subject="Englisch" type="button"><strong>English</strong><span>Countries, language games, vocabulary & more</span><span class="emoji">💬</span></button>
+</section>
+
+<div class="toolbar">
+  <div class="search"><input id="search" type="search" placeholder="Tool, Thema oder Tag suchen …" autocomplete="off"></div>
+  <div class="filters">
+    <select class="filter-select" id="typeFilter"><option value="all">Alle Typen</option></select>
+    <select class="filter-select" id="statusFilter"><option value="active">Aktiv</option><option value="all">Alle inkl. Archiv</option><option value="draft">Nur Entwürfe</option><option value="archived">Nur Archiv</option></select>
   </div>
+</div>
 
-  <div class="section-title"><h2 id="sectionTitle">Geschichte · Alle Klassen</h2><span id="moduleCount">1 Modul</span></div>
-  <section class="grid" id="moduleGrid"></section>
+<div class="grades" id="grades">
+  <button class="grade active" data-grade="all" type="button">Alle</button>
+  <button class="grade" data-grade="7" type="button">7. Klasse<span class="drop-dot"></span></button>
+  <button class="grade" data-grade="8" type="button">8. Klasse<span class="drop-dot"></span></button>
+  <button class="grade" data-grade="9" type="button">9. Klasse<span class="drop-dot"></span></button>
+  <button class="grade" data-grade="10" type="button">10. Klasse<span class="drop-dot"></span></button>
+  <button class="grade" data-grade="none" type="button">Nicht zugeordnet<span class="drop-dot"></span></button>
+</div>
+<div class="tagbar" id="tagbar"></div>
 
-  <div class="notice">Tipp: Auf PC kannst du eine Kachel direkt auf eine Klassenstufe ziehen. Auf Tablet/Handy nutzt du das <b>⋯</b>-Menü. Beim Ablegen entscheidest du, ob das Modul <b>zusätzlich</b> dort erscheinen oder <b>verschoben</b> werden soll.</div>
+<div class="section-title"><h2 id="sectionTitle">Geschichte · Alle Klassen</h2><span id="moduleCount"></span></div>
+<section class="grid" id="moduleGrid"></section>
+<div class="notice">Desktop: Kacheln auf eine Klassenstufe ziehen oder innerhalb der Ansicht sortieren. Tablet/Handy: <b>⋯</b> verwenden. Änderungen werden lokal gespeichert und – nach einmaliger Supabase-Einrichtung – automatisch synchronisiert.</div>
 </main>
 
-<div class="modal" id="dropModal" role="dialog" aria-modal="true">
-  <div class="modal-card">
-    <h3 id="dropTitle">Klassenstufe ändern</h3>
-    <p id="dropText"></p>
-    <div class="modal-actions">
-      <button class="btn primary" id="dropAdd" type="button">Zusätzlich zuordnen</button>
-      <button class="btn" id="dropMove" type="button">Verschieben</button>
-      <button class="btn" id="dropCancel" type="button">Abbrechen</button>
-    </div>
-  </div>
-</div>
+<input class="hidden" id="importFile" type="file" accept="application/json,.json">
 
-<div class="modal" id="editModal" role="dialog" aria-modal="true">
-  <div class="modal-card">
-    <h3>Klassenstufen auswählen</h3>
-    <p id="editText">Dieses Modul kann in mehreren Klassenstufen gleichzeitig auftauchen.</p>
-    <div class="checks">
-      <label class="check"><input type="checkbox" value="7"> 7. Klasse</label>
-      <label class="check"><input type="checkbox" value="8"> 8. Klasse</label>
-      <label class="check"><input type="checkbox" value="9"> 9. Klasse</label>
-      <label class="check"><input type="checkbox" value="10"> 10. Klasse</label>
-    </div>
-    <div class="modal-actions">
-      <button class="btn primary" id="editSave" type="button">Speichern</button>
-      <button class="btn" id="editCancel" type="button">Abbrechen</button>
-    </div>
+<div class="modal" id="dropModal"><div class="modal-card"><h3 id="dropTitle">Klassenstufe ändern</h3><p id="dropText"></p><div class="modal-actions"><button class="btn primary" id="dropAdd" type="button">Zusätzlich zuordnen</button><button class="btn" id="dropMove" type="button">Verschieben</button><button class="btn" id="dropCancel" type="button">Abbrechen</button></div></div></div>
+
+<div class="modal" id="moduleModal"><div class="modal-card">
+  <h3 id="moduleModalTitle">Neues Tool</h3><p>Die Kachel kann später jederzeit bearbeitet, dupliziert, archiviert oder anderen Klassenstufen zugeordnet werden.</p>
+  <div class="form-grid">
+    <div class="field"><label>Titel</label><input id="fTitle"></div>
+    <div class="field"><label>Fach</label><select id="fSubject"><option>Geschichte</option><option>Englisch</option></select></div>
+    <div class="field wide"><label>Beschreibung</label><textarea id="fSubtitle"></textarea></div>
+    <div class="field"><label>Typ</label><input id="fType" placeholder="Quiz, Spiel, Wiederholung …"></div>
+    <div class="field"><label>Dauer</label><input id="fDuration" placeholder="z. B. 10–15 Min."></div>
+    <div class="field wide"><label>Tags, mit Komma getrennt</label><input id="fTags" placeholder="Quiz, Karten, Abschluss"></div>
+    <div class="field wide"><label>Link / Pfad</label><input id="fHref" placeholder="tool.html oder https://…"></div>
+    <div class="field"><label>Status</label><select id="fStatus"><option value="ready">Bereit</option><option value="draft">Entwurf</option></select></div>
+    <div class="field"><label>Cover-Bild URL (optional)</label><input id="fArt" placeholder="https://…"></div>
+    <div class="field wide"><label>Klassenstufen</label><div class="checks" id="fGrades"><label class="check"><input type="checkbox" value="7">7. Klasse</label><label class="check"><input type="checkbox" value="8">8. Klasse</label><label class="check"><input type="checkbox" value="9">9. Klasse</label><label class="check"><input type="checkbox" value="10">10. Klasse</label></div></div>
   </div>
-</div>
+  <div class="modal-actions"><button class="btn primary" id="moduleSave" type="button">Speichern</button><button class="btn" id="moduleCancel" type="button">Abbrechen</button></div>
+</div></div>
+
+<div class="modal" id="menuModal"><div class="modal-card"><h3 id="menuTitle">Tool</h3><div class="menu-list">
+  <button id="menuOpen" type="button">Öffnen</button><button id="menuGrades" type="button">Klassenstufen ändern</button><button id="menuEdit" type="button">Bearbeiten</button><button id="menuDuplicate" type="button">Duplizieren</button><button id="menuFavorite" type="button">Favorit umschalten</button><button id="menuArchive" type="button">Archivieren / Wiederherstellen</button>
+</div><div class="modal-actions"><button class="btn" id="menuClose" type="button">Schließen</button></div></div></div>
+
+<div class="modal" id="gradeModal"><div class="modal-card"><h3>Klassenstufen auswählen</h3><p id="gradeText"></p><div class="checks" id="gradeChecks"><label class="check"><input type="checkbox" value="7">7. Klasse</label><label class="check"><input type="checkbox" value="8">8. Klasse</label><label class="check"><input type="checkbox" value="9">9. Klasse</label><label class="check"><input type="checkbox" value="10">10. Klasse</label></div><div class="modal-actions"><button class="btn primary" id="gradeSave" type="button">Speichern</button><button class="btn" id="gradeCancel" type="button">Abbrechen</button></div></div></div>
+
+<div class="modal" id="settingsModal"><div class="modal-card"><h3>Einstellungen & Cloud Sync</h3>
+  <p>Die Kiste funktioniert immer lokal. Für gleiche Kacheln auf mehreren Geräten kannst du die Konfiguration zusätzlich in Supabase speichern.</p>
+  <div class="syncbox"><b>Sync-Status</b><div class="small" id="settingsSyncStatus">wird geprüft …</div><div class="sync-key" id="adminKeyView"></div></div>
+  <div class="field" style="margin-top:10px"><label>Vorhandenen Admin-Sync-Schlüssel eingeben</label><input id="adminKeyInput" placeholder="Schlüssel von einem anderen Lehrergerät"></div>
+  <div class="modal-actions"><button class="btn primary" id="saveAdminKey" type="button">Schlüssel übernehmen</button><button class="btn" id="syncNow" type="button">Jetzt synchronisieren</button><button class="btn" id="settingsClose" type="button">Schließen</button></div>
+  <p class="small">Beim allerersten Start nach der V19-SQL-Migration erzeugt dieses Gerät automatisch einen Admin-Sync-Schlüssel. Bewahre ihn auf, wenn du die Kiste später auf einem anderen Gerät bearbeiten möchtest.</p>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-const defaultModules=[
-  {
-    id:"cold-war-final",
-    subject:"Geschichte",
-    grades:[9],
-    title:"Kalter Krieg – Abschluss",
-    subtitle:"Interaktive Abschlusswiederholung mit Karten, Quellen, Missionen und Classroom Control.",
-    meta:"5–20 Min. · Teams · Live-Steuerung",
-    href:"kalter_krieg_lehrer.html",
-    art:"data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201200%20720%22%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%0A%3Cstop%20offset=%220%22%20stop-color=%22#223a57%22/%3E%3Cstop%20offset=%22.46%22%20stop-color=%22#415d76%22/%3E%0A%3Cstop%20offset=%22.52%22%20stop-color=%22#7b4c5c%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#a75a64%22/%3E%0A%3C/linearGradient%3E%0A%3CradialGradient%20id=%22glow%22%3E%3Cstop%20stop-color=%22#fff%22%20stop-opacity=%22.20%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#fff%22%20stop-opacity=%220%22/%3E%3C/radialGradient%3E%0A%3C/defs%3E%0A%3Crect%20width=%221200%22%20height=%22720%22%20fill=%22url(#g)%22/%3E%0A%3Ccircle%20cx=%22250%22%20cy=%22310%22%20r=%22250%22%20fill=%22url(#glow)%22/%3E%3Ccircle%20cx=%22960%22%20cy=%22340%22%20r=%22250%22%20fill=%22url(#glow)%22/%3E%0A%3Cg%20fill=%22none%22%20stroke=%22#fff%22%20stroke-opacity=%22.18%22%20stroke-width=%223%22%3E%0A%3Ccircle%20cx=%22255%22%20cy=%22320%22%20r=%22150%22/%3E%3Ccircle%20cx=%22255%22%20cy=%22320%22%20r=%22205%22/%3E%0A%3Ccircle%20cx=%22945%22%20cy=%22330%22%20r=%22150%22/%3E%3Ccircle%20cx=%22945%22%20cy=%22330%22%20r=%22205%22/%3E%0A%3Cpath%20d=%22M40%20380C260%20170%20430%20220%20565%20335S855%20515%201160%20290%22/%3E%0A%3C/g%3E%0A%3Crect%20x=%22565%22%20y=%2275%22%20width=%2270%22%20height=%22570%22%20rx=%224%22%20fill=%22#111b24%22%20fill-opacity=%22.62%22/%3E%0A%3Cg%20fill=%22#e9eef2%22%20fill-opacity=%22.24%22%3E%0A%3Crect%20x=%22574%22%20y=%2295%22%20width=%2252%22%20height=%2237%22/%3E%3Crect%20x=%22574%22%20y=%22145%22%20width=%2252%22%20height=%2237%22/%3E%0A%3Crect%20x=%22574%22%20y=%22195%22%20width=%2252%22%20height=%2237%22/%3E%3Crect%20x=%22574%22%20y=%22245%22%20width=%2252%22%20height=%2237%22/%3E%0A%3Crect%20x=%22574%22%20y=%22295%22%20width=%2252%22%20height=%2237%22/%3E%3Crect%20x=%22574%22%20y=%22345%22%20width=%2252%22%20height=%2237%22/%3E%0A%3Crect%20x=%22574%22%20y=%22395%22%20width=%2252%22%20height=%2237%22/%3E%3Crect%20x=%22574%22%20y=%22445%22%20width=%2252%22%20height=%2237%22/%3E%0A%3Crect%20x=%22574%22%20y=%22495%22%20width=%2252%22%20height=%2237%22/%3E%3Crect%20x=%22574%22%20y=%22545%22%20width=%2252%22%20height=%2237%22/%3E%0A%3C/g%3E%0A%3Ctext%20x=%2266%22%20y=%22625%22%20fill=%22#fff%22%20fill-opacity=%22.32%22%20font-family=%22Arial%22%20font-size=%2272%22%20font-weight=%22700%22%3E1945%3C/text%3E%0A%3Ctext%20x=%22940%22%20y=%22625%22%20fill=%22#fff%22%20fill-opacity=%22.32%22%20font-family=%22Arial%22%20font-size=%2272%22%20font-weight=%22700%22%3E1991%3C/text%3E%0A%3C/svg%3E"
-  }
-];
-
-let modules=loadModules();
-let activeSubject="Geschichte",activeGrade="all",query="",draggedId=null,pendingDrop=null,editId=null;
-
+const SUPABASE_URL="https://fzqxnjhuvgpgovcovosl.supabase.co",SUPABASE_KEY="sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV";
+const DEFAULT_MODULES=[{"id": "cold-war-final", "subject": "Geschichte", "grades": [9], "title": "Kalter Krieg – Abschluss", "subtitle": "Interaktive Abschlusswiederholung mit Karten, Quellen, Missionen und Classroom Control.", "duration": "5–20 Min.", "type": "Abschluss", "tags": ["Quiz", "Wiederholung", "Karten", "Quellen", "Teams"], "status": "ready", "href": "kalter_krieg_lehrer.html", "external": false, "art": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201200%20720%22%3E%0A%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%3Cstop%20stop-color=%22#1e354f%22/%3E%3Cstop%20offset=%22.45%22%20stop-color=%22#496279%22/%3E%3Cstop%20offset=%22.52%22%20stop-color=%22#774b5a%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#aa6068%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%3Crect%20width=%221200%22%20height=%22720%22%20fill=%22url(#g)%22/%3E%0A%3Cg%20fill=%22none%22%20stroke=%22#fff%22%20stroke-opacity=%22.17%22%20stroke-width=%223%22%3E%3Ccircle%20cx=%22250%22%20cy=%22320%22%20r=%22160%22/%3E%3Ccircle%20cx=%22250%22%20cy=%22320%22%20r=%22215%22/%3E%3Ccircle%20cx=%22950%22%20cy=%22325%22%20r=%22160%22/%3E%3Ccircle%20cx=%22950%22%20cy=%22325%22%20r=%22215%22/%3E%3Cpath%20d=%22M30%20390C260%20160%20430%20220%20570%20340S860%20510%201170%20285%22/%3E%3C/g%3E%0A%3Crect%20x=%22568%22%20y=%2270%22%20width=%2264%22%20height=%22580%22%20fill=%22#111a23%22%20fill-opacity=%22.68%22/%3E%0A%3Cg%20fill=%22#eaf0f4%22%20fill-opacity=%22.22%22%3E%3Crect%20x=%22576%22%20y=%2295%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22145%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22195%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22245%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22295%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22345%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22395%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22445%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22495%22%20width=%2248%22%20height=%2236%22/%3E%3Crect%20x=%22576%22%20y=%22545%22%20width=%2248%22%20height=%2236%22/%3E%3C/g%3E%0A%3Ctext%20x=%2260%22%20y=%22625%22%20fill=%22#fff%22%20fill-opacity=%22.28%22%20font-family=%22Arial%22%20font-size=%2270%22%20font-weight=%22700%22%3E1945%3C/text%3E%0A%3Ctext%20x=%22930%22%20y=%22625%22%20fill=%22#fff%22%20fill-opacity=%22.28%22%20font-family=%22Arial%22%20font-size=%2270%22%20font-weight=%22700%22%3E1991%3C/text%3E%0A%3C/svg%3E", "favorite": true, "archived": false, "order": {"all": 10, "9": 10}, "updatedAt": "2026-09-18T00:00:00Z"}, {"id": "english-world-quiz", "subject": "Englisch", "grades": [9], "title": "The World Speaks English", "subtitle": "Interaktives Länderquiz mit Weltkarte, Bonus-Runde, Zoom, Combo und Konfetti.", "duration": "10–15 Min.", "type": "Spiel", "tags": ["Quiz", "Weltkarte", "Countries", "Bonus", "Englisch"], "status": "ready", "href": "https://sessioncrewadmin.github.io/world-map-quiz/", "external": true, "art": "data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%201200%20720%22%3E%0A%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%3Cstop%20stop-color=%22#8fd6df%22/%3E%3Cstop%20offset=%22.5%22%20stop-color=%22#b8a9eb%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#f2a5c5%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%3Crect%20width=%221200%22%20height=%22720%22%20fill=%22url(#g)%22/%3E%0A%3Ccircle%20cx=%22260%22%20cy=%22300%22%20r=%22210%22%20fill=%22#fff%22%20fill-opacity=%22.20%22/%3E%3Ccircle%20cx=%22940%22%20cy=%22390%22%20r=%22250%22%20fill=%22#fff%22%20fill-opacity=%22.14%22/%3E%0A%3Cg%20fill=%22none%22%20stroke=%22#fff%22%20stroke-width=%226%22%20stroke-opacity=%22.45%22%3E%0A%3Cellipse%20cx=%22600%22%20cy=%22360%22%20rx=%22330%22%20ry=%22210%22/%3E%3Cpath%20d=%22M270%20360h660M600%20150v420M360%20205c160%20120%20320%20120%20480%200M360%20515c160-120%20320-120%20480%200%22/%3E%0A%3C/g%3E%0A%3Cg%20font-family=%22Arial%22%20font-weight=%22700%22%20font-size=%2244%22%20fill=%22#fff%22%20fill-opacity=%22.72%22%3E%0A%3Ctext%20x=%22120%22%20y=%22145%22%3EHELLO%21%3C/text%3E%3Ctext%20x=%22905%22%20y=%22170%22%3EWORLD%3C/text%3E%3Ctext%20x=%22120%22%20y=%22590%22%3EENGLISH%3C/text%3E%3Ctext%20x=%22900%22%20y=%22585%22%3EQUIZ%20%E2%9C%A6%3C/text%3E%0A%3C/g%3E%0A%3Cg%20fill=%22#fff%22%20fill-opacity=%22.90%22%3E%0A%3Ccircle%20cx=%22425%22%20cy=%22275%22%20r=%2212%22/%3E%3Ccircle%20cx=%22720%22%20cy=%22235%22%20r=%2212%22/%3E%3Ccircle%20cx=%22810%22%20cy=%22405%22%20r=%2212%22/%3E%3Ccircle%20cx=%22520%22%20cy=%22455%22%20r=%2212%22/%3E%0A%3C/g%3E%0A%3C/svg%3E", "favorite": true, "archived": false, "order": {"all": 10, "9": 10}, "updatedAt": "2026-09-18T00:00:00Z"}];
+const DEFAULT_STATE={activeSubject:"Geschichte",activeGrade:"all",recent:[],selectedTag:"all",typeFilter:"all",statusFilter:"active"};
+let modules=[],state={...DEFAULT_STATE},draggedId=null,pendingDrop=null,menuId=null,gradeEditId=null,moduleEditId=null,cloudMode="local",syncBusy=false;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function clone(v){return JSON.parse(JSON.stringify(v))}
-function loadModules(){
-  try{
-    const saved=JSON.parse(localStorage.getItem("kathleenToolboxModules")||"null");
-    if(Array.isArray(saved)){
-      // Merge future defaults without overwriting teacher edits.
-      const map=new Map(saved.map(x=>[x.id,x]));
-      defaultModules.forEach(d=>{if(!map.has(d.id))saved.push(clone(d))});
-      return saved
-    }
-  }catch(e){}
-  return clone(defaultModules)
+function uid(){return "mod-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7)}
+function loadLocal(){
+  try{const p=JSON.parse(localStorage.getItem("kathleenToolboxV19")||"null");if(p?.modules){modules=p.modules;state=Object.assign({},DEFAULT_STATE,p.state||{});return}}catch(e){}
+  modules=clone(DEFAULT_MODULES);state=clone(DEFAULT_STATE);saveLocal(false)
 }
-function saveModules(){
-  localStorage.setItem("kathleenToolboxModules",JSON.stringify(modules));
-  const s=document.getElementById("saveStatus");s.textContent="Änderungen gespeichert ✓";s.classList.add("online");
-  setTimeout(()=>{s.textContent="Änderungen lokal gespeichert";s.classList.remove("online")},1500)
+function saveLocal(schedule=true){localStorage.setItem("kathleenToolboxV19",JSON.stringify({version:19,modules,state,updatedAt:new Date().toISOString()}));if(schedule)queueCloudSave()}
+function payload(){return {version:19,modules,state,updatedAt:new Date().toISOString()}}
+function mergeDefaults(){
+  const ids=new Set(modules.map(m=>m.id));
+  DEFAULT_MODULES.forEach(d=>{if(!ids.has(d.id))modules.push(clone(d))})
 }
-function gradeLabel(g){return g==="all"?"Alle Klassen":g==="none"?"Nicht zugeordnet":g+". Klasse"}
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1900)}
+function safe(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function gradesOf(m){return Array.isArray(m.grades)?m.grades.map(Number).filter(n=>n>=7&&n<=10):[]}
+function orderKey(){return state.activeGrade==="all"?"all":state.activeGrade}
+function orderOf(m){const k=orderKey();return Number(m.order?.[k]??m.order?.all??999)}
+function activeModules(){return modules.filter(m=>!m.archived)}
+function allTags(){return [...new Set(activeModules().flatMap(m=>m.tags||[]))].sort((a,b)=>a.localeCompare(b,"de"))}
+function allTypes(){return [...new Set(activeModules().map(m=>m.type).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de"))}
 function filtered(){
+  const q=($("#search")?.value||"").trim().toLowerCase();
   return modules.filter(m=>{
-    if(m.subject!==activeSubject)return false;
-    const gradeOK=activeGrade==="all"||(activeGrade==="none"?(!m.grades||!m.grades.length):(m.grades||[]).includes(Number(activeGrade)));
-    if(!gradeOK)return false;
-    if(query&&!(`${m.title} ${m.subtitle||""} ${m.meta||""}`.toLowerCase().includes(query)))return false;
+    if(m.subject!==state.activeSubject)return false;
+    const gs=gradesOf(m);
+    if(state.activeGrade!=="all" && (state.activeGrade==="none"?gs.length!==0:!gs.includes(Number(state.activeGrade))))return false;
+    if(state.statusFilter==="active"&&m.archived)return false;
+    if(state.statusFilter==="archived"&&!m.archived)return false;
+    if(state.statusFilter==="draft"&&(m.status!=="draft"||m.archived))return false;
+    if(state.typeFilter!=="all"&&m.type!==state.typeFilter)return false;
+    if(state.selectedTag!=="all"&&!(m.tags||[]).includes(state.selectedTag))return false;
+    if(q&&!(`${m.title} ${m.subtitle||""} ${m.type||""} ${(m.tags||[]).join(" ")}`.toLowerCase().includes(q)))return false;
     return true
-  })
+  }).sort((a,b)=>orderOf(a)-orderOf(b)||a.title.localeCompare(b.title,"de"))
+}
+function moduleStatus(m){if(m.archived)return["Archiv","status-archived"];if(m.status==="draft")return["Entwurf","status-draft"];return["Bereit","status-ready"]}
+function fallbackArt(m){return m.subject==="Englisch"?DEFAULT_MODULES[1].art:DEFAULT_MODULES[0].art}
+function renderQuick(){
+  const favs=activeModules().filter(m=>m.favorite).slice(0,8);
+  const recent=(state.recent||[]).map(id=>modules.find(m=>m.id===id)).filter(Boolean).slice(0,5);
+  $("#favCount").textContent=favs.length?`${favs.length} gespeichert`:"noch keine";
+  $("#favoritesList").innerHTML=favs.length?favs.map(quickCard).join(""):'<span class="small">Mit ☆ auf einer Kachel Favoriten hinzufügen.</span>';
+  $("#recentList").innerHTML=recent.length?recent.map(quickCard).join(""):'<span class="small">Noch kein Tool geöffnet.</span>';
+  $$(".quick-item").forEach(x=>x.addEventListener("click",()=>openModule(x.dataset.id)))
+}
+function quickCard(m){return `<button type="button" class="quick-item" data-id="${safe(m.id)}"><span class="quick-thumb" style="background-image:url('${safe(m.art||fallbackArt(m))}')"></span><span><b>${safe(m.title)}</b><span>${safe(m.subject)} · ${gradesOf(m).map(g=>g+". Kl.").join(", ")||"ohne Klasse"}</span></span></button>`}
+function renderTags(){
+  const tags=allTags();$("#tagbar").innerHTML=`<button class="tagbtn ${state.selectedTag==="all"?"active":""}" data-tag="all">Alle Tags</button>`+tags.map(t=>`<button class="tagbtn ${state.selectedTag===t?"active":""}" data-tag="${safe(t)}">${safe(t)}</button>`).join("");
+  $$(".tagbtn").forEach(b=>b.addEventListener("click",()=>{state.selectedTag=b.dataset.tag;saveLocal();render()}))
+}
+function renderTypeFilter(){
+  const cur=state.typeFilter,sel=$("#typeFilter"),types=allTypes();sel.innerHTML='<option value="all">Alle Typen</option>'+types.map(t=>`<option value="${safe(t)}">${safe(t)}</option>`).join("");sel.value=types.includes(cur)?cur:"all";state.typeFilter=sel.value
+}
+function renderStats(){
+  $("#statModules").textContent=activeModules().length;$("#statFav").textContent=activeModules().filter(m=>m.favorite).length;
+  renderQuick()
 }
 function render(){
-  document.querySelectorAll(".subject").forEach(b=>b.classList.toggle("active",b.dataset.subject===activeSubject));
-  document.querySelectorAll(".grade").forEach(b=>b.classList.toggle("active",b.dataset.grade===activeGrade));
-  document.getElementById("sectionTitle").textContent=`${activeSubject} · ${gradeLabel(activeGrade)}`;
-  const rows=filtered(),grid=document.getElementById("moduleGrid");
-  document.getElementById("moduleCount").textContent=`${rows.length} ${rows.length===1?"Modul":"Module"}`;
-  if(!rows.length){
-    grid.innerHTML=`<div class="empty"><b>Noch nichts in dieser Kiste ✨</b><span>${activeSubject==="Englisch"?"Hier können später deine Englisch-Tools und Spiele landen.":"Für diese Klassenstufe ist noch kein Modul zugeordnet."}</span></div>`;
-    return
-  }
-  grid.innerHTML=rows.map(m=>`
-    <article class="card" draggable="true" data-id="${m.id}">
-      <div class="card-art" style="background-image:url('${m.art}')">
-        <div class="card-badges"><span class="badge">${m.subject}</span><span class="badge">${m.meta||""}</span></div>
-        <button class="card-menu" type="button" data-edit="${m.id}" aria-label="Klassenstufen ändern">⋯</button>
+  mergeDefaults();
+  $$(".subject").forEach(b=>b.classList.toggle("active",b.dataset.subject===state.activeSubject));
+  $$(".grade").forEach(b=>b.classList.toggle("active",b.dataset.grade===state.activeGrade));
+  $("#statusFilter").value=state.statusFilter;renderTypeFilter();renderTags();
+  const rows=filtered(),grid=$("#moduleGrid");
+  $("#sectionTitle").textContent=`${state.activeSubject} · ${state.activeGrade==="all"?"Alle Klassen":state.activeGrade==="none"?"Nicht zugeordnet":state.activeGrade+". Klasse"}`;
+  $("#moduleCount").textContent=`${rows.length} ${rows.length===1?"Modul":"Module"}`;
+  if(!rows.length)grid.innerHTML=`<div class="empty"><b>Noch nichts in dieser Kiste ✨</b><span>Filter ändern oder mit „＋ Neues Tool“ eine Kachel anlegen.</span></div>`;
+  else grid.innerHTML=rows.map(m=>{
+    const [st,cl]=moduleStatus(m),gs=gradesOf(m);
+    return `<article class="card" draggable="true" data-id="${safe(m.id)}">
+      <div class="card-art" style="background-image:url('${safe(m.art||fallbackArt(m))}')">
+        <div class="card-badges"><span class="badge">${safe(m.subject)}</span><span class="badge ${cl}">${st}</span><span class="badge">${safe(m.duration||"")}</span></div>
+        <div class="card-tools"><button class="iconbtn favorite ${m.favorite?"on":""}" type="button" data-fav="${safe(m.id)}" aria-label="Favorit">${m.favorite?"★":"☆"}</button><button class="iconbtn" type="button" data-menu="${safe(m.id)}" aria-label="Menü">⋯</button></div>
       </div>
-      <div class="card-body">
-        <h3>${m.title}</h3>
-        <p>${m.subtitle||""}</p>
-        <div class="grade-tags">${(m.grades||[]).length?(m.grades||[]).map(g=>`<span class="grade-tag">${g}. Klasse</span>`).join(""):'<span class="grade-tag">Nicht zugeordnet</span>'}</div>
-        <div class="card-footer">
-          <span class="drag-hint">↕ Ziehen zum Umordnen / Zuordnen</span>
-          <button class="open" type="button" data-open="${m.id}">Öffnen</button>
-        </div>
-      </div>
-    </article>`).join("");
-  bindCards()
+      <div class="card-body"><h3>${safe(m.title)}</h3><p>${safe(m.subtitle||"")}</p>
+        <div class="grade-tags">${gs.length?gs.map(g=>`<span class="grade-tag">${g}. Klasse</span>`).join(""):'<span class="grade-tag">Nicht zugeordnet</span>'}</div>
+        <div class="tag-tags">${(m.tags||[]).slice(0,5).map(t=>`<span class="mini-tag">${safe(t)}</span>`).join("")}</div>
+        <div class="card-footer"><span class="drag-hint">↕ Ziehen zum Sortieren / Zuordnen</span><button class="open" type="button" data-open="${safe(m.id)}">Öffnen</button></div>
+      </div></article>`
+  }).join("");
+  bindCards();renderStats();saveLocal(false)
 }
 function bindCards(){
-  document.querySelectorAll(".card").forEach(card=>{
+  $$(".card").forEach(card=>{
     card.addEventListener("dragstart",e=>{draggedId=card.dataset.id;card.classList.add("dragging");e.dataTransfer.effectAllowed="move"});
-    card.addEventListener("dragend",()=>{card.classList.remove("dragging");draggedId=null;clearDropTargets()});
+    card.addEventListener("dragend",()=>{card.classList.remove("dragging");$$(".card").forEach(c=>c.classList.remove("sort-target"));draggedId=null;clearDropTargets()});
+    card.addEventListener("dragover",e=>{if(!draggedId||draggedId===card.dataset.id)return;e.preventDefault();card.classList.add("sort-target")});
+    card.addEventListener("dragleave",()=>card.classList.remove("sort-target"));
+    card.addEventListener("drop",e=>{if(!draggedId||draggedId===card.dataset.id)return;e.preventDefault();card.classList.remove("sort-target");reorder(draggedId,card.dataset.id)})
   });
-  document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>{
-    const m=modules.find(x=>x.id===b.dataset.open);if(m)location.href=m.href
-  }));
-  document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();openEdit(b.dataset.edit)}))
+  $$("[data-open]").forEach(b=>b.addEventListener("click",()=>openModule(b.dataset.open)));
+  $$("[data-menu]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();openMenu(b.dataset.menu)}));
+  $$("[data-fav]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();toggleFavorite(b.dataset.fav)}))
 }
-function clearDropTargets(){document.querySelectorAll(".grade").forEach(x=>x.classList.remove("drop-target"))}
-document.querySelectorAll(".grade").forEach(btn=>{
-  btn.addEventListener("click",()=>{activeGrade=btn.dataset.grade;render()});
-  btn.addEventListener("dragover",e=>{if(!draggedId||["all","none"].includes(btn.dataset.grade))return;e.preventDefault();btn.classList.add("drop-target");e.dataTransfer.dropEffect="move"});
+function reorder(fromId,toId){
+  const rows=filtered().map(m=>m.id),from=rows.indexOf(fromId),to=rows.indexOf(toId);if(from<0||to<0)return;
+  rows.splice(to,0,rows.splice(from,1)[0]);const k=orderKey();
+  rows.forEach((id,i)=>{const m=modules.find(x=>x.id===id);m.order=m.order||{};m.order[k]=(i+1)*10});
+  saveLocal();toast("Reihenfolge gespeichert ✨");render()
+}
+function clearDropTargets(){$$(".grade").forEach(x=>x.classList.remove("drop-target"))}
+$$(".grade").forEach(btn=>{
+  btn.addEventListener("click",()=>{state.activeGrade=btn.dataset.grade;saveLocal();render()});
+  btn.addEventListener("dragover",e=>{if(!draggedId||["all","none"].includes(btn.dataset.grade))return;e.preventDefault();btn.classList.add("drop-target")});
   btn.addEventListener("dragleave",()=>btn.classList.remove("drop-target"));
-  btn.addEventListener("drop",e=>{
-    e.preventDefault();btn.classList.remove("drop-target");
-    const grade=Number(btn.dataset.grade);if(!draggedId||!grade)return;
-    const mod=modules.find(x=>x.id===draggedId);if(!mod)return;
-    pendingDrop={id:draggedId,grade};
-    document.getElementById("dropTitle").textContent=`${mod.title} → ${grade}. Klasse`;
-    document.getElementById("dropText").textContent=(mod.grades||[]).includes(grade)
-      ?"Dieses Modul ist dieser Klassenstufe bereits zugeordnet."
-      :"Soll das Modul zusätzlich in dieser Klassenstufe erscheinen oder aus den bisherigen Stufen hierher verschoben werden?";
-    document.getElementById("dropModal").classList.add("show")
-  })
+  btn.addEventListener("drop",e=>{e.preventDefault();btn.classList.remove("drop-target");const grade=Number(btn.dataset.grade),m=modules.find(x=>x.id===draggedId);if(!grade||!m)return;pendingDrop={id:m.id,grade};$("#dropTitle").textContent=`${m.title} → ${grade}. Klasse`;$("#dropText").textContent=gradesOf(m).includes(grade)?"Bereits zugeordnet.":"Zusätzlich anzeigen oder aus bisherigen Klassenstufen hierher verschieben?";$("#dropModal").classList.add("show")})
 });
-document.querySelectorAll(".subject").forEach(b=>b.addEventListener("click",()=>{activeSubject=b.dataset.subject;activeGrade="all";render()}));
-document.getElementById("search").addEventListener("input",e=>{query=e.target.value.trim().toLowerCase();render()});
-
-function closeDrop(){document.getElementById("dropModal").classList.remove("show");pendingDrop=null}
-document.getElementById("dropCancel").addEventListener("click",closeDrop);
-document.getElementById("dropAdd").addEventListener("click",()=>{
-  if(!pendingDrop)return;const m=modules.find(x=>x.id===pendingDrop.id);if(!m)return;
-  m.grades=[...new Set([...(m.grades||[]),pendingDrop.grade])].sort((a,b)=>a-b);saveModules();toast(`Zusätzlich der ${pendingDrop.grade}. Klasse zugeordnet ✨`);closeDrop();render()
-});
-document.getElementById("dropMove").addEventListener("click",()=>{
-  if(!pendingDrop)return;const m=modules.find(x=>x.id===pendingDrop.id);if(!m)return;
-  m.grades=[pendingDrop.grade];saveModules();toast(`In die ${pendingDrop.grade}. Klasse verschoben`);closeDrop();activeGrade=String(pendingDrop?.grade||activeGrade);render()
-});
-
-function openEdit(id){
-  editId=id;const m=modules.find(x=>x.id===id);if(!m)return;
-  document.getElementById("editText").textContent=`${m.title} · wähle alle Klassenstufen, in denen die Kachel erscheinen soll.`;
-  document.querySelectorAll("#editModal input").forEach(x=>x.checked=(m.grades||[]).includes(Number(x.value)));
-  document.getElementById("editModal").classList.add("show")
+$$(".subject").forEach(b=>b.addEventListener("click",()=>{state.activeSubject=b.dataset.subject;state.activeGrade="all";state.selectedTag="all";saveLocal();render()}));
+$("#search").addEventListener("input",render);$("#typeFilter").addEventListener("change",e=>{state.typeFilter=e.target.value;saveLocal();render()});$("#statusFilter").addEventListener("change",e=>{state.statusFilter=e.target.value;saveLocal();render()});
+function closeDrop(){$("#dropModal").classList.remove("show");pendingDrop=null}
+$("#dropCancel").addEventListener("click",closeDrop);$("#dropAdd").addEventListener("click",()=>{if(!pendingDrop)return;const m=modules.find(x=>x.id===pendingDrop.id);m.grades=[...new Set([...gradesOf(m),pendingDrop.grade])].sort((a,b)=>a-b);saveLocal();toast("Zusätzlich zugeordnet ✨");closeDrop();render()});
+$("#dropMove").addEventListener("click",()=>{if(!pendingDrop)return;const g=pendingDrop.grade,m=modules.find(x=>x.id===pendingDrop.id);m.grades=[g];saveLocal();closeDrop();state.activeGrade=String(g);toast("Kachel verschoben");render()});
+function toggleFavorite(id){const m=modules.find(x=>x.id===id);if(!m)return;m.favorite=!m.favorite;saveLocal();render()}
+function rememberRecent(id){state.recent=[id,...(state.recent||[]).filter(x=>x!==id)].slice(0,5);saveLocal()}
+function openModule(id){const m=modules.find(x=>x.id===id);if(!m)return;rememberRecent(id);if(m.external)window.open(m.href,"_blank","noopener");else location.href=m.href}
+function openMenu(id){menuId=id;const m=modules.find(x=>x.id===id);if(!m)return;$("#menuTitle").textContent=m.title;$("#menuFavorite").textContent=m.favorite?"Aus Favoriten entfernen":"Zu Favoriten";$("#menuArchive").textContent=m.archived?"Wiederherstellen":"Archivieren";$("#menuModal").classList.add("show")}
+$("#menuClose").addEventListener("click",()=>$("#menuModal").classList.remove("show"));$("#menuOpen").addEventListener("click",()=>{$("#menuModal").classList.remove("show");openModule(menuId)});$("#menuFavorite").addEventListener("click",()=>{toggleFavorite(menuId);$("#menuModal").classList.remove("show")});$("#menuArchive").addEventListener("click",()=>{const m=modules.find(x=>x.id===menuId);m.archived=!m.archived;saveLocal();$("#menuModal").classList.remove("show");toast(m.archived?"Ins Archiv verschoben":"Wiederhergestellt");render()});
+$("#menuGrades").addEventListener("click",()=>{$("#menuModal").classList.remove("show");openGrades(menuId)});$("#menuEdit").addEventListener("click",()=>{$("#menuModal").classList.remove("show");openModuleEditor(menuId)});$("#menuDuplicate").addEventListener("click",()=>{const m=modules.find(x=>x.id===menuId),n=clone(m);n.id=uid();n.title=m.title+" – Kopie";n.favorite=false;n.status="draft";n.updatedAt=new Date().toISOString();modules.push(n);saveLocal();$("#menuModal").classList.remove("show");toast("Kopie erstellt");render()});
+function openGrades(id){gradeEditId=id;const m=modules.find(x=>x.id===id);$("#gradeText").textContent=`${m.title} · mehrere Klassenstufen sind möglich.`;$$('#gradeChecks input').forEach(x=>x.checked=gradesOf(m).includes(Number(x.value)));$("#gradeModal").classList.add("show")}
+$("#gradeCancel").addEventListener("click",()=>$("#gradeModal").classList.remove("show"));$("#gradeSave").addEventListener("click",()=>{const m=modules.find(x=>x.id===gradeEditId);m.grades=$$('#gradeChecks input:checked').map(x=>Number(x.value)).sort((a,b)=>a-b);saveLocal();$("#gradeModal").classList.remove("show");toast("Klassenstufen gespeichert ✨");render()});
+function openModuleEditor(id=null){
+  moduleEditId=id;const m=id?modules.find(x=>x.id===id):null;
+  $("#moduleModalTitle").textContent=m?"Tool bearbeiten":"Neues Tool";
+  $("#fTitle").value=m?.title||"";$("#fSubject").value=m?.subject||state.activeSubject;$("#fSubtitle").value=m?.subtitle||"";$("#fType").value=m?.type||"";$("#fDuration").value=m?.duration||"";$("#fTags").value=(m?.tags||[]).join(", ");$("#fHref").value=m?.href||"";$("#fStatus").value=m?.status||"draft";$("#fArt").value=m?.art&&String(m.art).startsWith("http")?m.art:"";
+  $$("#fGrades input").forEach(x=>x.checked=(m?gradesOf(m):state.activeGrade!=="all"&&state.activeGrade!=="none"?[Number(state.activeGrade)]:[]).includes(Number(x.value)));$("#moduleModal").classList.add("show")
 }
-document.getElementById("editCancel").addEventListener("click",()=>{document.getElementById("editModal").classList.remove("show");editId=null});
-document.getElementById("editSave").addEventListener("click",()=>{
-  const m=modules.find(x=>x.id===editId);if(!m)return;
-  m.grades=[...document.querySelectorAll("#editModal input:checked")].map(x=>Number(x.value)).sort((a,b)=>a-b);
-  saveModules();document.getElementById("editModal").classList.remove("show");toast("Klassenstufen aktualisiert ✨");editId=null;render()
+$("#newModuleBtn").addEventListener("click",()=>openModuleEditor());$("#moduleCancel").addEventListener("click",()=>$("#moduleModal").classList.remove("show"));$("#moduleSave").addEventListener("click",()=>{
+  const title=$("#fTitle").value.trim(),href=$("#fHref").value.trim();if(!title||!href){toast("Titel und Link fehlen");return}
+  let m=moduleEditId?modules.find(x=>x.id===moduleEditId):null;if(!m){m={id:uid(),favorite:false,archived:false,order:{all:Date.now()},external:/^https?:/i.test(href)};modules.push(m)}
+  Object.assign(m,{title,subject:$("#fSubject").value,subtitle:$("#fSubtitle").value.trim(),type:$("#fType").value.trim()||"Tool",duration:$("#fDuration").value.trim(),tags:$("#fTags").value.split(",").map(x=>x.trim()).filter(Boolean),href,external:/^https?:/i.test(href),status:$("#fStatus").value,art:$("#fArt").value.trim()||m.art||fallbackArt({subject:$("#fSubject").value}),grades:$$('#fGrades input:checked').map(x=>Number(x.value)).sort((a,b)=>a-b),updatedAt:new Date().toISOString()});
+  saveLocal();$("#moduleModal").classList.remove("show");toast("Tool gespeichert ✨");render()
 });
-document.getElementById("resetLayout").addEventListener("click",()=>{
-  if(!confirm("Klassenstufen-Zuordnungen der Kacheln auf den Ausgangszustand zurücksetzen?"))return;
-  modules=clone(defaultModules);saveModules();activeSubject="Geschichte";activeGrade="all";render();toast("Ausgangszustand wiederhergestellt")
-});
-function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1900)}
+$("#exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(payload(),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Kathleens_Tool_Kiste_Backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),300)});
+$("#importBtn").addEventListener("click",()=>$("#importFile").click());$("#importFile").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{const p=JSON.parse(await f.text());if(!Array.isArray(p.modules))throw 0;modules=p.modules;state=Object.assign({},DEFAULT_STATE,p.state||{});saveLocal();toast("Backup importiert ✨");render()}catch(err){toast("Backup-Datei ungültig")}e.target.value=""});
 
-render();
+/* Cloud sync */
+function randomKey(){const a=new Uint8Array(24);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function adminKey(){return localStorage.getItem("kathleenToolboxAdminKey")||""}
+function setAdminKey(k){localStorage.setItem("kathleenToolboxAdminKey",k)}
+async function rpc(name,body={}){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`,{method:"POST",headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw new Error(`${name} ${r.status} ${await r.text()}`);const ct=r.headers.get("content-type")||"";return ct.includes("json")?r.json():null}
+async function cloudRead(){try{return await rpc("toolbox_read")}catch(e){return null}}
+async function cloudInit(){
+  const remote=await cloudRead();
+  if(remote&&remote.modules){modules=remote.modules;state=Object.assign({},DEFAULT_STATE,remote.state||{});saveLocal(false);cloudMode=adminKey()?"write":"read";updateSyncUI();render();return}
+  let key=adminKey();if(!key){key=randomKey();setAdminKey(key)}
+  try{const ok=await rpc("toolbox_init",{p_key:key,p_payload:payload()});cloudMode=ok?"write":"local"}catch(e){cloudMode="local"}
+  updateSyncUI()
+}
+let cloudTimer=null;function queueCloudSave(){clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudSave,650)}
+async function cloudSave(){
+  if(syncBusy||!adminKey()||cloudMode==="local")return;syncBusy=true;try{const ok=await rpc("toolbox_write",{p_key:adminKey(),p_payload:payload()});if(ok)cloudMode="write";else cloudMode="read"}catch(e){cloudMode="local"}finally{syncBusy=false;updateSyncUI()}
+}
+function updateSyncUI(){
+  const dot=cloudMode==="write"?"ok":cloudMode==="read"?"":"bad",label=cloudMode==="write"?"Cloud":cloudMode==="read"?"nur lesen":"lokal";
+  $("#statSync").innerHTML=`<span class="sync-dot ${dot}"></span>${label}`;$("#syncHint").textContent=cloudMode==="write"?"automatisch synchronisiert":cloudMode==="read"?"Admin-Schlüssel fehlt":"SQL-Migration prüfen";
+  $("#settingsSyncStatus").textContent=$("#syncHint").textContent;$("#adminKeyView").textContent=adminKey()?`Admin-Sync-Schlüssel dieses Geräts: ${adminKey()}`:"Dieses Gerät hat noch keinen Admin-Sync-Schlüssel."
+}
+$("#settingsBtn").addEventListener("click",()=>{updateSyncUI();$("#settingsModal").classList.add("show")});$("#settingsClose").addEventListener("click",()=>$("#settingsModal").classList.remove("show"));$("#saveAdminKey").addEventListener("click",async()=>{const k=$("#adminKeyInput").value.trim();if(!k)return;setAdminKey(k);cloudMode="write";await cloudSave();toast("Sync-Schlüssel übernommen");updateSyncUI()});$("#syncNow").addEventListener("click",async()=>{const remote=await cloudRead();if(remote?.modules){modules=remote.modules;state=Object.assign({},DEFAULT_STATE,remote.state||{});saveLocal(false);render();toast("Cloud-Stand geladen")}else await cloudSave();updateSyncUI()});
+
+/* Active session card */
+async function loadActiveSession(){
+  try{const r=await fetch(`${SUPABASE_URL}/rest/v1/quiz_session_public?select=code,status,start_at,created_at&status=neq.closed&order=created_at.desc&limit=1`,{headers:{apikey:SUPABASE_KEY}});if(!r.ok)return;const rows=await r.json(),s=rows[0];if(s){$("#statSession").textContent=s.code;$("#sessionHint").textContent=s.status==="armed"?"läuft / Start freigegeben":"wartet auf Klasse"}else{$("#statSession").textContent="–";$("#sessionHint").textContent="keine"}}catch(e){}
+}
+loadLocal();mergeDefaults();render();updateSyncUI();loadActiveSession();cloudInit();
 </script>
-</body>
-</html>
+</body></html>

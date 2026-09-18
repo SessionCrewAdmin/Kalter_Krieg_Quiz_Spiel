@@ -1,48 +1,42 @@
-# V18 – Kathleens magische Tool und Aufgaben Kiste
+# V19 – Teacher Hub
 
-## Neue Struktur
-- `index.html` → aktuelles Kalter-Krieg-Schülerquiz
-- `lehrer.html` → zentrale, fachübergreifende Lehrer-Hauptseite
-- `kalter_krieg_lehrer.html` → bestehender Cold-War-Control-Room
+Neu:
+- Dashboard mit Favoriten, zuletzt verwendet, aktiver Session und Cloud-Status
+- Geschichte / English als Hauptkategorien
+- 7.–10. Klasse als Filter
+- Kalter Krieg – Abschluss bereits enthalten
+- The World Speaks English – Länderquiz bereits enthalten
+- Favoriten
+- Zuletzt verwendet
+- Suche über Titel, Beschreibung, Typ und Tags
+- Tag-Filter
+- Typ- und Statusfilter
+- Drag & Drop zwischen Klassenstufen
+- Drag & Drop zum Sortieren innerhalb der Ansicht
+- Neue Kachel direkt im Lehrer-Hub anlegen
+- Kacheln bearbeiten, duplizieren, archivieren und wiederherstellen
+- Backup als JSON exportieren / importieren
+- Supabase Cloud-Sync der gesamten Hub-Konfiguration
+- lokaler Fallback, falls Supabase nicht verfügbar ist
+- responsive für PC / Tablet / Handy
 
-## Hauptseite
-Titel: **Kathleens magische Tool und Aufgaben Kiste**
-
-Design:
-- fröhlicher, girlie Pastell-Look
-- Pink / Flieder / Mint / Peach
-- kleine schwebende Sparkles
-- Fachkacheln Geschichte und English
-- Klassenfilter 7 / 8 / 9 / 10
-- Suche
-
-## Kachelstruktur
-Erste Kachel:
-- Geschichte
-- 9. Klasse
-- Kalter Krieg – Abschluss
-
-Klick auf `Öffnen` führt zum bisherigen Kalter-Krieg-Control-Room.
-
-## Drag & Drop
-Auf Desktop:
-- Tool-Kachel auf `7. Klasse`, `8. Klasse`, `9. Klasse` oder `10. Klasse` ziehen.
-- Danach wählen:
-  - **Zusätzlich zuordnen**
-  - **Verschieben**
-
-Auf Tablet/Handy:
-- `⋯` auf der Kachel öffnen.
-- Mehrere Klassenstufen per Checkbox auswählen.
-
-Die Zuordnungen werden aktuell im Browser der Lehrkraft gespeichert (`localStorage`).
-Das ist absichtlich zunächst ohne neue Supabase-Migration umgesetzt, damit die neue Navigationsstruktur unabhängig vom Quiz-Backend funktioniert.
-
-## GitHub Upload
-Bitte diese drei Dateien in das Repo laden:
+Upload zu GitHub:
 - index.html
 - lehrer.html
 - kalter_krieg_lehrer.html
 
-Lehrer-Hauptseite:
-`https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/lehrer.html`
+Einmalig vorher:
+- V19_SUPABASE_MIGRATION.sql in Supabase ausführen.
+
+Lehrer-Hub:
+https://sessioncrewadmin.github.io/Kathleens_magische_Kiste/lehrer.html
+
+Englisch World Quiz:
+https://sessioncrewadmin.github.io/world-map-quiz/
+
+## Aktueller GitHub-Pages-Pfad
+- Hauptseite / Schüler: https://sessioncrewadmin.github.io/Kathleens_magische_Kiste/
+- Lehrer-Hub: https://sessioncrewadmin.github.io/Kathleens_magische_Kiste/lehrer.html
+- Kalter-Krieg-Control-Room: https://sessioncrewadmin.github.io/Kathleens_magische_Kiste/kalter_krieg_lehrer.html
+
+Der fest eingebettete QR-Code wurde ebenfalls auf diesen Pfad aktualisiert.
