@@ -1,26 +1,26 @@
-# V17.1 – Lehrermodus-Fix
+# V17.2 – Session-Erstellung repariert
 
-Der Lehrermodus wurde robuster gemacht.
+## Ursache
+In V17 lagen mehrere Overlay-Elemente (Lehrer-Nachricht, Gerätesperre, Zertifikat usw.)
+unterhalb des Haupt-JavaScripts.
 
-## Zwei Wege zum Lehrermodus
+Das JavaScript versuchte beim Laden bereits Event-Listener auf diese Elemente zu setzen.
+Dadurch brach der App-Start vorzeitig ab. Der Lehrermodus wurde zwar angezeigt,
+aber der Button „Neue Unterrichts-Session“ bekam keinen funktionierenden Click-Handler.
 
-1. Empfohlen:
-   https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/lehrer.html
+## Fix
+- Alle benötigten Overlay-Elemente werden jetzt vor dem JavaScript geladen.
+- Der komplette Lehrer-Boot läuft wieder durch.
+- „Neue Unterrichts-Session“ wird wieder korrekt gebunden.
+- Fehler beim Supabase-RPC werden jetzt direkt im Lehrermodus detaillierter angezeigt.
+- `lehrer.html` bleibt die empfohlene Lehreradresse.
 
-2. Weiterhin unterstützt:
-   https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/?teacher=1
-
-`lehrer.html` enthält dieselbe Anwendung wie `index.html`, startet aber direkt im Cold-War-Control-Room.
-
-## Was wurde repariert?
-- Lehrerroute wird jetzt schon vor dem normalen App-Start ausgewertet.
-- Selbst wenn später ein externes Skript langsam lädt, wird der Lehrerbildschirm direkt angezeigt.
-- `/lehrer.html` wird auch vom normalen JavaScript als Lehrerroute erkannt.
-- Bestehende V17 Supabase-Struktur bleibt unverändert.
-
-## Upload zu GitHub Pages
-Diesmal bitte ZWEI Dateien in das Repo laden/ersetzen:
+## Upload
+Bitte beide Dateien ersetzen:
 - index.html
 - lehrer.html
 
-Keine neue SQL-Migration notwendig, wenn V17 bereits ausgeführt wurde.
+Keine neue SQL-Migration erforderlich.
+
+Lehrer:
+https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/lehrer.html

@@ -916,7 +916,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 
         <div class="teacher-card">
           <h3>2 · Session</h3>
-          <div class="teacher-statusline" id="teacherSessionStatus">Noch keine Session erstellt.</div>
+          <div class="teacher-statusline" id="teacherSessionStatus">Lehrersteuerung bereit · noch keine Session erstellt.</div>
           <div class="mode-badge" id="teacherModeBadge">Modus: <strong>15 Min.</strong></div>
           <div class="session-code-big" id="teacherCode">------</div>
           <div class="small" id="teacherJoinUrl">Der Klassen-Code erscheint hier.</div>
@@ -1504,6 +1504,57 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 <div class="finale-unlock" id="finaleUnlock" aria-hidden="true"><div class="archive-core" id="archiveCore"><div class="archive-core-title">8 Akten<br>werden entschlüsselt</div></div></div>
 
 
+
+
+<div class="launch-overlay" id="launchOverlay" aria-live="polite">
+  <div class="launch-console">
+    <div class="launch-top"><span>OPERATION EISZEIT // STARTFREIGABE</span><span class="launch-label">SIGNAL EMPFANGEN</span></div>
+    <div class="launch-clock">
+      <div class="launch-digits" id="launchDigits">T–10</div>
+      <div class="launch-sub" id="launchSub">Synchronisiere mit Klassen-Session</div>
+    </div>
+    <div class="launch-bars" id="launchBars">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="launch-warning">Freigabe durch Lehrkraft · Quiz startet automatisch bei T–00</div>
+  </div>
+</div>
+
+
+
+<div class="command-overlay" id="commandOverlay" aria-live="assertive">
+  <div class="command-card"><div class="stamp">LEHRER-NACHRICHT</div><h2 id="commandTitle">Nachricht</h2><p id="commandText"></p><div class="lock-count hidden" id="lockCount">30</div><button class="btn btn-primary" id="ackCommand" type="button">Verstanden</button></div>
+</div>
+<div class="pause-overlay" id="pauseOverlay"><div class="pause-card"><div class="kicker">Übertragung unterbrochen</div><h2>UNTERRICHT PAUSIERT</h2><p>Die Lehrkraft hat die Session angehalten. Dein aktueller Stand bleibt erhalten.</p></div></div>
+
+<div class="time-expired-overlay" id="timeExpiredOverlay" aria-live="assertive">
+  <div class="expired-card">
+    <div class="expired-kicker">Operation Eiszeit // Zeitkontrolle</div>
+    <div class="expired-title">ZEITFENSTER<br>GESCHLOSSEN</div>
+    <div class="expired-sub">Weitere Eingaben wurden gesperrt.<br>Der aktuelle Stand wird gesichert und die persönliche Auswertung geöffnet.</div>
+    <div class="expired-bar"></div>
+  </div>
+</div>
+
+
+<div class="certificate-overlay" id="certificateOverlay">
+  <div>
+    <div class="certificate-sheet" id="certificateSheet">
+      <div class="cert-kicker">Operation Kalter Krieg · persönliche Abschlussakte</div>
+      <div class="cert-title">ARCHIVFREIGABE</div>
+      <div class="cert-name" id="certName">–</div>
+      <p id="certText">hat die ausgewählten Missionen der Unterrichtsübung bearbeitet.</p>
+      <div class="cert-grid"><div class="cert-stat"><span>Punkte</span><b id="certScore">0</b></div><div class="cert-stat"><span>Fehler</span><b id="certMistakes">0</b></div><div class="cert-stat"><span>Beste Serie</span><b id="certCombo">0</b></div></div>
+      <div class="profile-summary" style="margin-top:14px"><div class="profile-summary-card strong"><span>Stärkstes Thema</span><b id="certStrong">–</b></div><div class="profile-summary-card revisit"><span>Wiederholen</span><b id="certWeak">–</b></div></div>
+      <div class="cert-badges" id="certBadges"></div>
+      <p><b>Session:</b> <span id="certSession">–</span> &nbsp; <b>Team:</b> <span id="certTeam">–</span> &nbsp; <b>Datum:</b> <span id="certDate">–</span></p>
+      <div class="cert-disclaimer">Spielergebnis einer Unterrichtsübung. Diese Abschlussakte ist kein offizielles schulisches Zertifikat und enthält keine Leistungsbewertung.</div>
+    </div>
+    <div class="cert-actions"><button class="btn btn-primary" id="printCertificate" type="button">Als PDF / drucken</button><button class="btn btn-secondary" id="closeCertificate" type="button">Schließen</button></div>
+  </div>
+</div>
+
+
 <script>
 /* V17.1 robust route bootstrap: teacher screen is selected before the main app boots. */
 (function(){
@@ -1967,7 +2018,15 @@ async function createTeacherSession(){
     const row=Array.isArray(data)?data[0]:data;if(!row?.code||!row?.teacher_key)throw new Error("bad-response");
     teacherSessionCode=row.code;teacherKey=row.teacher_key;teacherStoreKey(teacherSessionCode,teacherKey);
     teacherActivateUI();questionOverrides=await fetchQuestionOverrides(teacherSessionCode);renderEditorList();await refreshTeacherPanel();startTeacherPolling()
-  }catch(e){console.warn(e);$("#teacherSessionStatus").textContent="Fehler: Bitte prüfen, ob V15, V16 und V17 Supabase-Migrationen ausgeführt wurden."}
+  }catch(e){
+    console.error("Session creation failed:",e);
+    const raw=String(e?.message||e||"Unbekannter Fehler");
+    let hint="Session konnte nicht erstellt werden.";
+    if(raw.includes("404")) hint+=" Die Supabase-RPC-Funktion wurde nicht gefunden.";
+    else if(raw.includes("401")||raw.includes("403")) hint+=" Supabase-Berechtigung/RPC-Freigabe prüfen.";
+    else if(raw.includes("create_quiz_session")) hint+=" Die Funktion create_quiz_session bzw. die Migrationen prüfen.";
+    $("#teacherSessionStatus").textContent=hint+" ["+raw.slice(0,160)+"]";
+  }
   finally{$("#createSession").disabled=false}
 }
 function teacherActivateUI(){
@@ -2792,56 +2851,8 @@ if(urlParams.get("practice")==="1"){
 }
 if(urlParams.get("teacher")==="1"||/\/lehrer\.html$/i.test(location.pathname)){show("teacher");restoreTeacherSession()}
 decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
+if($("#createSession")) $("#createSession").dataset.bound="1";
 })();
 </script>
-
-<div class="launch-overlay" id="launchOverlay" aria-live="polite">
-  <div class="launch-console">
-    <div class="launch-top"><span>OPERATION EISZEIT // STARTFREIGABE</span><span class="launch-label">SIGNAL EMPFANGEN</span></div>
-    <div class="launch-clock">
-      <div class="launch-digits" id="launchDigits">T–10</div>
-      <div class="launch-sub" id="launchSub">Synchronisiere mit Klassen-Session</div>
-    </div>
-    <div class="launch-bars" id="launchBars">
-      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <div class="launch-warning">Freigabe durch Lehrkraft · Quiz startet automatisch bei T–00</div>
-  </div>
-</div>
-
-
-
-<div class="command-overlay" id="commandOverlay" aria-live="assertive">
-  <div class="command-card"><div class="stamp">LEHRER-NACHRICHT</div><h2 id="commandTitle">Nachricht</h2><p id="commandText"></p><div class="lock-count hidden" id="lockCount">30</div><button class="btn btn-primary" id="ackCommand" type="button">Verstanden</button></div>
-</div>
-<div class="pause-overlay" id="pauseOverlay"><div class="pause-card"><div class="kicker">Übertragung unterbrochen</div><h2>UNTERRICHT PAUSIERT</h2><p>Die Lehrkraft hat die Session angehalten. Dein aktueller Stand bleibt erhalten.</p></div></div>
-
-<div class="time-expired-overlay" id="timeExpiredOverlay" aria-live="assertive">
-  <div class="expired-card">
-    <div class="expired-kicker">Operation Eiszeit // Zeitkontrolle</div>
-    <div class="expired-title">ZEITFENSTER<br>GESCHLOSSEN</div>
-    <div class="expired-sub">Weitere Eingaben wurden gesperrt.<br>Der aktuelle Stand wird gesichert und die persönliche Auswertung geöffnet.</div>
-    <div class="expired-bar"></div>
-  </div>
-</div>
-
-
-<div class="certificate-overlay" id="certificateOverlay">
-  <div>
-    <div class="certificate-sheet" id="certificateSheet">
-      <div class="cert-kicker">Operation Kalter Krieg · persönliche Abschlussakte</div>
-      <div class="cert-title">ARCHIVFREIGABE</div>
-      <div class="cert-name" id="certName">–</div>
-      <p id="certText">hat die ausgewählten Missionen der Unterrichtsübung bearbeitet.</p>
-      <div class="cert-grid"><div class="cert-stat"><span>Punkte</span><b id="certScore">0</b></div><div class="cert-stat"><span>Fehler</span><b id="certMistakes">0</b></div><div class="cert-stat"><span>Beste Serie</span><b id="certCombo">0</b></div></div>
-      <div class="profile-summary" style="margin-top:14px"><div class="profile-summary-card strong"><span>Stärkstes Thema</span><b id="certStrong">–</b></div><div class="profile-summary-card revisit"><span>Wiederholen</span><b id="certWeak">–</b></div></div>
-      <div class="cert-badges" id="certBadges"></div>
-      <p><b>Session:</b> <span id="certSession">–</span> &nbsp; <b>Team:</b> <span id="certTeam">–</span> &nbsp; <b>Datum:</b> <span id="certDate">–</span></p>
-      <div class="cert-disclaimer">Spielergebnis einer Unterrichtsübung. Diese Abschlussakte ist kein offizielles schulisches Zertifikat und enthält keine Leistungsbewertung.</div>
-    </div>
-    <div class="cert-actions"><button class="btn btn-primary" id="printCertificate" type="button">Als PDF / drucken</button><button class="btn btn-secondary" id="closeCertificate" type="button">Schließen</button></div>
-  </div>
-</div>
-
 </body>
 </html>
