@@ -48,7 +48,8 @@ async function setup(pin){
   if(!crypto?.subtle)throw new Error('Dieser Browser unterstützt die benötigte Verschlüsselung nicht.');
   const salt=randomBytes(16);key=await deriveKey(pin,salt);cache=readLegacy();
   localStorage.setItem(VAULT_KEY,JSON.stringify({version:2,cipher:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:KDF_ITERATIONS,salt:bytesToB64(salt),iv:'',data:'',updatedAt:new Date().toISOString()}));
-  await persist(cache);bindActivity();window.dispatchEvent(new CustomEvent('kathleen:classlists-unlocked'));return true
+  try{await persist(cache)}catch(e){localStorage.removeItem(VAULT_KEY);key=null;cache=[];throw e}
+  bindActivity();window.dispatchEvent(new CustomEvent('kathleen:classlists-unlocked'));return true
 }
 async function unlock(pin){
   pin=String(pin||'');if(!hasVault())return setup(pin);
@@ -101,15 +102,17 @@ function exportSecureBackup(){
   return JSON.stringify({format:'kathleen-class-vault',version:2,exportedAt:new Date().toISOString(),vault:JSON.parse(raw)},null,2)
 }
 function validateVault(v){return !!(v&&v.version===2&&v.cipher==='AES-256-GCM'&&typeof v.salt==='string'&&typeof v.iv==='string'&&typeof v.data==='string')}
-function importSecureBackup(text){
+async function importSecureBackup(text,pin){
   const d=JSON.parse(text),v=d?.format==='kathleen-class-vault'?d.vault:null;if(!validateVault(v))throw new Error('Kein gültiges verschlüsseltes Klassenlisten-Backup.');
-  localStorage.setItem(VAULT_KEY,JSON.stringify(v));localStorage.removeItem(LEGACY_KEY);lock(false);return true
+  const candidate=await deriveKey(String(pin||''),b64ToBytes(v.salt));let restored;
+  try{const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(v.iv)},candidate,b64ToBytes(v.data));restored=sanitizeLists(JSON.parse(dec.decode(plain))?.classes||[])}catch(e){throw new Error('Backup-PIN falsch oder Backup beschädigt.')}
+  localStorage.setItem(VAULT_KEY,JSON.stringify(v));localStorage.removeItem(LEGACY_KEY);key=candidate;cache=restored;bindActivity();window.dispatchEvent(new CustomEvent('kathleen:classlists'));return true
 }
 async function changePin(newPin){
   assertUnlocked();newPin=String(newPin||'');if(newPin.length<8)throw new Error('Die neue Lehrer-PIN muss mindestens 8 Zeichen haben.');
-  const lists=load(),salt=randomBytes(16);key=await deriveKey(newPin,salt);
+  const lists=load(),salt=randomBytes(16),oldVault=localStorage.getItem(VAULT_KEY),oldKey=key;key=await deriveKey(newPin,salt);
   localStorage.setItem(VAULT_KEY,JSON.stringify({version:2,cipher:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:KDF_ITERATIONS,salt:bytesToB64(salt),iv:'',data:'',updatedAt:new Date().toISOString()}));
-  await persist(lists);return true
+  try{await persist(lists);return true}catch(e){if(oldVault)localStorage.setItem(VAULT_KEY,oldVault);key=oldKey;throw e}
 }
 function ensureGuardStyles(){
   if(document.getElementById('kclGuardStyle'))return;
