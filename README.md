@@ -70,3 +70,34 @@ Der Patch allein reicht dann nicht.
 Einfach `setup/V20_2_FULL_RECOVERY.sql` komplett in einem neuen Supabase SQL Tab ausführen.
 Das Skript erstellt Tabellen und RPCs in richtiger Reihenfolge und qualifiziert
 `extensions.digest()` explizit.
+
+
+## V20.3 – iPhone / Mobile Polish
+
+Speziell für iPhone 14 / ca. 390 px Breite optimiert:
+- kompakter Header und sinnvoll angeordnete Hauptaktionen
+- deutlich kompakteres Dashboard
+- sticky Fach-Tabs
+- horizontale Klassen- und Tag-Leisten
+- mindestens ca. 44 px große Touch-Flächen
+- 16 px Eingabefelder gegen automatisches Safari-Zoomen
+- kompaktere Modul-Karten
+- mobiles `i` für Details, weil Hover auf dem iPhone nicht existiert
+- Modale als Bottom-Sheets
+- Safe-Area-Unterstützung für Home-Indicator / Displayränder
+- horizontaler Overflow verhindert
+
+Für den reinen Mobile-Fix reicht auf GitHub das Ersetzen von `index.html`.
+
+## V20.4 – World Quiz exakt wiederhergestellt
+
+Die beiden Dateien unter `tools/english-world-quiz/` wurden nicht rekonstruiert, sondern auf den exakten Stand des ursprünglichen GitHub-Repositories `SessionCrewAdmin/world-map-quiz` zurückgesetzt.
+
+- `index.html`: D3-Vektorkarte, Natural Earth / world-atlas 50m, Mausrad/Pinch, Drag, +/−/1×, bis 8× Zoom.
+- `bonus.html`: gleicher Vektor-/Zoom-Unterbau plus Combo, ON FIRE / UNSTOPPABLE / MAP MASTER / PERFECT, Konfetti und Homework Pass.
+
+Für diesen Fix müssen auf GitHub nur diese beiden Dateien ersetzt werden:
+- `tools/english-world-quiz/index.html`
+- `tools/english-world-quiz/bonus.html`
+
+Keine neue Supabase-Migration nötig.
