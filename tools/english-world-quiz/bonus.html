@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#173248"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="../../manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/kathleen-180.png">
 <title>Bonus Round – The World Speaks English</title>
 <style>
 :root{--bg:#f5f1e7;--ink:#173248;--accent:#d2a23a;--land:#d7e1e7;--land-hover:#c3d1d9;--water:#eef6f9;--ok:#2f7d5a;--bad:#a4473c;--card:#fff;--muted:#6a7c88}
@@ -29,6 +29,26 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 .feedback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(245,241,232,.82);backdrop-filter:blur(4px);z-index:30}.feedback.show{display:flex}.feedback-card{min-width:330px;text-align:center;background:#fff;border-radius:20px;padding:28px 32px;box-shadow:0 18px 60px rgba(0,0,0,.15)}.feedback-card .title{font-size:44px;font-weight:900;margin-bottom:6px}.feedback.correct .title{color:var(--ok)}.feedback.wrong .title{color:var(--bad)}.feedback-card p{font-size:21px;color:var(--muted);margin:0 0 20px}
 .win-card{text-align:center}.trophy{font-size:70px;margin-bottom:10px}.win-card h1{font-size:clamp(52px,7vw,96px)}.pass{margin:28px auto 18px;max-width:650px;border:3px dashed var(--accent);border-radius:22px;padding:24px;background:#fffaf0}.pass .small{font-size:15px;text-transform:uppercase;letter-spacing:.16em;color:#8c6a1b;font-weight:900}.pass .title{font-size:clamp(36px,5vw,64px);font-weight:900;margin:8px 0}.pass .code{font-size:28px;font-weight:900;color:var(--ink);letter-spacing:.12em}.pass .time{font-size:15px;color:var(--muted);margin-top:10px}.note{font-size:18px!important}
 @media(max-width:760px){.screen{padding:16px}.card{padding:32px 26px}.quiz-head{grid-template-columns:1fr}.progress{text-align:left}.combo-wrap{justify-content:flex-start}.map-controls{right:10px;top:10px}.map-controls button{width:42px;height:42px}}
+
+/* V21 mobile/tablet polish */
+html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}.app{height:100dvh;min-height:100svh}
+button{touch-action:manipulation}svg{-webkit-user-select:none;user-select:none}
+@media(max-width:760px){
+  body{position:fixed;inset:0;width:100%}.app{height:100dvh;min-height:0}
+  .topbar{height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 12px 0;gap:8px}.brand{font-size:15px}.badge{font-size:10px;padding:6px 9px}
+  .screen{padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
+  #intro,#win{overflow:auto;-webkit-overflow-scrolling:touch;align-items:flex-start;padding-top:14px}.card{width:100%;padding:22px 18px;border-radius:19px}.card h1{font-size:clamp(34px,11vw,50px)}.card p{font-size:17px}.rules{margin:17px 0;padding:14px 15px;font-size:16px}.reward{font-size:18px}
+  #quiz{gap:6px;overflow:hidden}.quiz-head{grid-template-columns:1fr auto;gap:8px;align-items:end}.eyebrow{font-size:11px;margin-bottom:2px}.country-name{font-size:clamp(25px,8vw,37px)}.progress strong{font-size:20px}.progress span{font-size:10px}.combo-wrap{gap:5px;margin-top:3px}.combo-label{font-size:9px}.combo-badge{min-width:72px;padding:5px 8px;font-size:12px}
+  .map-card{border-radius:16px;min-height:0}.map-controls{right:8px;top:8px;gap:6px}.map-controls button{width:44px;height:44px;border-radius:11px}
+  .feedback{padding:12px}.feedback-card{min-width:0;width:100%;max-width:360px;padding:22px 18px;border-radius:18px}.feedback-card .title{font-size:31px}.feedback-card p{font-size:15px;margin-bottom:14px}
+  .combo-burst{top:15%;font-size:clamp(25px,8vw,42px);padding:8px 12px}
+  .trophy{font-size:50px}.win-card h1{font-size:clamp(38px,12vw,58px)}.pass{margin:18px auto 12px;padding:17px}.pass .title{font-size:34px}.pass .code{font-size:21px}
+}
+@media(max-width:950px) and (orientation:landscape){
+  .topbar{height:calc(44px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}.brand{font-size:14px}.badge{font-size:9px}
+  .screen{padding:4px 10px calc(6px + env(safe-area-inset-bottom))}#quiz{gap:3px}.quiz-head{grid-template-columns:1fr auto}.country-name{font-size:27px}.eyebrow{font-size:10px}.progress strong{font-size:18px}.combo-wrap{margin-top:1px}.map-card{border-radius:13px}
+}
+
 </style>
 </head>
 <body>
@@ -45,8 +65,8 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 <section id="win" class="screen"><div class="card win-card"><div class="trophy">🏆</div><h1>Perfect round!</h1><p>You found every country without a mistake.</p><div class="pass"><div class="small">Surprise reward unlocked</div><div class="title">Homework Pass</div><div class="code" id="rewardCode">PASS-0000</div><div class="time" id="rewardTime"></div></div><p class="note">Show this screen to your teacher.</p></div></section>
 </div>
 <canvas id="confettiCanvas" aria-hidden="true"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script>
 (() => {
 const challengeCountries=["United Kingdom","Ireland","United States of America","Canada","New Zealand","Jamaica","Nigeria","Kenya","Philippines","Ghana","Bahamas","Barbados"];
@@ -104,7 +124,7 @@ if(frame<230)requestAnimationFrame(draw);else ctx.clearRect(0,0,innerWidth,inner
 requestAnimationFrame(draw);
 }
 function issueReward(){const code="PASS-"+Math.floor(1000+Math.random()*9000),now=new Date();rewardCode.textContent=code;rewardTime.textContent=now.toLocaleDateString()+" · "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});localStorage.setItem("homeworkPassEarned",JSON.stringify({code,timestamp:now.toISOString()}));show("win");setTimeout(launchConfetti,180)}
-fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(world=>{
+fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(world=>{
 const features=topojson.feature(world,world.objects.countries).features;
 mapViewport.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).attr("data-name",d=>d.properties.name).on("click",function(event,d){
 event.stopPropagation();const clicked=normalizeName(d.properties.name),target=currentCountry();
@@ -118,5 +138,6 @@ startBtn.addEventListener("click",newGame);restartBtn.addEventListener("click",(
 nextBtn.addEventListener("click",()=>{correctFeedback.classList.remove("show");if(index>=challengeCountries.length)issueReward();else{resetMapZoom();updateUI()}});
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('../../sw.js').catch(()=>{}))}</script>
 </body>
 </html>
