@@ -1,4 +1,4 @@
-const CACHE='kathleen-v21-20260918-1';
+const CACHE='kathleen-v21-20260918-2';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html',
@@ -9,7 +9,8 @@ const CORE=[
 const REMOTE=[
   'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js',
   'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js',
-  'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json'
+  'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json',
+  'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
 ];
 
 self.addEventListener('install',event=>{
