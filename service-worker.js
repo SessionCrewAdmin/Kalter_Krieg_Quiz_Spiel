@@ -1,4 +1,4 @@
-const CACHE='kathleen-v21-20260918-4';
+const CACHE='kathleen-v21-20260918-5';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html',
