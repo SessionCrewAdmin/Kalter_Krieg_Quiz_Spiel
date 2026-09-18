@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f1e7"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="../../manifest.webmanifest"><link rel="apple-touch-icon" href="../../assets/icons/app-180.png">
 <title>Bonus Round – The World Speaks English</title>
 <style>
 :root{--bg:#f5f1e7;--ink:#173248;--accent:#d2a23a;--land:#d7e1e7;--land-hover:#c3d1d9;--water:#eef6f9;--ok:#2f7d5a;--bad:#a4473c;--card:#fff;--muted:#6a7c88}
@@ -29,6 +29,36 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 .feedback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(245,241,232,.82);backdrop-filter:blur(4px);z-index:30}.feedback.show{display:flex}.feedback-card{min-width:330px;text-align:center;background:#fff;border-radius:20px;padding:28px 32px;box-shadow:0 18px 60px rgba(0,0,0,.15)}.feedback-card .title{font-size:44px;font-weight:900;margin-bottom:6px}.feedback.correct .title{color:var(--ok)}.feedback.wrong .title{color:var(--bad)}.feedback-card p{font-size:21px;color:var(--muted);margin:0 0 20px}
 .win-card{text-align:center}.trophy{font-size:70px;margin-bottom:10px}.win-card h1{font-size:clamp(52px,7vw,96px)}.pass{margin:28px auto 18px;max-width:650px;border:3px dashed var(--accent);border-radius:22px;padding:24px;background:#fffaf0}.pass .small{font-size:15px;text-transform:uppercase;letter-spacing:.16em;color:#8c6a1b;font-weight:900}.pass .title{font-size:clamp(36px,5vw,64px);font-weight:900;margin:8px 0}.pass .code{font-size:28px;font-weight:900;color:var(--ink);letter-spacing:.12em}.pass .time{font-size:15px;color:var(--muted);margin-top:10px}.note{font-size:18px!important}
 @media(max-width:760px){.screen{padding:16px}.card{padding:32px 26px}.quiz-head{grid-template-columns:1fr}.progress{text-align:left}.combo-wrap{justify-content:flex-start}.map-controls{right:10px;top:10px}.map-controls button{width:42px;height:42px}}
+
+/* V21 · iPhone/iPad classroom polish */
+html,body{height:100%;height:100dvh}.app{height:100%;height:100dvh}
+@supports(padding:max(0px)){
+  .topbar{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  .screen{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+}
+@media(max-width:900px){
+  .topbar{height:58px}.brand{font-size:17px}.badge{font-size:11px;padding:7px 10px}
+  .screen{padding:14px 16px 18px}#quiz{gap:9px}.quiz-head{gap:10px}
+  .eyebrow{font-size:14px}.country-name{font-size:clamp(32px,7vw,52px)}
+  .progress strong{font-size:24px}.progress span{font-size:13px}.combo-badge{min-width:84px;font-size:13px}
+  .map-card{border-radius:18px;min-height:300px}.map-controls{right:10px;top:10px;gap:6px}.map-controls button{width:44px;height:44px}
+  .feedback-card{min-width:0;width:min(340px,88vw);padding:23px 20px}.feedback-card .title{font-size:36px}.feedback-card p{font-size:18px}
+  .card{padding:34px 30px;border-radius:20px}.rules{font-size:18px}.reward{font-size:20px}
+}
+@media(max-width:600px){
+  .topbar{height:54px;padding-left:10px;padding-right:10px}.brand{font-size:14px;max-width:55vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.badge{font-size:9px}
+  .screen{padding:9px 10px max(10px,env(safe-area-inset-bottom))}
+  .quiz-head{grid-template-columns:1fr auto;align-items:end}.eyebrow{font-size:11px}.country-name{font-size:28px}
+  .progress{text-align:right}.progress strong{font-size:20px}.progress span{font-size:10px}.combo-wrap{justify-content:flex-end;gap:5px;margin-top:4px}.combo-label{font-size:9px}.combo-badge{min-width:64px;padding:5px 7px;font-size:11px}
+  .map-card{border-radius:15px;min-height:330px}.map-controls button{width:42px;height:42px;font-size:22px}
+  .loading{font-size:17px;padding:20px}.combo-burst{top:15%;font-size:30px}
+  .card{padding:27px 22px}.card h1{font-size:42px}.card p{font-size:19px}.rules{font-size:16px;padding:16px}.reward{font-size:18px}.trophy{font-size:52px}.pass{padding:18px}.pass .code{font-size:24px}
+}
+@media(max-width:600px) and (orientation:landscape){
+  .topbar{height:46px}.screen{padding-top:6px;padding-bottom:6px}.eyebrow{display:none}.country-name{font-size:24px}.map-card{min-height:0}.combo-burst{top:20%}
+}
+@media(display-mode:standalone){.topbar{padding-top:max(6px,env(safe-area-inset-top))}}
+
 </style>
 </head>
 <body>
@@ -118,5 +148,6 @@ startBtn.addEventListener("click",newGame);restartBtn.addEventListener("click",(
 nextBtn.addEventListener("click",()=>{correctFeedback.classList.remove("show");if(index>=challengeCountries.length)issueReward();else{resetMapZoom();updateUI()}});
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(console.warn))}</script>
 </body>
 </html>
