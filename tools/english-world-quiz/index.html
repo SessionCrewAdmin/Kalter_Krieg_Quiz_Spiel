@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f1e7"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="../../manifest.webmanifest"><link rel="apple-touch-icon" href="../../assets/icons/app-180.png">
 <title>The World Speaks English – Vector Map Quiz</title>
 <style>
 :root{--bg:#f5f1e7;--ink:#173248;--accent:#d2a23a;--land:#d7e1e7;--land-hover:#c3d1d9;--water:#eef6f9;--ok:#2f7d5a;--bad:#a4473c;--card:#fff;--muted:#6a7c88}
@@ -26,6 +26,52 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 .feedback-card{min-width:320px;text-align:center;background:#fff;border-radius:20px;padding:28px 32px;box-shadow:0 18px 60px rgba(0,0,0,.15)}.feedback-card .title{font-size:44px;font-weight:900;margin-bottom:6px}.feedback.correct .title{color:var(--ok)}.feedback.wrong .title{color:var(--bad)}.feedback-card p{font-size:22px;color:var(--muted);margin:0 0 20px}
 #brainstorm{align-items:center;justify-content:center}.brain-card{width:min(1100px,94vw);padding:50px 56px}.brain-card .label{color:var(--accent);font-size:18px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;margin-bottom:14px}.brain-card h1{margin:0 0 18px;font-size:clamp(48px,6vw,88px);line-height:1}.brain-card .task{font-size:clamp(26px,3vw,38px);line-height:1.28;max-width:900px}.brain-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:36px;flex-wrap:wrap}.timer{font-size:30px;font-weight:900}.subtle{color:var(--muted);font-size:20px;margin-top:4px}
 @media(max-width:760px){.country-grid{grid-template-columns:1fr}.screen{padding:16px}.brain-card{padding:34px 28px}.map-controls{right:10px;top:10px}.map-controls button{width:42px;height:42px}.map-note{font-size:13px;left:10px;bottom:10px}}
+
+/* V21 · iPhone/iPad classroom polish */
+html,body{height:100%;height:100dvh}
+.app{height:100%;height:100dvh}
+@supports(padding:max(0px)){
+  .topbar{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  .screen{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+}
+@media(max-width:900px){
+  .topbar{height:58px;padding-top:4px;padding-bottom:4px}
+  .brand{font-size:17px}.tools{gap:6px}.btn{padding:10px 13px;border-radius:11px}
+  .screen{padding:14px 16px 18px}
+  #quiz{gap:9px}
+  .quiz-head .eyebrow{font-size:14px;margin-bottom:2px}
+  .quiz-head .country-name{font-size:clamp(32px,7vw,52px)}
+  .map-card{border-radius:18px;min-height:300px}
+  .map-controls{right:10px;top:10px;gap:6px}
+  .map-controls button{width:44px;height:44px}
+  .map-note{font-size:12px;left:10px;bottom:10px;max-width:calc(100% - 80px)}
+  .feedback-card{min-width:0;width:min(330px,88vw);padding:23px 20px}
+  .feedback-card .title{font-size:36px}.feedback-card p{font-size:18px}
+  .setup-card{padding:30px 26px;border-radius:20px}
+  .setup-card h1{font-size:clamp(34px,8vw,52px)}.setup-card p{font-size:18px}
+  .country-grid{gap:9px;margin:20px 0}.country-btn{padding:15px 12px}
+  .brain-card{padding:34px 30px;border-radius:20px}.brain-card .task{font-size:clamp(22px,4vw,31px)}
+}
+@media(max-width:600px){
+  .topbar{height:54px;padding-left:10px;padding-right:10px}
+  .brand{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw}
+  .tools .btn{font-size:12px;padding:9px 10px}.tools{gap:5px}
+  .screen{padding:9px 10px max(10px,env(safe-area-inset-bottom))}
+  .quiz-head .eyebrow{font-size:12px}.quiz-head .country-name{font-size:30px}
+  .map-card{border-radius:15px;min-height:330px}
+  .map-controls button{width:42px;height:42px;font-size:22px}
+  .map-note{font-size:10px;padding:7px 9px}
+  .loading{font-size:17px;padding:20px}
+  .country-grid{grid-template-columns:1fr}
+  .brain-card{padding:27px 22px}.brain-card .label{font-size:13px}.brain-card h1{font-size:42px}.brain-card .task{font-size:22px}.timer{font-size:25px}.subtle{font-size:16px}
+}
+@media(max-width:600px) and (orientation:landscape){
+  .topbar{height:46px}.screen{padding-top:6px;padding-bottom:6px}.quiz-head .eyebrow{display:none}.quiz-head .country-name{font-size:26px}.map-card{min-height:0}.map-note{display:none}
+}
+@media(display-mode:standalone){
+  .topbar{padding-top:max(6px,env(safe-area-inset-top))}
+}
+
 </style>
 </head>
 <body>
@@ -79,5 +125,6 @@ resetBtn.addEventListener("click",()=>{wrongFeedback.classList.remove("show");co
 fullscreenBtn.addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(_){}});
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(console.warn))}</script>
 </body>
 </html>
