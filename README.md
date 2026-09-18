@@ -1,11 +1,9 @@
-# V14.2 – Missile Icons auf den Karten
+# V14.3 – QR-Code fest eingebunden
 
 Geändert:
-- Kleine stilisierte Langstreckenraketen/ICBM-Icons wurden in die Karten-Netzwerke eingebaut.
-- Mission 1: Raketen-Icon entlang der Verbindung Washington ↔ Moskau.
-- Kuba-Krise: rote Raketen-Icons entlang der Verbindungen Kuba ↔ Washington und Kuba ↔ Moskau.
-- Vietnam: dezentes Raketen-Icon im globalen Konfliktnetzwerk.
-- Keine Cartoon-Optik, sondern zurückhaltende taktische Karten-Symbole.
-- Die technische Ziellinie aus dem letzten Fix bleibt weiterhin entfernt.
-
-Alle übrigen V14.1-Funktionen bleiben unverändert.
+- QR-Code ist jetzt direkt als SVG in die HTML-Datei eingebettet.
+- Keine externe QR-Bibliothek mehr nötig.
+- Der QR-Code funktioniert dadurch auch dann, wenn das QR-Skript nicht geladen wird.
+- Festes Ziel:
+  https://sessioncrewadmin.github.io/world-map-quiz/
+- Alle Funktionen aus V14.2 bleiben erhalten.
