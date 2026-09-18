@@ -4,7 +4,7 @@ const LEGACY_KEY='kathleenClassListsV1';
 const VAULT_KEY='kathleenClassListsVaultV2';
 const KDF_ITERATIONS=250000;
 const AUTO_LOCK_MS=15*60*1000;
-const enc=new TextEncoder(),dec=new TextDecoder();
+const enc=new TextEncoder(),dec=new TextDecoder(),AAD=enc.encode('KathleenClassListsVaultV2');
 let key=null,cache=[],guardPromise=null,guardResolve=null,lockTimer=null,activityBound=false;
 
 function uid(){return 'class-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
@@ -22,9 +22,10 @@ function sanitizeLists(v){
 function bytesToB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
 function b64ToBytes(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
 function randomBytes(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a}
-async function deriveKey(pin,salt){
+function vaultIterations(v){const n=Number(v?.iterations)||KDF_ITERATIONS;return Math.max(100000,Math.min(1000000,n))}
+async function deriveKey(pin,salt,iterations=KDF_ITERATIONS){
   const material=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);
-  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:KDF_ITERATIONS,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])
 }
 function hasVault(){return !!localStorage.getItem(VAULT_KEY)}
 function hasLegacy(){return !!localStorage.getItem(LEGACY_KEY)}
@@ -38,7 +39,7 @@ async function persist(lists=cache){
   let vault;try{vault=JSON.parse(localStorage.getItem(VAULT_KEY)||'null')}catch(e){vault=null}
   if(!vault?.salt)throw new Error('Verschlüsselung ist nicht eingerichtet.');
   const iv=randomBytes(12),payload=enc.encode(JSON.stringify({version:2,classes:cache}));
-  const cipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,payload));
+  const cipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:AAD},key,payload));
   const next={version:2,cipher:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:KDF_ITERATIONS,salt:vault.salt,iv:bytesToB64(iv),data:bytesToB64(cipher),updatedAt:new Date().toISOString()};
   localStorage.setItem(VAULT_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_KEY);touch();
   window.dispatchEvent(new CustomEvent('kathleen:classlists'));return true
@@ -56,9 +57,9 @@ async function unlock(pin){
   if(!crypto?.subtle)throw new Error('Dieser Browser unterstützt die benötigte Verschlüsselung nicht.');
   let vault;try{vault=JSON.parse(localStorage.getItem(VAULT_KEY)||'null')}catch(e){throw new Error('Der verschlüsselte Speicher ist beschädigt.')}
   if(!vault?.salt||!vault?.iv||!vault?.data)throw new Error('Der verschlüsselte Speicher ist unvollständig.');
-  const candidate=await deriveKey(pin,b64ToBytes(vault.salt));
+  const candidate=await deriveKey(pin,b64ToBytes(vault.salt),vaultIterations(vault));
   try{
-    const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(vault.iv)},candidate,b64ToBytes(vault.data));
+    const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(vault.iv),additionalData:AAD},candidate,b64ToBytes(vault.data));
     const parsed=JSON.parse(dec.decode(plain));key=candidate;cache=sanitizeLists(parsed?.classes||[]);localStorage.removeItem(LEGACY_KEY);bindActivity();
     window.dispatchEvent(new CustomEvent('kathleen:classlists-unlocked'));return true
   }catch(e){key=null;cache=[];throw new Error('Lehrer-PIN falsch oder Backup beschädigt.')}
@@ -104,8 +105,8 @@ function exportSecureBackup(){
 function validateVault(v){return !!(v&&v.version===2&&v.cipher==='AES-256-GCM'&&typeof v.salt==='string'&&typeof v.iv==='string'&&typeof v.data==='string')}
 async function importSecureBackup(text,pin){
   const d=JSON.parse(text),v=d?.format==='kathleen-class-vault'?d.vault:null;if(!validateVault(v))throw new Error('Kein gültiges verschlüsseltes Klassenlisten-Backup.');
-  const candidate=await deriveKey(String(pin||''),b64ToBytes(v.salt));let restored;
-  try{const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(v.iv)},candidate,b64ToBytes(v.data));restored=sanitizeLists(JSON.parse(dec.decode(plain))?.classes||[])}catch(e){throw new Error('Backup-PIN falsch oder Backup beschädigt.')}
+  const candidate=await deriveKey(String(pin||''),b64ToBytes(v.salt),vaultIterations(v));let restored;
+  try{const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(v.iv),additionalData:AAD},candidate,b64ToBytes(v.data));restored=sanitizeLists(JSON.parse(dec.decode(plain))?.classes||[])}catch(e){throw new Error('Backup-PIN falsch oder Backup beschädigt.')}
   localStorage.setItem(VAULT_KEY,JSON.stringify(v));localStorage.removeItem(LEGACY_KEY);key=candidate;cache=restored;bindActivity();window.dispatchEvent(new CustomEvent('kathleen:classlists'));return true
 }
 async function changePin(newPin){
