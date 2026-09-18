@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#173248"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="manifest" href="../../manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/kathleen-180.png">
 <title>The World Speaks English – Vector Map Quiz</title>
 <style>
 :root{--bg:#f5f1e7;--ink:#173248;--accent:#d2a23a;--land:#d7e1e7;--land-hover:#c3d1d9;--water:#eef6f9;--ok:#2f7d5a;--bad:#a4473c;--card:#fff;--muted:#6a7c88}
@@ -26,6 +26,29 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 .feedback-card{min-width:320px;text-align:center;background:#fff;border-radius:20px;padding:28px 32px;box-shadow:0 18px 60px rgba(0,0,0,.15)}.feedback-card .title{font-size:44px;font-weight:900;margin-bottom:6px}.feedback.correct .title{color:var(--ok)}.feedback.wrong .title{color:var(--bad)}.feedback-card p{font-size:22px;color:var(--muted);margin:0 0 20px}
 #brainstorm{align-items:center;justify-content:center}.brain-card{width:min(1100px,94vw);padding:50px 56px}.brain-card .label{color:var(--accent);font-size:18px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;margin-bottom:14px}.brain-card h1{margin:0 0 18px;font-size:clamp(48px,6vw,88px);line-height:1}.brain-card .task{font-size:clamp(26px,3vw,38px);line-height:1.28;max-width:900px}.brain-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:36px;flex-wrap:wrap}.timer{font-size:30px;font-weight:900}.subtle{color:var(--muted);font-size:20px;margin-top:4px}
 @media(max-width:760px){.country-grid{grid-template-columns:1fr}.screen{padding:16px}.brain-card{padding:34px 28px}.map-controls{right:10px;top:10px}.map-controls button{width:42px;height:42px}.map-note{font-size:13px;left:10px;bottom:10px}}
+
+/* V21 mobile/tablet polish */
+html,body{overscroll-behavior:none;-webkit-text-size-adjust:100%}.app{height:100dvh;min-height:100svh}
+button{touch-action:manipulation}svg{-webkit-user-select:none;user-select:none}
+@media(max-width:760px){
+  body{position:fixed;inset:0;width:100%}
+  .app{height:100dvh;min-height:0}
+  .topbar{height:calc(54px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 12px 0;gap:8px}
+  .brand{font-size:15px;line-height:1.1}.tools{gap:6px}.btn{padding:9px 12px;border-radius:10px;font-size:13px;min-height:42px}#fullscreenBtn{display:none}
+  .screen{padding:8px 10px calc(10px + env(safe-area-inset-bottom))}
+  #setup,#brainstorm{overflow:auto;-webkit-overflow-scrolling:touch}
+  .setup-card{width:100%;padding:22px 18px;border-radius:19px}.setup-card h1{font-size:clamp(30px,10vw,42px)}.setup-card p{font-size:16px;line-height:1.35}
+  .country-grid{grid-template-columns:1fr;gap:8px;margin:16px 0}.country-btn{padding:12px 12px;min-height:48px;border-radius:12px}
+  #quiz{gap:7px;overflow:hidden}.quiz-head .eyebrow{font-size:12px;margin-bottom:2px}.quiz-head .country-name{font-size:clamp(28px,9.5vw,42px)}
+  .map-card{border-radius:16px;min-height:0}.map-controls{right:8px;top:8px;gap:6px}.map-controls button{width:44px;height:44px;border-radius:11px}.map-note{display:none}
+  .feedback{padding:12px}.feedback-card{min-width:0;width:100%;max-width:360px;padding:22px 18px;border-radius:18px}.feedback-card .title{font-size:32px}.feedback-card p{font-size:16px;margin-bottom:14px}
+  .brain-card{width:100%;padding:24px 18px;border-radius:19px}.brain-card .label{font-size:12px}.brain-card h1{font-size:clamp(34px,12vw,54px)}.brain-card .task{font-size:20px}.brain-bottom{margin-top:24px}.timer{font-size:24px}.subtle{font-size:15px}
+}
+@media(max-width:950px) and (orientation:landscape){
+  .topbar{height:calc(46px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}.brand{font-size:14px}.btn{min-height:36px;padding:7px 10px}
+  .screen{padding:5px 10px calc(7px + env(safe-area-inset-bottom))}#quiz{gap:4px}.quiz-head{display:flex;align-items:end;justify-content:space-between}.quiz-head .eyebrow{font-size:11px}.quiz-head .country-name{font-size:29px}.map-card{border-radius:13px}
+}
+
 </style>
 </head>
 <body>
@@ -41,8 +64,8 @@ svg{width:100%;height:100%;display:block;background:var(--water);touch-action:no
 </div></section>
 <section id="brainstorm" class="screen"><div class="brain-card"><div class="label">Brainstorming</div><h1 id="brainCountry">South Africa</h1><div class="task">Create a mind map with <strong>everything you already know</strong> about this country.</div><div class="brain-bottom"><div><div class="timer">3 minutes</div><div class="subtle">Short notes only.</div></div><button class="btn btn-primary" id="newRoundBtn">New round</button></div></div></section>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script>
 (() => {
 let targetCountry="South Africa",ready=false;
@@ -64,7 +87,7 @@ function resetMapZoom(animate=true){const target=animate?svg.transition().durati
 zoomInBtn.addEventListener("click",e=>{e.stopPropagation();svg.transition().duration(220).call(zoom.scaleBy,1.5)});
 zoomOutBtn.addEventListener("click",e=>{e.stopPropagation();svg.transition().duration(220).call(zoom.scaleBy,1/1.5)});
 zoomResetBtn.addEventListener("click",e=>{e.stopPropagation();resetMapZoom()});
-fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(world=>{
+fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(world=>{
 const features=topojson.feature(world,world.objects.countries).features;
 mapViewport.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).attr("data-name",d=>d.properties.name).on("click",function(event,d){
 event.stopPropagation();if(d.properties.name===targetCountry){d3.select(this).classed("correct-country",true);correctFeedback.classList.add("show")}else wrongFeedback.classList.add("show")});
@@ -79,5 +102,6 @@ resetBtn.addEventListener("click",()=>{wrongFeedback.classList.remove("show");co
 fullscreenBtn.addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(_){}});
 })();
 </script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('../../sw.js').catch(()=>{}))}</script>
 </body>
 </html>
