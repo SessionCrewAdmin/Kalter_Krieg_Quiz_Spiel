@@ -1,4 +1,4 @@
-const CACHE='kathleen-v21-20260918-2';
+const CACHE='kathleen-v21-20260918-3';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html',
@@ -59,7 +59,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith((async()=>{
       const cache=await caches.open(CACHE);
       try{
-        const fresh=await fetch(req);
+        const fresh=await fetch(req,{cache:'no-store'});
         if(fresh.ok) await cache.put(req,fresh.clone());
         return fresh;
       }catch(e){
