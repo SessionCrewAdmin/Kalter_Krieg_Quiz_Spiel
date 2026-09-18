@@ -59,6 +59,12 @@ html,body{height:100%;height:100dvh}.app{height:100%;height:100dvh}
 }
 @media(display-mode:standalone){.topbar{padding-top:max(6px,env(safe-area-inset-top))}}
 
+
+.reward-qr{width:154px;height:154px;margin:14px auto 8px;padding:8px;border-radius:14px;background:#fff;display:grid;place-items:center;border:1px solid #eadfce}
+.reward-qr img,.reward-qr canvas{max-width:100%!important;height:auto!important}
+.claim-note{font-size:13px;color:var(--muted);font-weight:800;margin-top:6px}
+.claim-btn{margin-top:10px}
+@media(max-width:600px){.reward-qr{width:140px;height:140px}.claim-note{font-size:11px}.claim-btn{width:100%}}
 </style>
 </head>
 <body>
@@ -72,11 +78,12 @@ html,body{height:100%;height:100dvh}.app{height:100%;height:100dvh}
 <div id="wrongFeedback" class="feedback wrong"><div class="feedback-card"><div class="title">Streak reset!</div><p id="wrongText">That was not the right country.</p><button class="btn btn-primary" id="restartBtn">Start again</button></div></div>
 <div id="correctFeedback" class="feedback correct"><div class="feedback-card"><div class="title">Correct!</div><p id="correctText">Keep going.</p><button class="btn btn-primary" id="nextBtn">Next country</button></div></div>
 </div></section>
-<section id="win" class="screen"><div class="card win-card"><div class="trophy">🏆</div><h1>Perfect round!</h1><p>You found every country without a mistake.</p><div class="pass"><div class="small">Surprise reward unlocked</div><div class="title">Homework Voucher</div><div class="code" id="rewardCode">Voucher-0000</div><div class="time" id="rewardTime"></div></div><p class="note">Show this screen to your teacher.</p></div></section>
+<section id="win" class="screen"><div class="card win-card"><div class="trophy">🏆</div><h1>Perfect round!</h1><p>You found every country without a mistake.</p><div class="pass"><div class="small">Surprise reward unlocked</div><div class="title">Homework Voucher</div><div class="code" id="rewardCode">Voucher-0000</div><div class="time" id="rewardTime"></div><div class="reward-qr" id="rewardQr"></div><div class="claim-note">Let your teacher scan the QR code to add this voucher to Kathleens Kiste.</div><button class="btn btn-primary claim-btn" id="claimVoucherBtn" type="button">Open voucher claim</button></div><p class="note">The voucher becomes valid after your teacher confirms it.</p></div></section>
 </div>
 <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 (() => {
 const challengeCountries=["United Kingdom","Ireland","United States of America","Canada","New Zealand","Jamaica","Nigeria","Kenya","Philippines","Ghana","Bahamas","Barbados"];
@@ -133,7 +140,7 @@ if(frame<230)requestAnimationFrame(draw);else ctx.clearRect(0,0,innerWidth,inner
 }
 requestAnimationFrame(draw);
 }
-function issueReward(){const code="PASS-"+Math.floor(1000+Math.random()*9000),now=new Date();rewardCode.textContent=code;rewardTime.textContent=now.toLocaleDateString()+" · "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});localStorage.setItem("homeworkPassEarned",JSON.stringify({code,timestamp:now.toISOString()}));show("win");setTimeout(launchConfetti,180)}
+function issueReward(){const code="PASS-"+Math.floor(1000+Math.random()*9000),now=new Date();rewardCode.textContent=code;rewardTime.textContent=now.toLocaleDateString()+" · "+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});localStorage.setItem("homeworkPassEarned",JSON.stringify({code,timestamp:now.toISOString()}));const claimUrl=new URL("../homework-vouchers/",location.href);claimUrl.searchParams.set("claim",code);claimUrl.searchParams.set("source","English World Quiz");rewardQr.innerHTML="";if(window.QRCode)new QRCode(rewardQr,{text:claimUrl.toString(),width:136,height:136,correctLevel:QRCode.CorrectLevel.M});else rewardQr.textContent=code;claimVoucherBtn.onclick=()=>location.href=claimUrl.toString();show("win");setTimeout(launchConfetti,180)}
 fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json").then(r=>{if(!r.ok)throw new Error();return r.json()}).then(world=>{
 const features=topojson.feature(world,world.objects.countries).features;
 mapViewport.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).attr("data-name",d=>d.properties.name).on("click",function(event,d){
