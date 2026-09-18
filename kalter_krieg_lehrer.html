@@ -867,7 +867,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
   <div class="mission-rail" id="missionRail" aria-hidden="true"><span class="mission-dot" data-mission="1"></span><span class="mission-dot" data-mission="2"></span><span class="mission-dot" data-mission="3"></span><span class="mission-dot" data-mission="4"></span><span class="mission-dot" data-mission="5"></span><span class="mission-dot" data-mission="6"></span><span class="mission-dot" data-mission="7"></span><span class="mission-dot" data-mission="8"></span></div>
 
 
-  <section id="teacher" class="screen">
+  <section id="teacher" class="screen active">
     <div class="teacher-shell">
       <div class="control-room-hero">
         <div class="control-radar" aria-hidden="true"></div>
@@ -883,7 +883,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
             <button class="btn btn-secondary" id="add2Min" type="button" disabled>+2 MIN</button>
             <button class="btn btn-secondary" id="add5Min" type="button" disabled>+5 MIN</button>
             <button class="btn btn-danger" id="endNow" type="button" disabled>SOFORT BEENDEN</button>
-            <button class="btn btn-secondary" id="teacherBack" type="button">Zurück</button>
+            <button class="btn btn-secondary" id="teacherBack" type="button">← Zur Tool-Kiste</button>
           </div>
         </div>
       </div>
@@ -1017,7 +1017,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
     </div>
   </section>
 
-  <section id="start" class="screen active">
+  <section id="start" class="screen">
     <div class="hero">
       <svg id="startWorld" class="start-world" viewBox="0 0 1400 720" aria-hidden="true"></svg>
       <div class="start-radar" aria-hidden="true"></div><div class="start-sweep" aria-hidden="true"></div>
@@ -1594,8 +1594,13 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 (function(){
   try{
     const qs=new URLSearchParams(location.search);
-    const teacherRoute=qs.get("teacher")==="1";
-    if(teacherRoute){location.replace("lehrer.html");}
+    const teacherRoute=qs.get("teacher")==="1" || /\/lehrer\.html$/i.test(location.pathname);
+    if(teacherRoute){
+      document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+      const t=document.getElementById("teacher");
+      if(t)t.classList.add("active");
+      document.documentElement.dataset.route="teacher";
+    }
   }catch(e){}
 })();
 </script>
@@ -2910,7 +2915,7 @@ document.addEventListener("pointerdown",e=>{
   btn.appendChild(sp);setTimeout(()=>sp.remove(),760)
 });
 
-$("#teacherBack").addEventListener("click",()=>show("start"));
+$("#teacherBack").addEventListener("click",()=>location.href="lehrer.html");
 $("#createSession").addEventListener("click",createTeacherSession);
 $("#teacherDuration").addEventListener("change",updateScopePreview);
 $("#teacherTeams").addEventListener("change",()=>renderTeamScores(teacherRosterCache));
@@ -2948,7 +2953,7 @@ if(urlParams.get("practice")==="1"){
   $("#startBtn").textContent="Quiz starten";
   setSessionState("Übungsmodus ohne Lehrerfreigabe.","good")
 }
-if(urlParams.get("teacher")==="1"){location.href="lehrer.html"}
+if(urlParams.get("teacher")==="1"||/\/lehrer\.html$/i.test(location.pathname)){show("teacher");restoreTeacherSession()}
 decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
 if($("#createSession")) $("#createSession").dataset.bound="1";
 })();
