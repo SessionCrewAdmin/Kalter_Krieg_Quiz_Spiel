@@ -792,6 +792,27 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 .mode-badge strong{color:var(--gold)}
 @media(max-width:700px){.mission-picker{grid-template-columns:1fr}}
 
+
+/* =========================================================
+   V17 CONTROL ROOM // TEAMS // COMMANDS // EDITOR // CERT
+   ========================================================= */
+.control-room-hero{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;background:radial-gradient(circle at 95px 95px,rgba(84,155,177,.09),transparent 30%),linear-gradient(145deg,rgba(7,22,31,.97),rgba(4,12,18,.97));overflow:hidden}
+.control-radar{width:170px;height:170px;border-radius:50%;border:1px solid rgba(86,151,170,.4);position:relative;background:repeating-radial-gradient(circle,transparent 0 26px,rgba(86,151,170,.16) 27px 28px),linear-gradient(90deg,transparent 49.5%,rgba(86,151,170,.2) 50%,transparent 50.5%),linear-gradient(0deg,transparent 49.5%,rgba(86,151,170,.2) 50%,transparent 50.5%);box-shadow:inset 0 0 35px rgba(0,0,0,.65)}
+.control-radar::after{content:"";position:absolute;inset:3px;border-radius:50%;background:conic-gradient(from 0deg,rgba(101,194,211,.34),transparent 20%);animation:controlSweep 4.4s linear infinite}
+.control-radar::before{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#d7b15b;left:70%;top:30%;box-shadow:-54px 66px 0 #6cc58b,24px 70px 0 #d65b5b,0 0 12px rgba(215,177,91,.6);z-index:2;animation:radarContacts 2.4s ease-in-out infinite}
+@keyframes controlSweep{to{transform:rotate(360deg)}}@keyframes radarContacts{50%{opacity:.45}}
+.control-room-title{font-size:clamp(34px,6vw,64px);margin:3px 0 8px;line-height:.95}.control-room-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.control-room-meta span{border:1px solid var(--line);border-radius:99px;padding:6px 9px;font:900 10px/1 ui-monospace,monospace;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}.control-room-meta strong{color:var(--gold)}
+.teacher-live-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.teacher-live-actions .btn{min-width:0;padding:9px 11px;font-size:12px}.btn-danger{background:#6f2424!important;border-color:#a13e3e!important}.btn-warn{background:#5b431c!important;border-color:#8d6b2d!important}
+.team-setting{margin-top:12px}.team-score-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:10px}.team-score{border:1px solid var(--line);border-radius:11px;padding:10px;background:rgba(255,255,255,.025)}.team-score b{display:block;font-size:13px}.team-score span{font:1000 22px/1 ui-monospace,monospace;color:var(--gold);display:block;margin-top:5px}.team-pill{display:none}.team-pill.on{display:block}.team-alpha{--team:#6ab4d0}.team-bravo{--team:#d06a6a}.team-charlie{--team:#d2ad5d}.team-delta{--team:#78b986}.team-score{border-left:4px solid var(--team,#657680)}
+.student-row-v17{display:grid;grid-template-columns:minmax(120px,1.2fr) 70px 70px minmax(170px,1fr);gap:7px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025);font-size:12px}.student-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap}.student-actions button{border:1px solid var(--line);background:#091822;color:var(--muted);border-radius:7px;padding:6px 7px;cursor:pointer;font-size:10px;font-weight:900}.student-actions button:hover{color:var(--ink);border-color:#527287}
+.command-overlay,.pause-overlay{position:fixed;inset:0;z-index:9997;display:none;place-items:center;padding:20px;background:rgba(2,7,10,.94);backdrop-filter:blur(8px)}.command-overlay.show,.pause-overlay.show{display:grid}.command-card{width:min(650px,94vw);border:1px solid #654942;border-radius:16px;padding:24px;background:linear-gradient(180deg,#1a1514,#080b0c);box-shadow:0 30px 100px rgba(0,0,0,.7);text-align:center}.command-card .stamp{display:inline-block;border:3px solid #a64a43;color:#ce665f;padding:6px 10px;font-weight:1000;letter-spacing:.12em;transform:rotate(-3deg);margin-bottom:14px}.command-card h2{margin:4px 0 10px;font-size:clamp(30px,7vw,52px)}.command-card p{font-size:17px;line-height:1.45}.lock-count{font:1000 54px/1 ui-monospace,monospace;color:#d55c51;margin:14px 0}.pause-card{width:min(720px,94vw);text-align:center}.pause-card h2{font:1000 clamp(42px,10vw,80px)/.95 ui-monospace,monospace;color:#d7b15b;text-shadow:0 0 30px rgba(215,177,91,.2);margin:10px 0}.pause-card p{color:var(--muted);font-weight:800}
+.editor-shell{display:grid;grid-template-columns:280px 1fr;gap:12px}.editor-list{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:6px}.editor-item{width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;cursor:pointer;font-size:12px}.editor-item:hover,.editor-item.active{background:rgba(95,156,180,.12);color:var(--ink)}.editor-item b{display:block;color:inherit}.editor-form{border:1px solid var(--line);border-radius:12px;padding:13px}.editor-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.editor-form label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:var(--muted);display:block;margin-bottom:5px}.editor-form input,.editor-form textarea,.editor-form select{width:100%;box-sizing:border-box;background:#07141d;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px;font:700 13px/1.35 Inter,Arial,sans-serif}.editor-form textarea{min-height:105px;resize:vertical}.editor-wide{grid-column:1/-1}.editor-status{margin-top:8px;font-size:12px;color:var(--muted)}
+.source-study{border:1px solid rgba(194,167,105,.4);border-radius:12px;padding:16px;background:linear-gradient(145deg,rgba(217,207,183,.96),rgba(182,166,133,.96));color:#221c13}.source-study .source-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}.source-study .source-head b{font:1000 11px/1 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}.source-study blockquote{margin:9px 0 14px;padding:13px 15px;border-left:4px solid #8b3d38;background:rgba(255,255,255,.34);font:700 17px/1.45 Georgia,serif}.source-study a{color:#493a27;font-weight:900}.source-study .choice{background:rgba(255,255,255,.4);color:#211a12;border-color:rgba(42,34,24,.25)}
+.certificate-overlay{position:fixed;inset:0;z-index:9998;display:none;place-items:center;padding:18px;background:rgba(0,0,0,.88)}.certificate-overlay.show{display:grid}.certificate-sheet{width:min(820px,94vw);max-height:92vh;overflow:auto;background:#f1ebda;color:#201b14;border:10px double #283846;padding:34px;box-sizing:border-box;position:relative}.certificate-sheet::before{content:"CLASSIFIED // TRAINING RECORD";position:absolute;right:24px;top:25px;border:3px solid rgba(140,43,38,.6);color:rgba(140,43,38,.72);padding:6px 9px;font-weight:1000;transform:rotate(-6deg);letter-spacing:.08em}.cert-kicker{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:1000;color:#6a5f50}.cert-title{font:1000 clamp(36px,8vw,64px)/.95 Georgia,serif;margin:12px 0}.cert-name{font:900 26px/1.2 Georgia,serif;margin:18px 0;border-bottom:1px solid #8d826f;padding-bottom:8px}.cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cert-stat{border:1px solid #a99d88;padding:10px}.cert-stat span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em}.cert-stat b{display:block;font-size:20px;margin-top:4px}.cert-badges{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0}.cert-badge{border:2px solid #5c5244;border-radius:99px;padding:6px 9px;font-weight:900;font-size:11px}.cert-disclaimer{font-size:10px;color:#6e665b;border-top:1px solid #a99d88;padding-top:10px;margin-top:16px}.cert-actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.map-multi-status{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.map-target-chip{border:1px solid var(--line);border-radius:99px;padding:6px 9px;font-size:11px;font-weight:900;color:var(--muted)}.map-target-chip.done{border-color:#5cb37c;color:#6cc58b;background:rgba(92,179,124,.08)}
+@media(max-width:900px){.control-room-hero{grid-template-columns:1fr}.control-radar{margin:auto}.editor-shell{grid-template-columns:1fr}.team-score-grid{grid-template-columns:repeat(2,1fr)}.student-row-v17{grid-template-columns:1fr 70px}.student-actions{grid-column:1/-1;justify-content:flex-start}.cert-grid{grid-template-columns:1fr}}
+@media print{body.cert-print *{visibility:hidden!important}.certificate-overlay,.certificate-overlay *{visibility:visible!important}.certificate-overlay{display:block!important;position:static!important;background:#fff!important;padding:0!important}.certificate-sheet{width:100%!important;max-height:none!important;overflow:visible!important;border:10px double #283846!important;margin:0!important}.cert-actions{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -804,6 +825,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="pill">Serie <span id="combo">0</span></div>
       <div class="pill">Mission <span id="missionHud">0/8</span></div>
       <div class="pill session-time-pill" id="sessionTimePill">Zeit <span id="sessionTime">15:00</span></div>
+      <div class="pill team-pill" id="teamPill">Team <span id="teamName">–</span></div>
       <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="Ton ausschalten" title="Ton an/aus">🔊</button>
     </div>
   </div>
@@ -813,13 +835,23 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 
   <section id="teacher" class="screen">
     <div class="teacher-shell">
-      <div class="teacher-head">
+      <div class="control-room-hero">
+        <div class="control-radar" aria-hidden="true"></div>
         <div>
-          <div class="kicker">Classroom Control</div>
-          <h2>Lehrersteuerung</h2>
-          <p style="color:var(--muted);max-width:760px">Session vorbereiten, Klasse sammeln und den Start zentral freigeben. Die Schüler können im Klassenmodus erst nach deiner Freigabe starten.</p>
+          <div class="kicker">Cold-War Control Room</div>
+          <h2 class="control-room-title">Lehrerzentrale</h2>
+          <p style="color:var(--muted);max-width:760px">Session vorbereiten, Teams steuern, Geräte ansprechen und den Spielverlauf live kontrollieren.</p>
+          <div class="control-room-meta"><span>Session <strong id="controlSessionMini">------</strong></span><span>Agents <strong id="controlAgentsMini">0</strong></span><span>Status <strong id="controlStatusMini">OFFLINE</strong></span></div>
+          <div class="teacher-live-actions">
+            <button class="btn btn-warn" id="pauseSession" type="button" disabled>PAUSE</button>
+            <button class="btn btn-secondary" id="resumeSession" type="button" disabled>FORTSETZEN</button>
+            <button class="btn btn-secondary" id="add1Min" type="button" disabled>+1 MIN</button>
+            <button class="btn btn-secondary" id="add2Min" type="button" disabled>+2 MIN</button>
+            <button class="btn btn-secondary" id="add5Min" type="button" disabled>+5 MIN</button>
+            <button class="btn btn-danger" id="endNow" type="button" disabled>SOFORT BEENDEN</button>
+            <button class="btn btn-secondary" id="teacherBack" type="button">Zurück</button>
+          </div>
         </div>
-        <button class="btn btn-secondary" id="teacherBack" type="button">Zurück</button>
       </div>
 
       <div class="teacher-grid">
@@ -843,6 +875,15 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
                 <option value="10" selected>10 Sekunden</option>
                 <option value="15">15 Sekunden</option>
                 <option value="30">30 Sekunden</option>
+              </select>
+            </div>
+            <div class="team-setting">
+              <label for="teacherTeams">Team-Modus</label>
+              <select id="teacherTeams">
+                <option value="1" selected>Einzelmodus</option>
+                <option value="2">2 Teams · Alpha / Bravo</option>
+                <option value="3">3 Teams · Alpha / Bravo / Charlie</option>
+                <option value="4">4 Teams · Alpha / Bravo / Charlie / Delta</option>
               </select>
             </div>
           </div>
@@ -897,6 +938,37 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
           <h3>Abgegebene Ergebnisse</h3>
           <div class="teacher-statusline"><span id="resultCount">0</span> Ergebnisse gespeichert</div>
           <div class="teacher-list" id="teacherResults"><div class="small">Noch keine Ergebnisse.</div></div>
+        </div>
+
+        <div class="teacher-card wide">
+          <h3>Team-Lagebild</h3>
+          <div class="team-score-grid" id="teamScores"><div class="small">Einzelmodus aktiv.</div></div>
+        </div>
+
+        <div class="teacher-card wide">
+          <h3>Frageneditor · aktuelle Session</h3>
+          <p class="small">Änderungen gelten für diese Unterrichts-Session. Standardfragen können angepasst, deaktiviert oder in Zeitmodi eingeschränkt werden.</p>
+          <div class="editor-shell">
+            <div class="editor-list" id="editorList"><div class="small">Session erstellen, um die Fragenbank zu öffnen.</div></div>
+            <div class="editor-form">
+              <div class="editor-form-grid">
+                <div><label>Frage-ID</label><input id="editQuestionId" readonly></div>
+                <div><label>Mission</label><select id="editMission"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></div>
+                <div><label>Typ</label><select id="editType"><option>choice</option><option>multi</option><option>sequence</option><option>map</option><option>classify</option><option>source</option><option>simulation</option><option>boss</option></select></div>
+                <div><label>Schwierigkeit 1–5</label><input id="editDifficulty" type="number" min="1" max="5"></div>
+                <div class="editor-wide"><label>Titel</label><input id="editTitle"></div>
+                <div class="editor-wide"><label>Frage / Arbeitsauftrag</label><textarea id="editPrompt"></textarea></div>
+                <div class="editor-wide"><label>Antworten / Elemente · eine Zeile pro Eintrag oder JSON bei komplexen Aufgaben</label><textarea id="editOptions"></textarea></div>
+                <div class="editor-wide"><label>Richtige Lösung · Index, Text oder JSON</label><textarea id="editCorrect" style="min-height:70px"></textarea></div>
+                <div><label>Punkte</label><input id="editPoints" type="number" min="0" max="1000"></div>
+                <div><label>Zeitmodi Sekunden</label><input id="editTimeModes" placeholder="300,600,900,1200,0"></div>
+                <div class="editor-wide"><label>Quellen-URL</label><input id="editSourceUrl" type="url"></div>
+                <label class="teacher-check editor-wide"><input type="checkbox" id="editActive" checked> Aufgabe aktiv</label>
+              </div>
+              <div class="teacher-actions"><button class="btn btn-primary" id="saveQuestionEdit" type="button" disabled>Änderung speichern</button><button class="btn btn-secondary" id="previewQuestionEdit" type="button" disabled>Vorschau</button><button class="btn btn-secondary" id="duplicateQuestionEdit" type="button" disabled>Duplizieren</button><button class="btn btn-secondary" id="newQuestionEdit" type="button" disabled>Neue Frage</button><button class="btn btn-danger" id="deleteQuestionEdit" type="button" disabled>Löschen</button><button class="btn btn-secondary" id="resetQuestionEdit" type="button" disabled>Override zurücksetzen</button></div>
+              <div class="editor-status" id="editorStatus">Noch keine Frage ausgewählt.</div><div id="editorPreview" class="bosscard hidden" style="margin-top:10px"></div>
+            </div>
+          </div>
         </div>
 
         <div class="teacher-card wide">
@@ -993,9 +1065,18 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="feedback" id="m1aFb">Ziel 1: westliche Supermacht bestimmen und auf der Karte finden.</div>
     </div>
 
+
+    <div class="panel task locked" id="m1hotspotPanel">
+      <div class="tasktag">Mehrfach-Karte · Konflikträume</div><h3>1B · Markiere drei zentrale Schauplätze</h3>
+      <p>Finde <b>Deutschland</b>, <b>Kuba</b> und <b>Vietnam</b>. Die Reihenfolge ist egal.</p>
+      <div class="mapwrap"><svg id="mapHotspots" viewBox="0 0 1400 720"></svg><div class="loading" id="loadHotspots">Karte wird geladen …</div><div class="radar"></div></div>
+      <div class="map-multi-status"><span class="map-target-chip" data-hot="Germany">Deutschland</span><span class="map-target-chip" data-hot="Cuba">Kuba</span><span class="map-target-chip" data-hot="Vietnam">Vietnam</span></div>
+      <div class="feedback" id="m1hotspotFb">0 von 3 Konflikträumen markiert.</div>
+    </div>
+
     <div class="panel task locked" id="m1bPanel">
       <div class="tasktag">Mehrfachauswahl · mehrere Antworten richtig</div>
-      <h3>1B · Welche Aussagen beschreiben die bipolare Weltordnung treffend?</h3>
+      <h3>1C · Welche Aussagen beschreiben die bipolare Weltordnung treffend?</h3>
       <div class="multi-row" id="m1multi">
         <label class="multi-item"><input type="checkbox" data-correct="1"> Zwei Supermächte prägten große Teile der Weltpolitik.</label>
         <label class="multi-item"><input type="checkbox" data-correct="1"> Militärische Bündnisse und Einflusszonen verstärkten die Blockbildung.</label>
@@ -1009,7 +1090,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
 
     <div class="panel task locked" id="m1cPanel">
       <div class="tasktag">Begründung · eine beste Antwort</div>
-      <h3>1C · Warum war der Kalte Krieg trotz fehlendem direkten Großkrieg so gefährlich?</h3>
+      <h3>1D · Warum war der Kalte Krieg trotz fehlendem direkten Großkrieg so gefährlich?</h3>
       <div class="choice-grid" data-q="m1c">
         <button class="choice" data-correct="1">Weil atomare Aufrüstung und gegenseitige Abschreckung eine Eskalation mit katastrophalen Folgen möglich machten.</button>
         <button class="choice">Weil beide Supermächte auf Atomwaffen verzichteten.</button>
@@ -1132,9 +1213,18 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="feedback" id="m4bFb">Frühestes Ereignis nach oben.</div>
     </div>
 
+
+    <div class="panel task locked" id="m4sourcePanel">
+      <div class="tasktag">Darstellungsquelle · bpb</div><h3>4C · Quellenakte: Feindbilder im geteilten Deutschland</h3>
+      <div class="source-study"><div class="source-head"><b>BUNDESZENTRALE FÜR POLITISCHE BILDUNG</b><span>Deutschland im Kalten Krieg</span></div>
+      <blockquote>„Das Bild vom ‚militaristischen Deutschen‘ der Vergangenheit wurde auf beiden Seiten durch neue Feindbilder ersetzt.“</blockquote>
+      <a href="https://www.bpb.de/themen/deutsche-einheit/deutsche-teilung-deutsche-einheit/43750/die-deutsche-frage-in-der-internationalen-politik/" target="_blank" rel="noopener">Quelle öffnen · bpb</a>
+      <h4>Welche Aussage lässt sich daraus am besten ableiten?</h4><div class="choice-grid" data-q="m4source"><button class="choice" data-correct="1">Die deutsche Teilung wurde auch durch ideologische Feindbilder des Ost-West-Konflikts geprägt.</button><button class="choice">Feindbilder verschwanden nach 1945 vollständig.</button><button class="choice">BRD und DDR hatten dieselbe politische Ordnung.</button><button class="choice">Der Konflikt spielte sich ausschließlich außerhalb Deutschlands ab.</button></div><div class="feedback" id="m4sourceFb">Ordne die Aussage in den Kontext der deutschen Teilung ein.</div></div>
+    </div>
+
     <div class="panel task locked" id="m4cPanel">
       <div class="tasktag">Zusammenhang</div>
-      <h3>4C · Warum war Berlin ein besonderer Brennpunkt?</h3>
+      <h3>4D · Warum war Berlin ein besonderer Brennpunkt?</h3>
       <div class="choice-grid" data-q="m4c">
         <button class="choice" data-correct="1">Weil sich in der geteilten Stadt die Machtblöcke direkt gegenüberstanden und Konflikte wie Blockade und Mauer die Systemkonkurrenz sichtbar machten.</button>
         <button class="choice">Weil Berlin nach 1945 vollständig zur Sowjetunion gehörte.</button>
@@ -1232,9 +1322,18 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="navrow"><button class="btn btn-secondary" id="checkVietnamSeq">Kette prüfen</button></div>
       <div class="feedback" id="m6bFb">Nicht jede Station ist eine direkte Ursache – gesucht ist eine sinnvolle historische Abfolge.</div>
     </div>
+
+    <div class="panel task locked" id="m6sourcePanel">
+      <div class="tasktag">Darstellungsquelle · bpb / LpB</div><h3>6C · Quellenakte: Vietnam im globalen Konflikt</h3>
+      <div class="source-study"><div class="source-head"><b>KALTER KRIEG · DARSTELLUNGSQUELLE</b><span>Stellvertreterkonflikte</span></div>
+      <blockquote>„Stellvertreterkriege an vielen anderen Orten der Welt“ prägten den Kalten Krieg ebenfalls.</blockquote>
+      <a href="https://www.bpb.de/themen/medien-journalismus/krieg-in-den-medien/500410/kalter-krieg/" target="_blank" rel="noopener">Quelle öffnen · bpb</a> · <a href="https://osteuropa.lpb-bw.de/kalter-krieg" target="_blank" rel="noopener">Überblick · LpB BW</a>
+      <h4>Warum passt Vietnam zu dieser Beschreibung?</h4><div class="choice-grid" data-q="m6source"><button class="choice" data-correct="1">Ein regionaler Krieg wurde durch Unterstützung und Interessen der Machtblöcke in den globalen Systemkonflikt eingebunden.</button><button class="choice">USA und UdSSR erklärten sich in Vietnam offiziell gegenseitig den Krieg.</button><button class="choice">Vietnam gehörte zur NATO.</button><button class="choice">Der Konflikt hatte keinerlei regionale Ursachen.</button></div><div class="feedback" id="m6sourceFb">Unterscheide regionalen Krieg und globalen Systemkonflikt.</div></div>
+    </div>
+
     <div class="panel task locked" id="m6cPanel">
       <div class="tasktag">Transfer · Mehrfachauswahl</div>
-      <h3>6C · Was macht Vietnam typisch für den Kalten Krieg?</h3>
+      <h3>6D · Was macht Vietnam typisch für den Kalten Krieg?</h3>
       <div class="multi-row" id="m6multi">
         <label class="multi-item"><input type="checkbox" data-correct="1"> Ein regionaler Konflikt wurde mit dem globalen Systemkonflikt verbunden.</label>
         <label class="multi-item"><input type="checkbox" data-correct="1"> Die Supermächte unterstützten unterschiedliche Seiten, ohne direkt gegeneinander Krieg zu erklären.</label>
@@ -1335,9 +1434,18 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
         <button class="btn btn-secondary" id="skipRisk">Risikofrage überspringen</button>
       </div>
     </div>
+
+    <div class="panel task locked" id="m8sourcePanel">
+      <div class="tasktag">Darstellungsquelle · LpB Baden-Württemberg</div><h3>8B · Quellenakte: Warum endete der Ost-West-Konflikt?</h3>
+      <div class="source-study"><div class="source-head"><b>LANDESZENTRALE FÜR POLITISCHE BILDUNG</b><span>Ende des Kalten Krieges</span></div>
+      <blockquote>„Mit den Umbrüchen in den Ländern des östlichen Europas“ und der Auflösung der Sowjetunion galt der Ost-West-Konflikt als beendet.</blockquote>
+      <a href="https://osteuropa.lpb-bw.de/kalter-krieg" target="_blank" rel="noopener">Quelle öffnen · LpB Baden-Württemberg</a>
+      <h4>Welche Entwicklung steht im Mittelpunkt dieser Darstellung?</h4><div class="choice-grid" data-q="m8source"><button class="choice" data-correct="1">Der Zusammenbruch der sowjetisch geprägten Ordnung in Osteuropa und schließlich der Sowjetunion.</button><button class="choice">Die Gründung der NATO.</button><button class="choice">Der Bau der Berliner Mauer.</button><button class="choice">Die Kuba-Krise.</button></div><div class="feedback" id="m8sourceFb">Ordne die Quelle in die Endphase des Kalten Krieges ein.</div></div>
+    </div>
+
     <div class="panel task locked" id="m8bPanel">
       <div class="tasktag">Finale · 4 adaptive Aktenfragen</div>
-      <h3>8B · Der Archiv-Code</h3>
+      <h3>8C · Der Archiv-Code</h3>
       <p>Vier Abschlussfragen aus der gesamten Einheit. Schwächere Themen aus deinen bisherigen Missionen werden bevorzugt. 4/4 = volle Freigabe, 3/4 = Archiv bestanden.</p>
       <div class="archive-code-panel">
         <div class="code-caption"><span>Entschlüsselung</span><span id="codeCounter">0 / 4</span></div>
@@ -1383,6 +1491,7 @@ body.glitching .glitch-layer,body.glitching .app{animation-duration:.46s!importa
       <div class="export-row">
         <button class="btn btn-secondary" id="exportOwnCsv" type="button">Mein Ergebnis als CSV</button>
         <button class="btn btn-secondary" id="printOwnResult" type="button">Ergebnis drucken / PDF</button>
+        <button class="btn btn-primary" id="openCertificate" type="button">Abschlussakte erstellen</button>
       </div>
       <button class="btn btn-primary" id="restartAll" style="margin-top:18px">Nochmal spielen</button>
     </div>
@@ -1403,11 +1512,14 @@ const SUPABASE_URL = "https://fzqxnjhuvgpgovcovosl.supabase.co"; // Supabase pro
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV"; // public browser key
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let score=0,mistakes=0,combo=0,bestCombo=0,currentMission=0,worldFeatures=null,playerName="";
-let currentSessionCode="",sessionStartedAt=null,sessionDuration=900,sessionSettings={show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8]};
+let currentSessionCode="",sessionStartedAt=null,sessionDuration=900,sessionSettings={show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8],team_count:1};
 let sessionPoll=null,sessionClockTimer=null,sessionJoined=false,sessionStarted=false,gameFinished=false,endedByTime=false;
-let teacherSessionCode="",teacherKey="",teacherPoll=null,teacherResultsCache=[],teacherUiHydratedCode="";
+let teacherSessionCode="",teacherKey="",teacherPoll=null,teacherResultsCache=[],teacherUiHydratedCode="",teacherRosterCache=[];
+let clientId=localStorage.getItem("cwClientId")||((crypto&&crypto.randomUUID)?crypto.randomUUID():"c"+Math.random().toString(36).slice(2)+Date.now());localStorage.setItem("cwClientId",clientId);
+let studentTeam="",lastCommandId=0,deviceLocked=false,lockTimer=null,questionOverrides={};
+let mapTargets={m1a:["United States of America","Russia"],m5a:"Cuba",m6a:"Vietnam",m1hotspots:["Germany","Cuba","Vietnam"]};
 let activeMissions=[1,2,3,4,5,6,7,8],allowedPanels=new Set(),quizModeSeconds=900;
-const missionPanelOrder={1:["m1bPanel","m1cPanel"],2:["m2bPanel"],3:["m3bPanel","m3cPanel"],4:["m4bPanel","m4cPanel"],5:["m5sourcePanel","m5bPanel","m5cPanel"],6:["m6bPanel","m6cPanel"],7:["m7bPanel","m7cPanel"],8:["m8bPanel"]};
+const missionPanelOrder={1:["m1hotspotPanel","m1bPanel","m1cPanel"],2:["m2bPanel"],3:["m3bPanel","m3cPanel"],4:["m4bPanel","m4sourcePanel","m4cPanel"],5:["m5sourcePanel","m5bPanel","m5cPanel"],6:["m6bPanel","m6sourcePanel","m6cPanel"],7:["m7bPanel","m7cPanel"],8:["riskPanel","m8sourcePanel","m8bPanel"]};
 const missionTitles={1:"Weltordnung",2:"Blockbildung",3:"Feindbilder",4:"Deutschland",5:"Kuba-Krise",6:"Vietnam",7:"Entspannung",8:"Ende des Kalten Krieges"};
 const missionErrors=Array(9).fill(0); const weakTopics={};
 const completed=new Set();
@@ -1472,7 +1584,8 @@ async function saveRemoteScore(entry){
       topic_errors:entry.topicErrors||{},
       completion_status:entry.completionStatus||"complete",
       selected_missions:entry.selectedMissions||[],
-      time_mode_seconds:entry.timeMode??null
+      time_mode_seconds:entry.timeMode??null,
+      team:entry.team||null
     })
   });
   if(!r.ok) throw new Error("save-failed");
@@ -1480,7 +1593,7 @@ async function saveRemoteScore(entry){
 async function fetchRemoteScores(){
   if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) throw new Error("not-configured");
   const filter=currentSessionCode?"&session_code=eq."+encodeURIComponent(currentSessionCode):"";
-  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at,session_code,elapsed_seconds,topic_errors,completion_status,selected_missions,time_mode_seconds&order=score.desc,mistakes.asc,best_combo.desc&limit=50"+filter;
+  const u=SUPABASE_URL+"/rest/v1/scores?select=player_name,score,mistakes,best_combo,completed_at,session_code,elapsed_seconds,topic_errors,completion_status,selected_missions,time_mode_seconds,team&order=score.desc,mistakes.asc,best_combo.desc&limit=50"+filter;
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});
   if(!r.ok) throw new Error("fetch-failed");
   const rows=await r.json();
@@ -1497,7 +1610,7 @@ function renderLeaderboard(rows){
   });
 }
 async function persistResult(reason="complete"){
-  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString(),sessionCode:currentSessionCode,elapsedSeconds:sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):null,topicErrors:Object.fromEntries(Array.from({length:8},(_,i)=>[String(i+1),missionErrors[i+1]])),completionStatus:reason==="timeout"?"timeout":"complete",selectedMissions:[...activeMissions],timeMode:sessionDuration};
+  const entry={name:playerName,score,mistakes,bestCombo,ts:new Date().toISOString(),sessionCode:currentSessionCode,elapsedSeconds:sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):null,topicErrors:Object.fromEntries(Array.from({length:8},(_,i)=>[String(i+1),missionErrors[i+1]])),completionStatus:reason==="timeout"?"timeout":reason==="teacher_end"?"teacher_end":"complete",selectedMissions:[...activeMissions],timeMode:sessionDuration,team:studentTeam,clientId:clientId};
   $("#saveStatus").textContent="Ergebnis wird gespeichert …";
   if(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY){
     try{
@@ -1539,7 +1652,7 @@ async function fetchSession(code){
   const rows=await r.json();return rows[0]||null
 }
 async function joinSession(code,name){
-  return rpc("join_quiz_session",{p_code:code,p_player_name:name})
+  return rpc("join_quiz_session",{p_code:code,p_player_name:name,p_client_id:clientId})
 }
 function setSessionState(text,kind=""){
   const el=$("#sessionState");if(!el)return;el.className="session-state"+(kind?" "+kind:"");el.textContent=text
@@ -1550,7 +1663,7 @@ function quotaForMode(seconds,n){
   if(seconds===300)return 1;
   if(seconds===600)return Math.min(2,maxTaskBlocks(n));
   if(seconds===900){
-    const q={1:3,2:2,3:2,4:3,5:2,6:2,7:2,8:2};
+    const q={1:3,2:2,3:2,4:3,5:2,6:3,7:2,8:4};
     return Math.min(q[n]||2,maxTaskBlocks(n))
   }
   return maxTaskBlocks(n);
@@ -1577,6 +1690,8 @@ function configureQuizPlan(){
     const extra=Math.max(0,quotaForMode(quizModeSeconds,n)-1);
     (missionPanelOrder[n]||[]).slice(0,extra).forEach(id=>allowedPanels.add(id))
   }
+  const qPanel={m1hotspots:"m1hotspotPanel",m1b:"m1bPanel",m1c:"m1cPanel",m2b:"m2bPanel",m3b:"m3bPanel",m3cWho:"m3cPanel",m3cInterpret:"m3cPanel",m4b:"m4bPanel",m4source:"m4sourcePanel",m4c:"m4cPanel",m5source:"m5sourcePanel",m5b:"m5bPanel",m5c:"m5cPanel",m6b:"m6bPanel",m6source:"m6sourcePanel",m6c:"m6cPanel",m7b:"m7bPanel",m7cWho:"m7cPanel",m7cInterpret:"m7cPanel",risk1:"riskPanel",m8source:"m8sourcePanel"};
+  for(const [qid,q] of Object.entries(questionOverrides)){const panel=qPanel[qid];if(!panel)continue;const modes=Array.isArray(q.timeModes)?q.timeModes.map(Number):[];const modeOk=!modes.length||modes.includes(quizModeSeconds);if(q.active===false||!modeOk)allowedPanels.delete(panel)}
   Object.entries(missionPanelOrder).forEach(([n,ids])=>{
     ids.forEach(id=>$("#"+id)?.classList.toggle("plan-skipped",!allowedPanels.has(id)))
   });
@@ -1595,7 +1710,7 @@ function finishMissionEarly(n){
 }
 function unlockPlanned(id){
   if(allowedPanels.has(id))return false;
-  const m=Number((id.match(/^m(\d+)/)||[])[1]);if(!m)return false;
+  const m=id==="riskPanel"?8:Number((id.match(/^m(\d+)/)||[])[1]);if(!m)return false;
   const order=missionPanelOrder[m]||[],idx=order.indexOf(id);
   const later=order.slice(idx+1).find(x=>allowedPanels.has(x));
   if(later){unlock(later);return true}
@@ -1608,7 +1723,7 @@ function goNextMission(from){
 }
 
 function applySessionSettings(s){
-  sessionSettings=Object.assign({show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8]},s||{});
+  sessionSettings=Object.assign({show_highscore:true,hints:true,sound:true,active_missions:[1,2,3,4,5,6,7,8],team_count:1},s||{});
   activeMissions=normalizeMissions(sessionSettings.active_missions);
   if(!activeMissions.length)activeMissions=[1,2,3,4,5,6,7,8];
   configureQuizPlan();
@@ -1641,7 +1756,7 @@ function timeExpired(){
   setTimeout(()=>{vaultSound();o.classList.remove("show");finishGame("timeout")},4600)
 }
 function beginClassQuiz(){
-  if(sessionStarted)return;sessionStarted=true;clearInterval(sessionPoll);
+  if(sessionStarted)return;sessionStarted=true;
   $("#launchOverlay").classList.remove("show");
   radioBurst(.42);unlockSound();startQuizClock();setTimeout(()=>goNextMission(0),300)
 }
@@ -1659,18 +1774,46 @@ function runLaunchCountdown(startAt){
   };
   clearInterval(window.__launchTimer);tick();window.__launchTimer=setInterval(tick,140)
 }
+
+async function heartbeatStudent(){
+  if(!currentSessionCode||!sessionJoined)return;
+  try{await rpc("student_heartbeat",{p_code:currentSessionCode,p_client_id:clientId,p_score:score,p_mission:currentMission,p_mistakes:mistakes})}catch(e){}
+}
+async function pollDeviceCommands(){
+  if(!currentSessionCode||!sessionJoined)return;
+  try{
+    const data=await rpc("poll_device_commands",{p_code:currentSessionCode,p_client_id:clientId,p_after_id:lastCommandId});
+    (Array.isArray(data)?data:[]).forEach(c=>{lastCommandId=Math.max(lastCommandId,Number(c.id)||0);handleDeviceCommand(c)})
+  }catch(e){}
+}
+function showTeacherMessage(text,title="Nachricht der Lehrkraft"){
+  $("#commandTitle").textContent=title;$("#commandText").textContent=text||"Bitte beachte die Nachricht der Lehrkraft.";$("#lockCount").classList.add("hidden");$("#ackCommand").classList.remove("hidden");$("#commandOverlay").classList.add("show");radioBurst(.22)
+}
+function lockDevice(seconds=30,text="Bitte arbeite selbstständig weiter."){
+  deviceLocked=true;$("#commandTitle").textContent="Gerät vorübergehend gesperrt";$("#commandText").textContent=text;$("#ackCommand").classList.add("hidden");$("#lockCount").classList.remove("hidden");$("#commandOverlay").classList.add("show");
+  clearInterval(lockTimer);let s=Math.max(1,Number(seconds)||30);$("#lockCount").textContent=s;lockTimer=setInterval(()=>{s--;$("#lockCount").textContent=Math.max(0,s);if(s<=0)unlockDevice()},1000)
+}
+function unlockDevice(){deviceLocked=false;clearInterval(lockTimer);$("#commandOverlay").classList.remove("show")}
+function handleDeviceCommand(c){const p=c.payload||{};if(c.command_type==="message")showTeacherMessage(p.text||"");else if(c.command_type==="lock")lockDevice(p.seconds||30,p.text||"Bitte arbeite selbstständig weiter.");else if(c.command_type==="unlock")unlockDevice()}
+$("#ackCommand").addEventListener("click",()=>$("#commandOverlay").classList.remove("show"));
+function setPaused(paused){$("#pauseOverlay").classList.toggle("show",!!paused)}
+
 async function pollStudentSession(){
-  if(!currentSessionCode||sessionStarted)return;
+  if(!currentSessionCode)return;
   try{
     const s=await fetchSession(currentSessionCode);
     if(!s){setSessionState("Session nicht gefunden.","bad");return}
     sessionDuration=Number(s.duration_seconds);if(!Number.isFinite(sessionDuration))sessionDuration=900;applySessionSettings(s.settings||{});
-    if(s.status==="waiting"){setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","wait");return}
+    if(s.status==="waiting"){setPaused(false);if(!studentTeam)setSessionState("Bereit gemeldet · Warte auf Freigabe durch die Lehrkraft.","wait");return}
     if(s.status==="closed"){setSessionState("Diese Session wurde geschlossen.","bad");clearInterval(sessionPoll);return}
+    if(s.status==="paused"){setPaused(true);await heartbeatStudent();await pollDeviceCommands();return}else setPaused(false);
+    if(s.status==="ended"){setPaused(false);if(!gameFinished){endedByTime=true;finishGame("teacher_end")}return}
     if(s.status==="armed"&&s.start_at){
       const target=new Date(s.start_at).getTime();
-      if(!sessionStartedAt||sessionStartedAt!==target)runLaunchCountdown(s.start_at)
+      if(sessionStarted){sessionStartedAt=target}
+      else if(!sessionStartedAt||sessionStartedAt!==target)runLaunchCountdown(s.start_at)
     }
+    await heartbeatStudent();await pollDeviceCommands();
   }catch(e){console.warn(e);setSessionState("Verbindung zur Klassen-Session unterbrochen – neuer Versuch läuft.","bad")}
 }
 async function studentReady(){
@@ -1682,9 +1825,10 @@ async function studentReady(){
   try{
     const s=await fetchSession(code);
     if(!s){throw new Error("not-found")}
+    questionOverrides=await fetchQuestionOverrides(code);
     if(s.status==="closed")throw new Error("closed");
-    await joinSession(code,n);sessionJoined=true;sessionDuration=Number(s.duration_seconds);if(!Number.isFinite(sessionDuration))sessionDuration=900;applySessionSettings(s.settings||{});
-    setSessionState(`Bereit gemeldet · ${activeMissions.length} Themenfeld${activeMissions.length===1?"":"er"} · Warte auf Freigabe durch die Lehrkraft.`,"good");
+    const joined=await joinSession(code,n);const jr=Array.isArray(joined)?joined[0]:joined;if(jr&&jr.team){studentTeam=jr.team;$("#teamName").textContent=studentTeam;$("#teamPill").classList.add("on");setSessionState(`Bereit gemeldet · ${studentTeam} · Warte auf Freigabe.`,"good")}sessionJoined=true;sessionDuration=Number(s.duration_seconds);if(!Number.isFinite(sessionDuration))sessionDuration=900;applySessionSettings(s.settings||{});applyQuestionOverrides();
+    setSessionState(`Bereit gemeldet${studentTeam&&studentTeam!=="Einzel"?` · Team ${studentTeam}`:""} · ${activeMissions.length} Themenfeld${activeMissions.length===1?"":"er"} · Warte auf Freigabe.`,"good");
     clearInterval(sessionPoll);await pollStudentSession();sessionPoll=setInterval(pollStudentSession,1250)
   }catch(e){
     $("#startBtn").disabled=false;$("#startBtn").textContent="Bereit melden";
@@ -1702,7 +1846,8 @@ function teacherSettingsPayload(){
     hints:$("#settingHints").checked,
     sound:$("#settingSound").checked,
     countdown_seconds:Number($("#teacherCountdown").value)||10,
-    active_missions:getTeacherSelectedMissions()
+    active_missions:getTeacherSelectedMissions(),
+    team_count:Number($("#teacherTeams").value)||1
   }
 }
 function updateScopePreview(){
@@ -1714,6 +1859,89 @@ function updateScopePreview(){
   box.innerHTML=`<b>${missions.length} Themenfeld${missions.length===1?"":"er"} · ca. ${count} Aufgabenblöcke</b><br>${seconds===0?"Kein Zeitablauf – vollständiger Umfang der ausgewählten Missionen.":`${modeLabel(seconds)} – Umfang wird automatisch an die Zeit angepasst.`}`;
   return true
 }
+
+function questionCatalog(){
+ const domChoice=(id,mission,title,type="choice",points=120)=>{const g=document.querySelector(`[data-q="${id}"]`),opts=g?[...g.querySelectorAll(".choice")].map(b=>b.textContent.trim()):[];const ci=g?[...g.querySelectorAll(".choice")].findIndex(b=>b.dataset.correct):0;return{id,mission,type,title,prompt:title,options:opts,correct:ci+1,points,difficulty:3,timeModes:[300,600,900,1200,0],active:true}};
+ const q=[
+  {id:"m1a",mission:1,type:"map",title:"Machtzentren lokalisieren",prompt:$("#m1aFb")?.textContent||"",options:mapTargets.m1a,correct:mapTargets.m1a,points:200,difficulty:2,timeModes:[300,600,900,1200,0],active:true},
+  {id:"m1hotspots",mission:1,type:"map",title:"Drei Konflikträume markieren",prompt:"Deutschland, Kuba und Vietnam markieren",options:mapTargets.m1hotspots,correct:mapTargets.m1hotspots,points:150,difficulty:2,timeModes:[600,900,1200,0],active:true},
+  {id:"m1b",mission:1,type:"multi",title:"Bipolare Weltordnung",prompt:"Welche Aussagen beschreiben die bipolare Weltordnung?",options:[...$("#m1multi").querySelectorAll("label")].map(x=>x.textContent.trim()),correct:[1,2,4],points:150,difficulty:2,timeModes:[600,900,1200,0],active:true},
+  {id:"m2a",mission:2,type:"classify",title:"Blockbildung zuordnen",prompt:"Westblock, Ostblock oder blockfrei",options:blocks,correct:"side-Feld",points:540,difficulty:3,timeModes:[300,600,900,1200,0],active:true},
+  {id:"m3a",mission:3,type:"classify",title:"Feindbild, Propaganda oder Abschreckung",prompt:"Ordne die Fälle zu",options:feind,correct:"zweites Feld",points:275,difficulty:4,timeModes:[300,600,900,1200,0],active:true},
+  {id:"m4a",mission:4,type:"classify",title:"BRD, DDR oder beide",prompt:"Ordne die Begriffe zu",options:ger,correct:"zweites Feld",points:360,difficulty:3,timeModes:[300,600,900,1200,0],active:true},
+  {id:"m7a",mission:7,type:"classify",title:"Entspannung oder Konfrontation",prompt:"Ordne die Ereignisse ein",options:det,correct:"zweites Feld",points:315,difficulty:3,timeModes:[300,600,900,1200,0],active:true},
+  domChoice("m1c",1,"Gefahr des Kalten Krieges"),domChoice("m2b",2,"Systemvergleich"),domChoice("m3cWho",3,"Truman-Zitat zuordnen"),domChoice("m3cInterpret",3,"Truman-Zitat deuten"),
+  {id:"m3b",mission:3,type:"multi",title:"Wirkung von Feindbildern",prompt:"Welche Wirkung hatten Feindbilder besonders?",options:[...$("#m3multi").querySelectorAll("label")].map(x=>x.textContent.trim()),correct:[1,2,4],points:150,difficulty:3,timeModes:[600,900,1200,0],active:true},
+  {id:"m4b",mission:4,type:"sequence",title:"Deutschland-Chronologie",prompt:"Sortiere die Ereignisse",options:[...$("#germanySeq").querySelectorAll(".seq-item b")].map(x=>x.textContent),correct:"Reihenfolge wie Optionen",points:140,difficulty:3,timeModes:[600,900,1200,0],active:true},
+  domChoice("m4source",4,"Quellenakte Deutschland","source",120),domChoice("m4c",4,"Berlin als Brennpunkt"),
+  {id:"m5a",mission:5,type:"map",title:"Kuba lokalisieren",prompt:$("#m5aFb")?.textContent||"",options:[mapTargets.m5a],correct:mapTargets.m5a,points:110,difficulty:2,timeModes:[300,600,900,1200,0],active:true},
+  domChoice("m5source",5,"Kennedy-Geheimakte","source",120),
+  {id:"m5b",mission:5,type:"simulation",title:"Eskalationslogik Kuba",prompt:"Drei Phasen",options:cubaPhases,correct:"a-Feld je Phase",points:270,difficulty:4,timeModes:[900,1200,0],active:true},
+  {id:"m5c",mission:5,type:"sequence",title:"Kuba-Chronologie",prompt:"Ordne die Krise",options:[...$("#cubaSeq").querySelectorAll(".seq-item b")].map(x=>x.textContent),correct:"Reihenfolge wie Optionen",points:160,difficulty:3,timeModes:[1200,0],active:true},
+  {id:"m6a",mission:6,type:"map",title:"Vietnam lokalisieren",prompt:$("#m6aFb")?.textContent||"",options:[mapTargets.m6a],correct:mapTargets.m6a,points:110,difficulty:2,timeModes:[300,600,900,1200,0],active:true},
+  {id:"m6b",mission:6,type:"sequence",title:"Vietnam-Kausalitätskette",prompt:"Ordne Ursachen und Entwicklungen",options:[...$("#vietnamSeq").querySelectorAll(".seq-item b")].map(x=>x.textContent),correct:"Reihenfolge wie Optionen",points:150,difficulty:4,timeModes:[600,900,1200,0],active:true},
+  domChoice("m6source",6,"Quellenakte Vietnam","source",120),
+  {id:"m6c",mission:6,type:"multi",title:"Vietnam als Kalter-Krieg-Konflikt",prompt:"Wähle alle zutreffenden Aussagen",options:[...$("#m6multi").querySelectorAll("label")].map(x=>x.textContent.trim()),correct:[1,2,4],points:150,difficulty:4,timeModes:[900,1200,0],active:true},
+  {id:"m7b",mission:7,type:"sequence",title:"Entspannungs-Chronologie",prompt:"Was kam zuerst?",options:[...$("#detenteSeq").querySelectorAll(".seq-item b")].map(x=>x.textContent),correct:"Reihenfolge wie Optionen",points:140,difficulty:3,timeModes:[600,900,1200,0],active:true},
+  domChoice("m7cWho",7,"Reagan-Zitat zuordnen"),domChoice("m7cInterpret",7,"Reagan-Zitat deuten"),
+  {id:"m8a",mission:8,type:"sequence",title:"Final-Timeline",prompt:"Ordne das Ende des Kalten Krieges",options:[...$("#endSeq").querySelectorAll(".seq-item b")].map(x=>x.textContent),correct:"Reihenfolge wie Optionen",points:180,difficulty:3,timeModes:[300,600,900,1200,0],active:true},
+  domChoice("risk1",8,"Risikofrage","choice",300),domChoice("m8source",8,"Quellenakte Ende des Kalten Krieges","source",120)
+ ];
+ bossPool.forEach((b,i)=>{if(!b.customId)q.push({id:`boss${i+1}`,mission:b.tag,type:"boss",title:`Finale ${i+1}`,prompt:b.q,options:[b.a,...b.o],correct:1,points:b.points||100,difficulty:4,timeModes:[900,1200,0],active:true})});
+ const baseIds=new Set(q.map(x=>x.id));for(const [id,o] of Object.entries(questionOverrides)){if(!baseIds.has(id)&&id.startsWith("custom_"))q.push({id,mission:Number(o.mission)||1,type:o.type||"boss",title:o.title||"Zusatzfrage",prompt:o.prompt||"",options:o.options||["Richtig","Falsch A","Falsch B"],correct:o.correct||1,points:Number(o.points)||100,difficulty:Number(o.difficulty)||3,timeModes:o.timeModes||[900,1200,0],active:o.active!==false,sourceUrl:o.sourceUrl||""})}
+ return q
+}
+function mergedQuestion(q){return Object.assign({},q,questionOverrides[q.id]||{})}
+function renderEditorList(){const box=$("#editorList"),cat=questionCatalog();box.innerHTML=cat.map(q=>{const x=mergedQuestion(q);return `<button class="editor-item" data-edit-id="${q.id}"><b>M${x.mission} · ${escapeHtml(x.title)}</b>${escapeHtml(x.type)} · ${x.active===false?"inaktiv":"aktiv"}</button>`}).join("");box.querySelectorAll("[data-edit-id]").forEach(b=>b.addEventListener("click",()=>loadQuestionEditor(b.dataset.editId)))}
+function parseMaybeJSON(s){const t=(s||"").trim();if(!t)return[];try{return JSON.parse(t)}catch(e){return t.split(/\n/).map(x=>x.trim()).filter(Boolean)}}
+function parseCorrectValue(s){const t=(s||"").trim();if(!t)return"";try{return JSON.parse(t)}catch(e){return t}}
+function loadQuestionEditor(id){const q=mergedQuestion(questionCatalog().find(x=>x.id===id));if(!q)return;$("#editQuestionId").value=q.id;$("#editMission").value=q.mission;$("#editType").value=q.type;$("#editDifficulty").value=q.difficulty||3;$("#editTitle").value=q.title||"";$("#editPrompt").value=q.prompt||"";$("#editOptions").value=Array.isArray(q.options)&&q.options.every(x=>typeof x==="string")?q.options.join("\n"):JSON.stringify(q.options??[],null,2);$("#editCorrect").value=typeof q.correct==="object"?JSON.stringify(q.correct,null,2):String(q.correct??"");$("#editPoints").value=q.points||0;$("#editTimeModes").value=(q.timeModes||[300,600,900,1200,0]).join(",");$("#editSourceUrl").value=q.sourceUrl||"";$("#editActive").checked=q.active!==false;$("#editorStatus").textContent=`${q.id} geladen.`;$$(".editor-item").forEach(b=>b.classList.toggle("active",b.dataset.editId===id))}
+
+function editorFormPayload(){return{question_id:$("#editQuestionId").value,mission:Number($("#editMission").value),question_type:$("#editType").value,title:$("#editTitle").value.trim(),prompt:$("#editPrompt").value.trim(),options:parseMaybeJSON($("#editOptions").value),correct:parseCorrectValue($("#editCorrect").value),points:Number($("#editPoints").value)||0,difficulty:Number($("#editDifficulty").value)||3,time_modes:$("#editTimeModes").value.split(",").map(Number).filter(Number.isFinite),active:$("#editActive").checked,source_url:$("#editSourceUrl").value.trim()}}
+function newQuestionEditor(copy=false){const src=copy?editorFormPayload():null,id=`custom_${Date.now().toString(36)}`;$("#editQuestionId").value=id;$("#editMission").value=src?.mission||1;$("#editType").value="boss";$("#editDifficulty").value=src?.difficulty||3;$("#editTitle").value=copy?`${src.title||"Frage"} · Kopie`:"Neue Zusatzfrage";$("#editPrompt").value=src?.prompt||"";$("#editOptions").value=copy?(Array.isArray(src.options)?src.options.join("\\n"):JSON.stringify(src.options,null,2)):"Richtige Antwort\\nFalsche Antwort A\\nFalsche Antwort B";$("#editCorrect").value=copy?(typeof src.correct==="object"?JSON.stringify(src.correct):String(src.correct||1)):"1";$("#editPoints").value=src?.points||100;$("#editTimeModes").value=copy?(src.time_modes||[900,1200,0]).join(","):"900,1200,0";$("#editSourceUrl").value=src?.source_url||"";$("#editActive").checked=true;$("#editorStatus").textContent="Neue Zusatzfrage. Sie wird nach dem Speichern in den adaptiven Finale-Pool aufgenommen."}
+function previewQuestionEdit(){const q=editorFormPayload(),box=$("#editorPreview"),opts=Array.isArray(q.options)?q.options:[];box.classList.remove("hidden");box.innerHTML=`<h4>${escapeHtml(q.title||"Vorschau")}</h4><p>${escapeHtml(q.prompt||"")}</p><div class="choice-grid">${opts.map((x,i)=>`<button class="choice" disabled>${escapeHtml(typeof x==="string"?x:JSON.stringify(x))}${Number(q.correct)===i+1?" ✓":""}</button>`).join("")}</div>`}
+async function deleteQuestionEdit(){const id=$("#editQuestionId").value;if(!id)return;if(id.startsWith("custom_")){if(!confirm("Diese Zusatzfrage löschen?"))return;await resetQuestionEdit();$("#editQuestionId").value="";$("#editorStatus").textContent="Zusatzfrage gelöscht."}else{$("#editActive").checked=false;await saveQuestionEdit();$("#editorStatus").textContent="Standardfrage für diese Session deaktiviert."}}
+
+async function saveQuestionEdit(){if(!teacherSessionCode||!teacherKey)return;const id=$("#editQuestionId").value;if(!id)return;const payload=editorFormPayload();if(id.startsWith("custom_")){payload.question_type="boss";$("#editType").value="boss"}try{await rpc("save_session_question_override",{p_code:teacherSessionCode,p_teacher_key:teacherKey,p_question:payload});questionOverrides[id]={mission:payload.mission,type:payload.question_type,title:payload.title,prompt:payload.prompt,options:payload.options,correct:payload.correct,points:payload.points,difficulty:payload.difficulty,timeModes:payload.time_modes,active:payload.active,sourceUrl:payload.source_url};$("#editorStatus").textContent="Gespeichert. Gilt für neue/noch nicht gestartete Geräte dieser Session.";renderEditorList()}catch(e){console.warn(e);$("#editorStatus").textContent="Speichern fehlgeschlagen."}}
+async function resetQuestionEdit(){const id=$("#editQuestionId").value;if(!id||!teacherSessionCode)return;try{await rpc("delete_session_question_override",{p_code:teacherSessionCode,p_teacher_key:teacherKey,p_question_id:id});delete questionOverrides[id];renderEditorList();loadQuestionEditor(id);$("#editorStatus").textContent="Override entfernt."}catch(e){console.warn(e)}}
+async function fetchQuestionOverrides(code){const u=`${SUPABASE_URL}/rest/v1/quiz_question_override_public?select=*&session_code=eq.${encodeURIComponent(code)}`;const r=await fetch(u,{headers:{apikey:SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return{};const rows=await r.json(),o={};rows.forEach(x=>o[x.question_id]={mission:x.mission,type:x.question_type,title:x.title,prompt:x.prompt,options:x.options,correct:x.correct,points:x.points,difficulty:x.difficulty,timeModes:x.time_modes,active:x.active,sourceUrl:x.source_url});return o}
+
+function rerenderBlocks(data){
+ if(!Array.isArray(data))return;blocks=data;selToken=null;bcount=0;const pool=$("#blockPool");pool.innerHTML="";blocks.forEach(([t,side])=>{const b=document.createElement("button");b.className="token";b.textContent=t;b.dataset.side=side;b.addEventListener("click",()=>{$$(".token").forEach(x=>x.classList.remove("selected"));selToken=b;b.classList.add("selected")});pool.appendChild(b)});$("#m2aFb").textContent=`0 von ${blocks.length} richtig zugeordnet.`
+}
+function rerenderFeind(data){
+ if(!Array.isArray(data))return;feind=data;fdone=0;const box=$("#feindCases");box.innerHTML="";const chosen=[...feind].sort(()=>Math.random()-.5).slice(0,Math.min(5,feind.length));chosen.forEach(([txt,ans],i)=>{const cats=["Feindbild","Propaganda","Abschreckung"].sort(()=>Math.random()-.5),d=document.createElement("div");d.className="statement";d.innerHTML=`<b>Fall ${i+1}</b><br>${txt}<div class="category-row">${cats.map(c=>`<button class="catbtn" data-v="${c}">${c}</button>`).join("")}</div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(Math.round(qPoints("m3a",275)/Math.max(1,chosen.length)));good($("#m3Fb"),`${fdone} von ${chosen.length} richtig.`);if(fdone===chosen.length)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));box.appendChild(d)});$("#m3Fb").textContent=`Ordne alle ${chosen.length} Fälle richtig ein.`
+}
+function rerenderGermany(data){
+ if(!Array.isArray(data))return;ger=data;gdone=0;const box=$("#germanyCases");box.innerHTML="";ger.forEach(([term,ans])=>{const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="category-row">${["BRD","DDR","beide"].map(v=>`<button class="catbtn" data-v="${v}">${v}</button>`).join("")}</div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";gdone++;addScore(Math.round(qPoints("m4a",360)/Math.max(1,ger.length)));good($("#m4aFb"),`${gdone} von ${ger.length} richtig.`);if(gdone===ger.length)unlock("m4bPanel")}else{b.disabled=true;miss($("#m4aFb"),"Nicht korrekt. Prüfe, ob der Begriff nur einen Staat oder beide betrifft.")}}));box.appendChild(d)});$("#m4aFb").textContent=`0 von ${ger.length} richtig.`
+}
+function rerenderDetente(data){
+ if(!Array.isArray(data))return;det=data;ddone=0;const box=$("#detenteCases");box.innerHTML="";det.forEach(([term,ans])=>{const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="Entspannung">← Entspannung</button><button class="btn btn-secondary" data-v="Konfrontation">Konfrontation →</button></div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";ddone++;addScore(Math.round(qPoints("m7a",315)/Math.max(1,det.length)));good($("#m7aFb"),`${ddone} von ${det.length} richtig.`);if(ddone===det.length)unlock("m7bPanel")}else{b.disabled=true;miss($("#m7aFb"),"Nicht korrekt. Prüfe, ob das Ereignis Spannungen eher verringerte oder verschärfte.")}}));box.appendChild(d)});$("#m7aFb").textContent="Ordne alle Ereignisse ein."
+}
+
+function applyQuestionOverrides(){
+ for(const [id,q] of Object.entries(questionOverrides)){
+   if(id.startsWith("custom_")&&q.type==="boss"&&q.active!==false&&(!Array.isArray(q.timeModes)||!q.timeModes.length||q.timeModes.map(Number).includes(quizModeSeconds))&&!bossPool.some(x=>x.customId===id)){const opts=Array.isArray(q.options)?q.options:["Richtig","Falsch A","Falsch B"],ci=Math.max(0,(Number(q.correct)||1)-1);bossPool.push({tag:Number(q.mission)||1,q:q.prompt||q.title||"Zusatzfrage",a:opts[ci]||opts[0],o:opts.filter((_,j)=>j!==ci),points:Number(q.points)||100,customId:id})}
+   const group=document.querySelector(`[data-q="${id}"]`);if(group){const btns=[...group.querySelectorAll(".choice")];if(Array.isArray(q.options)&&q.options.every(x=>typeof x==="string")&&q.options.length===btns.length){btns.forEach((b,i)=>{b.textContent=q.options[i];delete b.dataset.correct});let ci=Number(q.correct);if(Array.isArray(q.correct))ci=Number(q.correct[0]);if(Number.isFinite(ci)&&ci>=1&&ci<=btns.length)btns[ci-1].dataset.correct="1"}const panel=group.closest(".panel");const h=panel?.querySelector("h3,h4");if(h&&q.title)h.textContent=q.title;if(panel&&q.sourceUrl){const a=panel.querySelector("a.source-link,.source-study a,.archive-source-ref a");if(a)a.href=q.sourceUrl}}
+   if(id==="m1a"&&Array.isArray(q.correct)&&q.correct.length>=2)mapTargets.m1a=q.correct.slice(0,2);
+   if(id==="m1hotspots"&&Array.isArray(q.correct))mapTargets.m1hotspots=q.correct;
+   if(id==="m5a"&&typeof q.correct==="string")mapTargets.m5a=q.correct;
+   if(id==="m6a"&&typeof q.correct==="string")mapTargets.m6a=q.correct;
+   if(id==="m2a"&&Array.isArray(q.options))rerenderBlocks(q.options);
+   if(id==="m3a"&&Array.isArray(q.options))rerenderFeind(q.options);
+   if(id==="m4a"&&Array.isArray(q.options))rerenderGermany(q.options);
+   if(id==="m7a"&&Array.isArray(q.options))rerenderDetente(q.options);
+   if(["m1b","m3b","m6c"].includes(id)&&Array.isArray(q.options)){const box=id==="m1b"?$("#m1multi"):id==="m3b"?$("#m3multi"):$("#m6multi");const labels=[...box.querySelectorAll("label")],corrects=Array.isArray(q.correct)?q.correct.map(Number):[];if(labels.length===q.options.length)labels.forEach((l,i)=>{const inp=l.querySelector("input");l.childNodes[l.childNodes.length-1].textContent=" "+q.options[i];if(inp){if(corrects.includes(i+1))inp.dataset.correct="1";else delete inp.dataset.correct}})}
+   if(id==="m4b"&&Array.isArray(q.options)){germanyCheck=seqGame("germanySeq",q.options.map((title,i)=>({order:i+1,title})))}
+   if(id==="m5c"&&Array.isArray(q.options)){cubaCheck=seqGame("cubaSeq",q.options.map((title,i)=>({order:i+1,title})))}
+   if(id==="m6b"&&Array.isArray(q.options)){vietCheck=seqGame("vietnamSeq",q.options.map((title,i)=>({order:i+1,title})))}
+   if(id==="m7b"&&Array.isArray(q.options)){detSeqCheck=seqGame("detenteSeq",q.options.map((title,i)=>({order:i+1,title})))}
+   if(id==="m8a"&&Array.isArray(q.options)){endCheck=seqGame("endSeq",q.options.map((title,i)=>({order:i+1,title})))}
+   if(id==="m5b"&&Array.isArray(q.options)&&q.options.every(x=>x&&typeof x==="object")){cubaPhases=q.options;cPhase=0;renderCubaPhase()}
+   if(id.startsWith("boss")){const i=Number(id.slice(4))-1;if(bossPool[i]){if(q.prompt)bossPool[i].q=q.prompt;if(Number.isFinite(Number(q.mission)))bossPool[i].tag=Number(q.mission);if(Number.isFinite(Number(q.points)))bossPool[i].points=Number(q.points);if(Array.isArray(q.options)&&q.options.length>=2){bossPool[i].a=q.options[Math.max(0,(Number(q.correct)||1)-1)];bossPool[i].o=q.options.filter((_,j)=>j!==Math.max(0,(Number(q.correct)||1)-1))}}}
+ }
+}
+
 async function createTeacherSession(){
   if(!updateScopePreview())return;
   $("#createSession").disabled=true;$("#teacherSessionStatus").textContent="Session wird erstellt …";
@@ -1721,14 +1949,14 @@ async function createTeacherSession(){
     const data=await rpc("create_quiz_session",{p_duration_seconds:Number($("#teacherDuration").value),p_settings:teacherSettingsPayload()});
     const row=Array.isArray(data)?data[0]:data;if(!row?.code||!row?.teacher_key)throw new Error("bad-response");
     teacherSessionCode=row.code;teacherKey=row.teacher_key;teacherStoreKey(teacherSessionCode,teacherKey);
-    teacherActivateUI();await refreshTeacherPanel();startTeacherPolling()
+    teacherActivateUI();questionOverrides=await fetchQuestionOverrides(teacherSessionCode);renderEditorList();await refreshTeacherPanel();startTeacherPolling()
   }catch(e){console.warn(e);$("#teacherSessionStatus").textContent="Fehler: Bitte zuerst V15_SUPABASE_MIGRATION.sql ausführen."}
   finally{$("#createSession").disabled=false}
 }
 function teacherActivateUI(){
   $("#teacherCode").textContent=teacherSessionCode||"------";
   $("#teacherJoinUrl").textContent=teacherSessionCode?`Schüler scannen den QR-Code und geben ${teacherSessionCode} ein.`:"Der Klassen-Code erscheint hier.";
-  ["releaseSession","resetSession","closeSession","refreshTeacher","exportClassCsv"].forEach(id=>$("#"+id).disabled=!teacherSessionCode)
+  ["releaseSession","resetSession","closeSession","refreshTeacher","exportClassCsv","pauseSession","resumeSession","add1Min","add2Min","add5Min","endNow","saveQuestionEdit","resetQuestionEdit","previewQuestionEdit","duplicateQuestionEdit","newQuestionEdit","deleteQuestionEdit"].forEach(id=>$("#"+id).disabled=!teacherSessionCode)
 }
 async function controlTeacher(action){
   if(!teacherSessionCode||!teacherKey)return;
@@ -1736,24 +1964,47 @@ async function controlTeacher(action){
     p_code:teacherSessionCode,p_teacher_key:teacherKey,p_action:action,
     p_duration_seconds:Number($("#teacherDuration").value),
     p_countdown_seconds:Number($("#teacherCountdown").value)||10,
-    p_settings:teacherSettingsPayload()
+    p_settings:teacherSettingsPayload(),
+    p_add_seconds:0
   };
   try{await rpc("control_quiz_session",payload);await refreshTeacherPanel()}catch(e){console.warn(e);$("#teacherSessionStatus").textContent="Steuerbefehl fehlgeschlagen."}
 }
+
+async function teacherAddTime(seconds){
+  if(!teacherSessionCode||!teacherKey)return;
+  try{await rpc("control_quiz_session",{p_code:teacherSessionCode,p_teacher_key:teacherKey,p_action:"add_time",p_duration_seconds:null,p_countdown_seconds:0,p_settings:null,p_add_seconds:seconds});await refreshTeacherPanel()}catch(e){console.warn(e)}
+}
+async function sendDeviceCommand(targetClient,type,payload={}){
+  if(!teacherSessionCode||!teacherKey)return;
+  return rpc("send_device_command",{p_code:teacherSessionCode,p_teacher_key:teacherKey,p_client_id:targetClient,p_command_type:type,p_payload:payload})
+}
+async function teacherMessage(client,name){const text=prompt(`Nachricht an ${name}:`,`Bitte arbeite selbstständig weiter.`);if(text&&text.trim())await sendDeviceCommand(client,"message",{text:text.trim()})}
+async function teacherLock(client,name){if(confirm(`${name} für 30 Sekunden sperren?`))await sendDeviceCommand(client,"lock",{seconds:30,text:"Bitte arbeite selbstständig weiter. Die Lehrkraft hat dein Gerät kurz gesperrt."})}
+async function teacherUnlock(client){await sendDeviceCommand(client,"unlock",{})}
+
 function fmtSec(v){
   if(v==null)return"–";const m=Math.floor(v/60),s=v%60;return `${m}:${String(s).padStart(2,"0")}`
 }
 async function fetchReady(code){
-  const u=`${SUPABASE_URL}/rest/v1/quiz_session_join_public?select=player_name,joined_at&session_code=eq.${encodeURIComponent(code)}&order=joined_at.asc`;
-  const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
+  if(!teacherKey)return[];
+  const data=await rpc("teacher_session_roster",{p_code:code,p_teacher_key:teacherKey});return Array.isArray(data)?data:[]
 }
 async function fetchTeacherResults(code){
-  const u=`${SUPABASE_URL}/rest/v1/scores?select=player_name,score,mistakes,best_combo,elapsed_seconds,topic_errors,completed_at,completion_status,selected_missions,time_mode_seconds&session_code=eq.${encodeURIComponent(code)}&order=score.desc,mistakes.asc,best_combo.desc`;
+  const u=`${SUPABASE_URL}/rest/v1/scores?select=player_name,score,mistakes,best_combo,elapsed_seconds,topic_errors,completed_at,completion_status,selected_missions,time_mode_seconds,team&session_code=eq.${encodeURIComponent(code)}&order=score.desc,mistakes.asc,best_combo.desc`;
   const r=await fetch(u,{headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}});if(!r.ok)return[];return r.json()
 }
 function renderReady(rows){
-  $("#readyCount").textContent=rows.length;const box=$("#readyList");
-  box.innerHTML=rows.length?rows.map(r=>`<div class="teacher-row"><div><span class="ready-dot"></span>${escapeHtml(r.player_name)}</div><div>bereit</div><div>${new Date(r.joined_at).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})}</div><div>–</div></div>`).join(""):'<div class="small">Noch niemand bereit.</div>'
+  teacherRosterCache=rows;$("#readyCount").textContent=rows.length;$("#controlAgentsMini").textContent=rows.length;const box=$("#readyList");
+  box.innerHTML=rows.length?rows.map(r=>`<div class="student-row-v17"><div><span class="ready-dot"></span><b>${escapeHtml(r.player_name)}</b><div class="small">${escapeHtml(r.team||"Einzel")} · Mission ${r.live_mission||0} · ${r.live_score||0} P</div></div><div>${r.live_mistakes||0} F</div><div>${r.last_seen_at?"online":"bereit"}</div><div class="student-actions"><button data-msg="${r.client_id}" data-name="${escapeHtml(r.player_name)}">Nachricht</button><button data-lock="${r.client_id}" data-name="${escapeHtml(r.player_name)}">30s sperren</button><button data-unlock="${r.client_id}">Freigeben</button></div></div>`).join(""):'<div class="small">Noch niemand bereit.</div>';
+  box.querySelectorAll('[data-msg]').forEach(b=>b.addEventListener('click',()=>teacherMessage(b.dataset.msg,b.dataset.name)));
+  box.querySelectorAll('[data-lock]').forEach(b=>b.addEventListener('click',()=>teacherLock(b.dataset.lock,b.dataset.name)));
+  box.querySelectorAll('[data-unlock]').forEach(b=>b.addEventListener('click',()=>teacherUnlock(b.dataset.unlock)));
+  renderTeamScores(rows)
+}
+function renderTeamScores(rows){
+  const count=Number($("#teacherTeams")?.value||1),box=$("#teamScores");if(count<=1){box.innerHTML='<div class="small">Einzelmodus aktiv.</div>';return}
+  const names=["Alpha","Bravo","Charlie","Delta"].slice(0,count),cls=["team-alpha","team-bravo","team-charlie","team-delta"];
+  box.innerHTML=names.map((n,i)=>{const members=rows.filter(r=>r.team===n),sum=members.reduce((a,r)=>a+(Number(r.live_score)||0),0);return `<div class="team-score ${cls[i]}"><b>Team ${n}</b><span>${sum}</span><small>${members.length} Agenten</small></div>`}).join("")
 }
 function renderTeacherResults(rows){
   teacherResultsCache=rows;$("#resultCount").textContent=rows.length;const box=$("#teacherResults");
@@ -1765,6 +2016,8 @@ function updateTeacherClock(session){
   const now=Date.now();
   if(session.status==="waiting"){ $("#teacherClock").textContent="READY";$("#teacherClockLabel").textContent="Klasse sammelt sich";return }
   if(session.status==="closed"){ $("#teacherClock").textContent="CLOSED";$("#teacherClockLabel").textContent="Session beendet";return }
+  if(session.status==="ended"){ $("#teacherClock").textContent="END";$("#teacherClockLabel").textContent="Vom Lehrer beendet";return }
+  if(session.status==="paused"){ $("#teacherClock").textContent="PAUSE";$("#teacherClockLabel").textContent="Unterricht angehalten";return }
   if(session.status==="armed"&&session.start_at){
     const start=new Date(session.start_at).getTime();
     if(now<start){const s=Math.max(0,Math.ceil((start-now)/1000));$("#teacherClock").textContent=`T-${String(s).padStart(2,"0")}`;$("#teacherClockLabel").textContent="Startfreigabe läuft";return}
@@ -1787,14 +2040,15 @@ async function refreshTeacherPanel(){
       if(typeof st.hints==="boolean")$("#settingHints").checked=st.hints;
       if(typeof st.sound==="boolean")$("#settingSound").checked=st.sound;
       if(st.countdown_seconds)$("#teacherCountdown").value=String(st.countdown_seconds);
-      updateScopePreview()
+      if(st.team_count)$("#teacherTeams").value=String(st.team_count);
+      updateScopePreview();renderTeamScores(teacherRosterCache)
     }
-    updateTeacherClock(s);renderReady(joins);renderTeacherResults(res)
+    updateTeacherClock(s);renderReady(joins);renderTeacherResults(res);$("#controlSessionMini").textContent=teacherSessionCode||"------";$("#controlStatusMini").textContent=s?s.status.toUpperCase():"OFFLINE"
   }catch(e){console.warn(e)}
 }
 function startTeacherPolling(){clearInterval(teacherPoll);teacherPoll=setInterval(refreshTeacherPanel,2200)}
 function restoreTeacherSession(){
-  const x=teacherLoadKey();if(x?.code&&x?.key){teacherSessionCode=x.code;teacherKey=x.key;teacherActivateUI();refreshTeacherPanel();startTeacherPolling()}
+  const x=teacherLoadKey();if(x?.code&&x?.key){teacherSessionCode=x.code;teacherKey=x.key;teacherActivateUI();fetchQuestionOverrides(teacherSessionCode).then(o=>{questionOverrides=o;renderEditorList()});refreshTeacherPanel();startTeacherPolling()}
 }
 function csvEscape(v){const s=String(v??"");return /[;"\n]/.test(s)?`"${s.replaceAll('"','""')}"`:s}
 function downloadText(filename,text,type="text/csv;charset=utf-8"){
@@ -1802,18 +2056,24 @@ function downloadText(filename,text,type="text/csv;charset=utf-8"){
 }
 function exportClassCSV(){
   if(!teacherResultsCache.length)return;
-  const head=["Name","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Mission 1 Fehler","Mission 2 Fehler","Mission 3 Fehler","Mission 4 Fehler","Mission 5 Fehler","Mission 6 Fehler","Mission 7 Fehler","Mission 8 Fehler","Abgabe"];
+  const head=["Name","Team","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Mission 1 Fehler","Mission 2 Fehler","Mission 3 Fehler","Mission 4 Fehler","Mission 5 Fehler","Mission 6 Fehler","Mission 7 Fehler","Mission 8 Fehler","Abgabe"];
   const rows=teacherResultsCache.map(r=>{
     const t=r.topic_errors||{};
-    return [r.player_name,r.score,r.mistakes,r.best_combo,r.elapsed_seconds,r.completion_status||"complete",r.time_mode_seconds??"",Array.isArray(r.selected_missions)?r.selected_missions.join(","):"",...Array.from({length:8},(_,i)=>t[String(i+1)]??0),r.completed_at]
+    return [r.player_name,r.team||"",r.score,r.mistakes,r.best_combo,r.elapsed_seconds,r.completion_status||"complete",r.time_mode_seconds??"",Array.isArray(r.selected_missions)?r.selected_missions.join(","):"",...Array.from({length:8},(_,i)=>t[String(i+1)]??0),r.completed_at]
   });
   downloadText(`Kalter_Krieg_${teacherSessionCode}_Ergebnisse.csv`,[head,...rows].map(r=>r.map(csvEscape).join(";")).join("\n"))
 }
+
+function buildCertificate(){
+ const badges=[];if(mistakes===0)badges.push("Fehlerfreie Akte");if(bestCombo>=5)badges.push("Serienprofi");if([1,5,6].filter(n=>activeMissions.includes(n)).every(n=>missionErrors[n]===0))badges.push("Kartograf");if([3,5,7,8].filter(n=>activeMissions.includes(n)).every(n=>missionErrors[n]===0))badges.push("Quellenanalyst");if(!badges.length)badges.push("Archiv abgeschlossen");
+ $("#certName").textContent=playerName;$("#certScore").textContent=score;$("#certMistakes").textContent=mistakes;$("#certCombo").textContent=bestCombo;$("#certStrong").textContent=$("#strongTopic").textContent;$("#certWeak").textContent=$("#revisitTopic").textContent;$("#certSession").textContent=currentSessionCode||"Übungsmodus";$("#certTeam").textContent=studentTeam||"Einzel";$("#certDate").textContent=new Date().toLocaleDateString("de-DE");$("#certBadges").innerHTML=badges.map(b=>`<span class="cert-badge">${b}</span>`).join("");$("#certificateOverlay").classList.add("show")
+}
+
 function exportOwnCSV(){
   const strong=$("#strongTopic")?.textContent||"",weak=$("#revisitTopic")?.textContent||"";
   const elapsed=sessionStartedAt?Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)):"";
-  const head=["Name","Session","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Stärkstes Thema","Wiederholen",...Array.from({length:8},(_,i)=>`Mission ${i+1} Fehler`)];
-  const row=[playerName,currentSessionCode,score,mistakes,bestCombo,elapsed,endedByTime?"timeout":"complete",sessionDuration,activeMissions.join(","),strong,weak,...Array.from({length:8},(_,i)=>missionErrors[i+1])];
+  const head=["Name","Session","Team","Punkte","Fehler","Beste Serie","Bearbeitungszeit Sekunden","Status","Zeitmodus Sekunden","Ausgewählte Missionen","Stärkstes Thema","Wiederholen",...Array.from({length:8},(_,i)=>`Mission ${i+1} Fehler`)];
+  const row=[playerName,currentSessionCode,studentTeam||"Einzel",score,mistakes,bestCombo,elapsed,endedByTime?"timeout":"complete",sessionDuration,activeMissions.join(","),strong,weak,...Array.from({length:8},(_,i)=>missionErrors[i+1])];
   downloadText(`Kalter_Krieg_${playerName.replace(/\s+/g,"_")}_Ergebnis.csv`,[head,row].map(r=>r.map(csvEscape).join(";")).join("\n"))
 }
 
@@ -1905,6 +2165,10 @@ function enterMission(n){
   const pos=missionPosition(n),total=activeMissions.length;
   $("#missionHud").textContent=pos+"/"+total;$("#progressFill").style.width=((pos-1)/Math.max(1,total)*100)+"%";show("m"+n);
   const el=$("#m"+n),title=el.querySelector('.mission-head h2')?.textContent||('Mission '+n);updateMissionRail(n);playMissionTransition(n,title);
+  const mainId=({1:"m1a",2:"m2a",3:"m3a",4:"m4a",5:"m5a",6:"m6a",7:"m7a",8:"m8a"})[n],mq=questionOverrides[mainId],modes=Array.isArray(mq?.timeModes)?mq.timeModes.map(Number):[];
+  const mainEnabled=!mq||((mq.active!==false)&&(!modes.length||modes.includes(quizModeSeconds))),firstPanel=el.querySelector(':scope > .panel');
+  if(firstPanel)firstPanel.classList.toggle('plan-skipped',!mainEnabled);
+  if(!mainEnabled){const firstSub=(missionPanelOrder[n]||[]).find(id=>allowedPanels.has(id));if(firstSub)$("#"+firstSub)?.classList.remove("locked");else{setTimeout(()=>finishMissionEarly(n),300);return}}
   const available=[...el.querySelectorAll('.panel')].filter(p=>!p.classList.contains('locked')&&!p.classList.contains('plan-skipped'));
   if(available.length)available.forEach((p,i)=>p.classList.toggle('completed-step',i!==available.length-1));
   const nav=$("#next"+n);if(nav){const nx=nextActiveMission(n);nav.textContent=nx?`Mission ${nx} freigeben`:"Auswertung öffnen"}
@@ -1927,6 +2191,7 @@ $("#startBtn").addEventListener("click",()=>{
   studentReady()
 });
 
+function qPoints(id,fallback){const q=questionOverrides[id];const n=Number(q?.points);return Number.isFinite(n)?n:fallback}
 function setupChoice(qid,onDone){
  const group=document.querySelector(`[data-q="${qid}"]`),fb=$("#"+qid+"Fb");let done=false;
  const shuffled=[...group.querySelectorAll(".choice")].sort(()=>Math.random()-.5);
@@ -1934,7 +2199,7 @@ function setupChoice(qid,onDone){
  shuffled.forEach(btn=>btn.addEventListener("click",()=>{
   if(done)return;
   if(btn.dataset.correct){
-   done=true;btn.classList.add("correct");group.querySelectorAll(".choice").forEach(b=>b.disabled=true);addScore(120);good(fb,"Richtig. "+({
+   done=true;btn.classList.add("correct");group.querySelectorAll(".choice").forEach(b=>b.disabled=true);addScore(qPoints(qid,120));good(fb,"Richtig. "+({
     m1c:"Die nukleare Abschreckung sollte Krieg verhindern, machte eine Eskalation aber zugleich existenziell gefährlich.",
     m2b:"Richtig: Der Konflikt war politisch, wirtschaftlich, ideologisch und militärisch.",
     m4c:"Richtig: Berlin war ein unmittelbarer Kontaktpunkt der Machtblöcke.",
@@ -1950,11 +2215,12 @@ function setupChoice(qid,onDone){
 }
 function checkMulti(containerId,fbId,onDone){
  const box=$("#"+containerId),fb=$("#"+fbId),inputs=[...box.querySelectorAll("input")];
+ const qid=({m1multi:"m1b",m3multi:"m3b",m6multi:"m6c"})[containerId]||containerId;
  const chosenCorrect=inputs.filter(i=>i.checked&&i.dataset.correct).length;
  const totalCorrect=inputs.filter(i=>i.dataset.correct).length;
  const chosenWrong=inputs.filter(i=>i.checked&&!i.dataset.correct).length;
  if(chosenCorrect===totalCorrect&&chosenWrong===0){
-   inputs.forEach(i=>i.disabled=true);addScore(150);good(fb,"Vollständig richtig.");onDone();return true;
+   inputs.forEach(i=>i.disabled=true);addScore(qPoints(qid,150));good(fb,"Vollständig richtig.");onDone();return true;
  } else {miss(fb,"Noch nicht vollständig richtig. Prüfe sowohl fehlende als auch zu viel ausgewählte Aussagen.");return false}
 }
 
@@ -2137,14 +2403,14 @@ let m1step=0;
  svg.append("path").datum(d3.geoGraticule10()).attr("d",path).attr("fill","none").attr("stroke","#c3d3da").attr("stroke-width",".7");
  ensureWorld(features=>{
   svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).on("click",function(e,d){
-   const target=m1step===0?"United States of America":"Russia",fb=$("#m1aFb");
+   const target=mapTargets.m1a[m1step],fb=$("#m1aFb");
    if(d.properties.name===target){
-    d3.select(this).classed("hit",true).style("pointer-events","none");animateMapTarget("#map1",this,true);addScore(100);m1step++;
+    d3.select(this).classed("hit",true).style("pointer-events","none");animateMapTarget("#map1",this,true);addScore(Math.round(qPoints("m1a",200)/2));m1step++;
     if(m1step===1)good(fb,"Erstes Machtzentrum gefunden. Die Karte fährt zurück – danach folgt Moskau als zweites Zentrum.");
     else{
       good(fb,"Beide Machtzentren lokalisiert. Jetzt wird die historische Verbindung Washington ↔ Moskau eingeblendet …");
       setTimeout(()=>showMapNetwork("#map1","superpowers"),2850);
-      setTimeout(()=>unlock("m1bPanel"),5600)
+      setTimeout(()=>unlock("m1hotspotPanel"),5600)
     }
    }else{mapSignalError("#map1");miss(fb,m1step===0?"Nicht korrekt. Denke an die westliche Supermacht nach 1945.":"Nicht korrekt. Gesucht ist das heutige Kerngebiet der damaligen UdSSR mit Hauptstadt Moskau.")}
   });$("#load1").classList.add("hidden");
@@ -2153,8 +2419,16 @@ let m1step=0;
 $("#checkM1multi").addEventListener("click",()=>checkMulti("m1multi","m1bFb",()=>unlock("m1cPanel")));
 setupChoice("m1c",()=>{completeMission(1);$("#next1").disabled=false});
 
+
+// M1B multi-target Cold War hotspots
+(function initHotspotMap(){
+ const svg=d3.select("#mapHotspots"),proj=d3.geoNaturalEarth1().fitExtent([[24,18],[1376,702]],{type:"Sphere"}),path=d3.geoPath(proj);let found=new Set();
+ svg.append("path").datum({type:"Sphere"}).attr("d",path).attr("fill","#dce8ed");svg.append("path").datum(d3.geoGraticule10()).attr("d",path).attr("fill","none").attr("stroke","#c3d3da").attr("stroke-width",".7");
+ ensureWorld(features=>{svg.selectAll("path.country").data(features).join("path").attr("class","country").attr("d",path).on("click",function(e,d){const name=d.properties.name;if(mapTargets.m1hotspots.includes(name)){if(found.has(name))return;found.add(name);d3.select(this).classed("hit",true);radarPing();const chip=document.querySelector(`[data-hot="${name}"]`);chip?.classList.add("done");addScore(Math.round(qPoints("m1hotspots",150)/Math.max(1,mapTargets.m1hotspots.length)));good($("#m1hotspotFb"),`${found.size} von ${mapTargets.m1hotspots.length} Konflikträumen markiert.`);if(found.size===mapTargets.m1hotspots.length){setTimeout(()=>unlock("m1bPanel"),1300)}}else{mapSignalError("#mapHotspots");miss($("#m1hotspotFb"),"Dieser Staat gehört nicht zu den drei gesuchten Schauplätzen.")}});$("#loadHotspots").classList.add("hidden")},"#loadHotspots")
+})();
+
 // M2 tokens incl Yugoslavia, India, Sweden as other
-const blocks=[
+let blocks=[
  ["USA","west"],["BRD","west"],["NATO","west"],["Marshallplan","west"],
  ["UdSSR","east"],["DDR","east"],["Warschauer Pakt","east"],["RGW / Comecon","east"],
  ["Jugoslawien","other"],["Indien","other"],["Schweden","other"],["Blockfreie Bewegung","other"]
@@ -2167,13 +2441,13 @@ let selToken=null,bcount=0;
 blocks.forEach(([t,s])=>{const b=document.createElement("button");b.className="token";b.textContent=t;b.dataset.side=s;b.addEventListener("click",()=>{$$(".token").forEach(x=>x.classList.remove("selected"));selToken=b;b.classList.add("selected")});$("#blockPool").appendChild(b)});
 $$(".drop").forEach(b=>b.addEventListener("click",()=>{
  const fb=$("#m2aFb");if(!selToken){fb.textContent="Wähle zuerst einen Begriff.";return}
- if(selToken.dataset.side===b.dataset.bin){const token=selToken,targetBin=$("#"+b.dataset.bin+"Bin");token.disabled=true;token.classList.remove("selected");flyToBin(token,targetBin);selToken=null;bcount++;addScore(45);good(fb,bcount+" von 12 richtig.");if(bcount===12)unlock("m2bPanel")}
+ if(selToken.dataset.side===b.dataset.bin){const token=selToken,targetBin=$("#"+b.dataset.bin+"Bin");token.disabled=true;token.classList.remove("selected");flyToBin(token,targetBin);selToken=null;bcount++;addScore(Math.round(qPoints("m2a",540)/12));good(fb,bcount+" von 12 richtig.");if(bcount===12)unlock("m2bPanel")}
  else miss(fb,"Diese Einordnung passt nicht.")
 }));
 setupChoice("m2b",()=>{completeMission(2);$("#next2").disabled=false});
 
 // M3
-const feind=[
+let feind=[
  ["„Der Gegner bedroht unsere gesamte Lebensweise und ist grundsätzlich aggressiv.“","Feindbild"],
  ["Ein Plakat stellt das eigene System als überlegen und den Gegner als rückständig dar.","Propaganda"],
  ["Beide Seiten halten Atomwaffen bereit, um einen Angriff des Gegners abzuschrecken.","Abschreckung"],
@@ -2190,34 +2464,35 @@ feind.slice(0,5).forEach(([txt,ans],i)=>{
  const cats=["Feindbild","Propaganda","Abschreckung"];
  for(let k=cats.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[cats[k],cats[j]]=[cats[j],cats[k]]}
  const d=document.createElement("div");d.className="statement";d.innerHTML=`<b>Fall ${i+1}</b><br>${txt}<div class="category-row">${cats.map(c=>`<button class="catbtn" data-v="${c}">${c}</button>`).join("")}</div>`;
- d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(55);good($("#m3Fb"),fdone+" von 5 richtig.");if(fdone===5)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));$("#feindCases").appendChild(d)
+ d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";fdone++;addScore(Math.round(qPoints("m3a",275)/5));good($("#m3Fb"),fdone+" von 5 richtig.");if(fdone===5)unlock("m3bPanel")}else{b.disabled=true;miss($("#m3Fb"),"Nicht korrekt. Was ist hier der zentrale Mechanismus?")}}));$("#feindCases").appendChild(d)
 });
 $("#checkM3multi").addEventListener("click",()=>checkMulti("m3multi","m3bFb",()=>unlock("m3cPanel")));
 setupChoice("m3cWho",()=>{$("#m3cReveal").classList.add("show");$("#m3cInterpretBox").classList.remove("hidden");$("#m3cInterpretBox").animate?.([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:360,easing:"ease"})});
 setupChoice("m3cInterpret",()=>{completeMission(3);$("#next3").disabled=false});
 
 // M4
-const ger=[["NATO-Mitgliedschaft","BRD"],["Warschauer Pakt","DDR"],["soziale Marktwirtschaft","BRD"],["Planwirtschaft","DDR"],["SED-Herrschaft","DDR"],["parlamentarische Demokratie","BRD"],["deutsche Sprache und gemeinsame Geschichte","beide"],["Folgen des Zweiten Weltkriegs","beide"]];
+let ger=[["NATO-Mitgliedschaft","BRD"],["Warschauer Pakt","DDR"],["soziale Marktwirtschaft","BRD"],["Planwirtschaft","DDR"],["SED-Herrschaft","DDR"],["parlamentarische Demokratie","BRD"],["deutsche Sprache und gemeinsame Geschichte","beide"],["Folgen des Zweiten Weltkriegs","beide"]];
 let gdone=0;
 ger.forEach(([term,ans])=>{
  const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="category-row">${["BRD","DDR","beide"].map(v=>`<button class="catbtn" data-v="${v}">${v}</button>`).join("")}</div>`;
- d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";gdone++;addScore(45);good($("#m4aFb"),gdone+" von 8 richtig.");if(gdone===8)unlock("m4bPanel")}else{b.disabled=true;miss($("#m4aFb"),"Nicht korrekt. Prüfe, ob der Begriff nur einen Staat oder beide betrifft.")}}));$("#germanyCases").appendChild(d)
+ d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";gdone++;addScore(Math.round(qPoints("m4a",360)/8));good($("#m4aFb"),gdone+" von 8 richtig.");if(gdone===8)unlock("m4bPanel")}else{b.disabled=true;miss($("#m4aFb"),"Nicht korrekt. Prüfe, ob der Begriff nur einen Staat oder beide betrifft.")}}));$("#germanyCases").appendChild(d)
 });
-const germanyCheck=seqGame("germanySeq",[
+let germanyCheck=seqGame("germanySeq",[
  {order:1,title:"Berliner Blockade und Luftbrücke"},
  {order:2,title:"Gründung von BRD und DDR"},
  {order:3,title:"Bau der Berliner Mauer"},
  {order:4,title:"Grundlagenvertrag zwischen BRD und DDR"},
  {order:5,title:"Fall der Berliner Mauer"}
 ]);
-$("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(140);good($("#m4bFb"),"Chronologie korrekt.");unlock("m4cPanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Denke an die Entwicklung von Nachkriegszeit über Teilung und Mauer bis zur Annäherung und schließlich 1989.")});
+$("#checkGermanySeq").addEventListener("click",()=>{if(germanyCheck()){addScore(qPoints("m4b",140));good($("#m4bFb"),"Chronologie korrekt.");unlock("m4sourcePanel");$("#checkGermanySeq").disabled=true}else miss($("#m4bFb"),"Noch nicht. Denke an die Entwicklung von Nachkriegszeit über Teilung und Mauer bis zur Annäherung und schließlich 1989.")});
+setupChoice("m4source",()=>unlock("m4cPanel"));
 setupChoice("m4c",()=>{completeMission(4);$("#next4").disabled=false});
 setupChoice("m7cWho",()=>{$("#m7cReveal").classList.add("show");$("#m7cInterpretBox").classList.remove("hidden");$("#m7cInterpretBox").animate?.([{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{duration:360,easing:"ease"})});
 setupChoice("m7cInterpret",()=>{completeMission(7);$("#next7").disabled=false});
 
 // M5
 let m5init=false;
-function initM5(){if(m5init)return;m5init=true;drawSingleMap("#map5","#load5","Cuba","#m5aFb",()=>unlock("m5sourcePanel"))}
+function initM5(){if(m5init)return;m5init=true;drawSingleMap("#map5","#load5",mapTargets.m5a,"#m5aFb",()=>unlock("m5sourcePanel"))}
 
 function typeSourceQuote(){
   const el=$("#source5Quote");if(!el||el.dataset.typed)return;el.dataset.typed="1";const full=el.textContent.trim();
@@ -2230,7 +2505,7 @@ $("#openSource5").addEventListener("click",()=>{
   const d=$("#sourceDossier5");d.classList.add("open");paperSound();setTimeout(typeSourceQuote,520)
 });
 setupChoice("m5source",()=>{stampSound();setTimeout(()=>unlock("m5bPanel"),1650)});
-const cubaPhases=[
+let cubaPhases=[
  {q:"US-Aufklärungsflugzeuge entdecken sowjetische Raketenstellungen auf Kuba. Was geschieht historisch als zentrale Reaktion der USA?",a:"Die USA verhängen eine Seeblockade („Quarantäne“) um Kuba.",wrong:["Die USA erklären der UdSSR sofort den Krieg.","Die USA ziehen sich vollständig aus der Krise zurück."]},
  {q:"Warum war die Situation so gefährlich?",a:"Weil Entscheidungen oder Fehlkalkulationen zu einem direkten militärischen Zusammenstoß der Supermächte führen konnten.",wrong:["Weil Kuba über keine strategische Bedeutung verfügte.","Weil Atomwaffen ausdrücklich keine Rolle spielten."]},
  {q:"Wie wird die unmittelbare Krise schließlich entschärft?",a:"Die UdSSR zieht die Raketen aus Kuba ab; die USA sichern u. a. zu, Kuba nicht anzugreifen.",wrong:["Die NATO besetzt Kuba.","Die Sowjetunion übernimmt Florida."]}
@@ -2239,32 +2514,33 @@ let cPhase=0;
 function renderCubaPhase(){
  setCrisisPressure(Math.min(5,cPhase+2));
  const area=$("#cubaRounds");area.innerHTML="";const p=cubaPhases[cPhase];const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>Phase ${cPhase+1}/3</b><p>${p.q}</p><div class="choice-grid"></div>`;const opts=[p.a,...p.wrong].sort(()=>Math.random()-.5);
- opts.forEach(t=>{const b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",()=>{if(t===p.a){b.classList.add("correct");addScore(90);cPhase++;good($("#m5bFb"),"Phase korrekt.");if(cPhase<3){setTimeout(renderCubaPhase,350)}else{unlock("m5cPanel");$("#m5bFb").textContent="Alle drei Phasen korrekt rekonstruiert."}}else{b.classList.add("wrong");b.disabled=true;miss($("#m5bFb"),"Nicht korrekt. Rekonstruiere, was historisch tatsächlich geschah.")}});d.querySelector(".choice-grid").appendChild(b)});area.appendChild(d)
+ opts.forEach(t=>{const b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",()=>{if(t===p.a){b.classList.add("correct");addScore(Math.round(qPoints("m5b",270)/Math.max(1,cubaPhases.length)));cPhase++;good($("#m5bFb"),"Phase korrekt.");if(cPhase<3){setTimeout(renderCubaPhase,350)}else{unlock("m5cPanel");$("#m5bFb").textContent="Alle drei Phasen korrekt rekonstruiert."}}else{b.classList.add("wrong");b.disabled=true;miss($("#m5bFb"),"Nicht korrekt. Rekonstruiere, was historisch tatsächlich geschah.")}});d.querySelector(".choice-grid").appendChild(b)});area.appendChild(d)
 }
 renderCubaPhase();
-const cubaCheck=seqGame("cubaSeq",[
+let cubaCheck=seqGame("cubaSeq",[
  {order:1,title:"Raketenstellungen werden entdeckt."},
  {order:2,title:"Kennedy kündigt eine Seeblockade („Quarantäne“) an."},
  {order:3,title:"Höchste Eskalationsgefahr und intensive Verhandlungen."},
  {order:4,title:"Raketenabzug aus Kuba; geheime und öffentliche Zusagen entschärfen die Krise."}
 ]);
-$("#checkCubaSeq").addEventListener("click",()=>{if(cubaCheck()){addScore(160);good($("#m5cFb"),"Ablauf korrekt.");completeMission(5);$("#next5").disabled=false;$("#checkCubaSeq").disabled=true}else miss($("#m5cFb"),"Noch nicht korrekt.")});
+$("#checkCubaSeq").addEventListener("click",()=>{if(cubaCheck()){addScore(qPoints("m5c",160));good($("#m5cFb"),"Ablauf korrekt.");completeMission(5);$("#next5").disabled=false;$("#checkCubaSeq").disabled=true}else miss($("#m5cFb"),"Noch nicht korrekt.")});
 
 // M6
 let m6init=false;
-function initM6(){if(m6init)return;m6init=true;drawSingleMap("#map6","#load6","Vietnam","#m6aFb",()=>unlock("m6bPanel"))}
-const vietCheck=seqGame("vietnamSeq",[
+function initM6(){if(m6init)return;m6init=true;drawSingleMap("#map6","#load6",mapTargets.m6a,"#m6aFb",()=>unlock("m6bPanel"))}
+let vietCheck=seqGame("vietnamSeq",[
  {order:1,title:"Nach dem Ende der französischen Kolonialherrschaft wird Vietnam geteilt."},
  {order:2,title:"Konflikt zwischen Nordvietnam und Südvietnam verschärft sich."},
  {order:3,title:"Die USA weiten ihr militärisches Eingreifen stark aus."},
  {order:4,title:"Krieg, Guerillakampf und hohe Verluste führen auch in den USA zu wachsender Kritik."},
  {order:5,title:"Die USA ziehen ihre Kampftruppen zurück; 1975 endet der Krieg mit dem Sieg Nordvietnams."}
 ]);
-$("#checkVietnamSeq").addEventListener("click",()=>{if(vietCheck()){addScore(150);good($("#m6bFb"),"Historische Abfolge stimmt.");unlock("m6cPanel");$("#checkVietnamSeq").disabled=true}else miss($("#m6bFb"),"Noch nicht korrekt. Prüfe Teilung, Eskalation, US-Eingreifen, Protest/Kritik und Kriegsende.")});
+$("#checkVietnamSeq").addEventListener("click",()=>{if(vietCheck()){addScore(qPoints("m6b",150));good($("#m6bFb"),"Historische Abfolge stimmt.");unlock("m6sourcePanel");$("#checkVietnamSeq").disabled=true}else miss($("#m6bFb"),"Noch nicht korrekt. Prüfe Teilung, Eskalation, US-Eingreifen, Protest/Kritik und Kriegsende.")});
+setupChoice("m6source",()=>unlock("m6cPanel"));
 $("#checkM6multi").addEventListener("click",()=>checkMulti("m6multi","m6cFb",()=>{completeMission(6);$("#next6").disabled=false}));
 
 // M7
-const det=[
+let det=[
  ["Ostverträge / Neue Ostpolitik","Entspannung"],
  ["SALT I (1972)","Entspannung"],
  ["KSZE-Schlussakte (1975)","Entspannung"],
@@ -2274,25 +2550,25 @@ const det=[
  ["Rüstungskontrollverhandlungen","Entspannung"]
 ];
 let ddone=0;
-det.forEach(([term,ans])=>{const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="Entspannung">← Entspannung</button><button class="btn btn-secondary" data-v="Konfrontation">Konfrontation →</button></div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";ddone++;addScore(45);good($("#m7aFb"),ddone+" von 7 richtig.");if(ddone===7)unlock("m7bPanel")}else{b.disabled=true;miss($("#m7aFb"),"Nicht korrekt. Prüfe, ob das Ereignis Spannungen eher verringerte oder verschärfte.")}}));$("#detenteCases").appendChild(d)});
-const detSeqCheck=seqGame("detenteSeq",[
+det.forEach(([term,ans])=>{const d=document.createElement("div");d.className="eventcard";d.innerHTML=`<b>${term}</b><div class="binary"><button class="btn btn-secondary" data-v="Entspannung">← Entspannung</button><button class="btn btn-secondary" data-v="Konfrontation">Konfrontation →</button></div>`;d.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{if(d.dataset.done)return;if(b.dataset.v===ans){d.dataset.done=1;b.style.borderColor="var(--green)";ddone++;addScore(Math.round(qPoints("m7a",315)/7));good($("#m7aFb"),ddone+" von 7 richtig.");if(ddone===7)unlock("m7bPanel")}else{b.disabled=true;miss($("#m7aFb"),"Nicht korrekt. Prüfe, ob das Ereignis Spannungen eher verringerte oder verschärfte.")}}));$("#detenteCases").appendChild(d)});
+let detSeqCheck=seqGame("detenteSeq",[
  {order:1,title:"Moskauer Vertrag"},
  {order:2,title:"SALT I"},
  {order:3,title:"KSZE-Schlussakte"},
  {order:4,title:"NATO-Doppelbeschluss"},
  {order:5,title:"Sowjetischer Einmarsch in Afghanistan"}
 ]);
-$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(140);good($("#m7bFb"),"Chronologie korrekt.");unlock("m7cPanel");$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Denke an die Abfolge von Ostpolitik, Rüstungskontrolle, KSZE und der erneuten Verschärfung am Ende der 1970er.")});
+$("#checkDetenteSeq").addEventListener("click",()=>{if(detSeqCheck()){addScore(qPoints("m7b",140));good($("#m7bFb"),"Chronologie korrekt.");unlock("m7cPanel");$("#checkDetenteSeq").disabled=true}else miss($("#m7bFb"),"Noch nicht. Denke an die Abfolge von Ostpolitik, Rüstungskontrolle, KSZE und der erneuten Verschärfung am Ende der 1970er.")});
 
 // M8
-const endCheck=seqGame("endSeq",[
+let endCheck=seqGame("endSeq",[
  {order:1,title:"Gorbatschow wird Generalsekretär der KPdSU."},
  {order:2,title:"Revolutionen und Systemumbrüche in Osteuropa."},
  {order:3,title:"Fall der Berliner Mauer."},
  {order:4,title:"Deutsche Einheit."},
  {order:5,title:"Auflösung der Sowjetunion."}
 ]);
-$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(180);good($("#m8aFb"),"Timeline korrekt. Risikofrage freigeschaltet.");unlock("riskPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Rekonstruiere den Ablauf von Gorbatschows Reformkurs über die Umbrüche in Osteuropa bis zum Ende der Sowjetunion.")});
+$("#checkEndSeq").addEventListener("click",()=>{if(endCheck()){addScore(qPoints("m8a",180));good($("#m8aFb"),"Timeline korrekt. Risikofrage freigeschaltet.");unlock("riskPanel");$("#checkEndSeq").disabled=true}else miss($("#m8aFb"),"Noch nicht. Rekonstruiere den Ablauf von Gorbatschows Reformkurs über die Umbrüche in Osteuropa bis zum Ende der Sowjetunion.")});
 
 
 let riskDone=false;
@@ -2306,28 +2582,30 @@ let riskDone=false;
    riskDone=true;
    buttons.forEach(b=>b.disabled=true);
    if(btn.dataset.correct){
-     score+=300;combo++;bestCombo=Math.max(bestCombo,combo);
+     score+=qPoints("risk1",300);combo++;bestCombo=Math.max(bestCombo,combo);
      $("#score").textContent=score;$("#combo").textContent=combo;
      btn.classList.add("correct");good($("#risk1Fb"),"Risiko gewonnen: +300 Punkte.");beep(true);
    }else{
-     score=Math.max(0,score-150);mistakes++;combo=0;
+     score=Math.max(0,score-Math.round(qPoints("risk1",300)/2));mistakes++;combo=0;
      $("#score").textContent=score;$("#mistakes").textContent=mistakes;$("#combo").textContent=combo;
      weakTopics[8]=(weakTopics[8]||0)+1; missionErrors[8]++; maybeShowHint(8);
      btn.classList.add("wrong");good($("#risk1Fb"),"Risiko verloren: −150 Punkte. Die Mission geht trotzdem weiter.");beep(false);
    }
-   unlock("m8bPanel");
+   unlock("m8sourcePanel");
    $("#skipRisk").disabled=true;
  }));
  $("#skipRisk").addEventListener("click",()=>{
    if(riskDone)return;
    riskDone=true;buttons.forEach(b=>b.disabled=true);
    good($("#risk1Fb"),"Risikofrage übersprungen. Keine Punkte gewonnen oder verloren.");
-   unlock("m8bPanel");$("#skipRisk").disabled=true;
+   unlock("m8sourcePanel");$("#skipRisk").disabled=true;
  });
 })();
 
+setupChoice("m8source",()=>unlock("m8bPanel"));
+
 // Boss finale
-const bossPool=[
+let bossPool=[
  {tag:1,q:"Welche Aussage beschreibt den Kalten Krieg am treffendsten?",a:"Systemkonflikt zwischen USA und UdSSR mit Blockbildung, Aufrüstung und indirekten Konflikten, aber ohne dauerhaften direkten Krieg der Supermächte.",o:["Ein ausschließlich deutscher Konflikt.","Ein direkter Krieg zwischen NATO und Warschauer Pakt von 1945 bis 1991."]},
  {tag:1,q:"Warum spricht man von einer bipolaren Weltordnung?",a:"Weil zwei Supermächte und ihre jeweiligen Bündnissysteme große Teile der internationalen Politik prägten.",o:["Weil es weltweit nur zwei Staaten gab.","Weil alle Konflikte ausschließlich in Europa stattfanden."]},
  {tag:2,q:"Welches Element gehört zum Westblock?",a:"NATO",o:["Warschauer Pakt","RGW"]},
@@ -2349,13 +2627,14 @@ let bossQs=[];
 let bossIndex=0,bossRight=0,bossTimer=null,bossSeconds=120;
 function buildAdaptiveBoss(){
   const ranked=Object.entries(weakTopics).sort((a,b)=>b[1]-a[1]).map(([k])=>Number(k));
+  const eligiblePool=bossPool.filter((q,i)=>{const id=q.customId||`boss${i+1}`,ov=questionOverrides[id];if(ov?.active===false)return false;const modes=Array.isArray(ov?.timeModes)?ov.timeModes.map(Number):[];return !modes.length||modes.includes(quizModeSeconds)});
   const chosen=[];
   for(const tag of ranked){
-    const candidates=bossPool.filter(q=>q.tag===tag && !chosen.includes(q));
+    const candidates=eligiblePool.filter(q=>q.tag===tag && !chosen.includes(q));
     if(candidates.length) chosen.push(candidates[Math.floor(Math.random()*candidates.length)]);
     if(chosen.length>=3) break;
   }
-  const rest=bossPool.filter(q=>!chosen.includes(q)).sort(()=>Math.random()-.5);
+  const rest=eligiblePool.filter(q=>!chosen.includes(q)).sort(()=>Math.random()-.5);
   while(chosen.length<4 && rest.length) chosen.push(rest.shift());
   bossQs=chosen.slice(0,4);
   const weakNames={1:"Weltordnung",2:"Blockbildung",3:"Feindbilder",4:"Deutschland",5:"Kuba-Krise",6:"Vietnam",7:"Entspannung",8:"Ende des Kalten Krieges"};
@@ -2383,7 +2662,7 @@ function renderBoss(){
    b.addEventListener("click",()=>{
      card.querySelectorAll(".choice").forEach(x=>x.disabled=true);
      const ok=t===q.a;
-     if(ok){bossRight++;addScore(100);b.classList.add("correct");good($("#bossFb"),"Code-Fragment bestätigt.")}
+     if(ok){bossRight++;addScore(Number(q.points)||100);b.classList.add("correct");good($("#bossFb"),"Code-Fragment bestätigt.")}
      else{miss($("#bossFb"),"Dieses Fragment passt nicht zum Archiv-Code.");b.classList.add("wrong")}
      setCodeSegment(bossIndex,ok);bossIndex++;setTimeout(renderBoss,1250)
    });
@@ -2425,10 +2704,13 @@ function finishGame(reason="complete"){
  if(reason==="timeout"){
    rank="ZEITFENSTER BEENDET";
    text=`${done} von ${played} ausgewählten Missionen abgeschlossen. Nicht bearbeitete Aufgaben geben 0 Punkte, werden aber nicht als Fehler gezählt.`;
+ }else if(reason==="teacher_end"){
+   rank="SESSION BEENDET";
+   text=`Die Lehrkraft hat die Session beendet. ${done} von ${played} ausgewählten Missionen wurden abgeschlossen; offene Aufgaben zählen nicht als Fehler.`;
  }else if(mistakes<=4){rank="Archivstufe: EXZELLENT";text="Sehr sichere Stoffbeherrschung: Räume, Chronologie, Ursachen und Zusammenhänge sitzen."}
  else if(mistakes<=10){rank="Archivstufe: SICHER";text="Guter Gesamtüberblick. Einzelne Details oder Zuordnungen können noch nachgeschärft werden."}
  else{rank="Archivstufe: BESTANDEN";text="Die ausgewählten Missionen sind abgeschlossen. Deine Fehler zeigen, welche Teilthemen du noch einmal wiederholen solltest."}
- $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}: ${score} Punkte · ${mistakes} Fehler · Serie ${bestCombo}`;
+ $("#rankText").textContent=rank;$("#agentResult").textContent=`${playerName}${studentTeam&&studentTeam!=="Einzel"?` · Team ${studentTeam}`:""}: ${score} Punkte · ${mistakes} Fehler · Serie ${bestCombo}`;
  $("#finalText").textContent=text;show("finish");animateCounter($("#finalScore"),score,2100);animateCounter($("#finalMistakes"),mistakes,1500);animateCounter($("#bestCombo"),bestCombo,1700);
  renderTopicProfile();unlockSound();persistResult(reason);
 }
@@ -2456,6 +2738,7 @@ document.addEventListener("pointerdown",e=>{
 $("#teacherBack").addEventListener("click",()=>show("start"));
 $("#createSession").addEventListener("click",createTeacherSession);
 $("#teacherDuration").addEventListener("change",updateScopePreview);
+$("#teacherTeams").addEventListener("change",()=>renderTeamScores(teacherRosterCache));
 $("#missionPicker").addEventListener("change",updateScopePreview);
 $("#selectAllMissions").addEventListener("click",()=>{$$("#missionPicker input").forEach(x=>x.checked=true);updateScopePreview()});
 $("#selectNoMissions").addEventListener("click",()=>{$$("#missionPicker input").forEach(x=>x.checked=false);updateScopePreview()});
@@ -2463,10 +2746,25 @@ updateScopePreview();
 $("#releaseSession").addEventListener("click",()=>controlTeacher("arm"));
 $("#resetSession").addEventListener("click",()=>controlTeacher("reset"));
 $("#closeSession").addEventListener("click",()=>controlTeacher("close"));
+$("#pauseSession").addEventListener("click",()=>controlTeacher("pause"));
+$("#resumeSession").addEventListener("click",()=>controlTeacher("resume"));
+$("#endNow").addEventListener("click",()=>{if(confirm("Quiz für alle Geräte sofort beenden?"))controlTeacher("end")});
+$("#add1Min").addEventListener("click",()=>teacherAddTime(60));
+$("#add2Min").addEventListener("click",()=>teacherAddTime(120));
+$("#add5Min").addEventListener("click",()=>teacherAddTime(300));
 $("#refreshTeacher").addEventListener("click",refreshTeacherPanel);
 $("#exportClassCsv").addEventListener("click",exportClassCSV);
 $("#exportOwnCsv").addEventListener("click",exportOwnCSV);
+$("#saveQuestionEdit").addEventListener("click",saveQuestionEdit);
+$("#resetQuestionEdit").addEventListener("click",resetQuestionEdit);
+$("#previewQuestionEdit").addEventListener("click",previewQuestionEdit);
+$("#duplicateQuestionEdit").addEventListener("click",()=>newQuestionEditor(true));
+$("#newQuestionEdit").addEventListener("click",()=>newQuestionEditor(false));
+$("#deleteQuestionEdit").addEventListener("click",deleteQuestionEdit);
 $("#printOwnResult").addEventListener("click",()=>window.print());
+$("#openCertificate").addEventListener("click",buildCertificate);
+$("#closeCertificate").addEventListener("click",()=>$("#certificateOverlay").classList.remove("show"));
+$("#printCertificate").addEventListener("click",()=>{document.body.classList.add("cert-print");window.print();setTimeout(()=>document.body.classList.remove("cert-print"),400)});
 
 const urlParams=new URLSearchParams(location.search),prefillSession=(urlParams.get("session")||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
 if(prefillSession)$("#sessionCode").value=prefillSession;
@@ -2495,12 +2793,36 @@ decorateSpeakerChoices();drawStartWorld();updateMissionRail(0);
 </div>
 
 
+
+<div class="command-overlay" id="commandOverlay" aria-live="assertive">
+  <div class="command-card"><div class="stamp">LEHRER-NACHRICHT</div><h2 id="commandTitle">Nachricht</h2><p id="commandText"></p><div class="lock-count hidden" id="lockCount">30</div><button class="btn btn-primary" id="ackCommand" type="button">Verstanden</button></div>
+</div>
+<div class="pause-overlay" id="pauseOverlay"><div class="pause-card"><div class="kicker">Übertragung unterbrochen</div><h2>UNTERRICHT PAUSIERT</h2><p>Die Lehrkraft hat die Session angehalten. Dein aktueller Stand bleibt erhalten.</p></div></div>
+
 <div class="time-expired-overlay" id="timeExpiredOverlay" aria-live="assertive">
   <div class="expired-card">
     <div class="expired-kicker">Operation Eiszeit // Zeitkontrolle</div>
     <div class="expired-title">ZEITFENSTER<br>GESCHLOSSEN</div>
     <div class="expired-sub">Weitere Eingaben wurden gesperrt.<br>Der aktuelle Stand wird gesichert und die persönliche Auswertung geöffnet.</div>
     <div class="expired-bar"></div>
+  </div>
+</div>
+
+
+<div class="certificate-overlay" id="certificateOverlay">
+  <div>
+    <div class="certificate-sheet" id="certificateSheet">
+      <div class="cert-kicker">Operation Kalter Krieg · persönliche Abschlussakte</div>
+      <div class="cert-title">ARCHIVFREIGABE</div>
+      <div class="cert-name" id="certName">–</div>
+      <p id="certText">hat die ausgewählten Missionen der Unterrichtsübung bearbeitet.</p>
+      <div class="cert-grid"><div class="cert-stat"><span>Punkte</span><b id="certScore">0</b></div><div class="cert-stat"><span>Fehler</span><b id="certMistakes">0</b></div><div class="cert-stat"><span>Beste Serie</span><b id="certCombo">0</b></div></div>
+      <div class="profile-summary" style="margin-top:14px"><div class="profile-summary-card strong"><span>Stärkstes Thema</span><b id="certStrong">–</b></div><div class="profile-summary-card revisit"><span>Wiederholen</span><b id="certWeak">–</b></div></div>
+      <div class="cert-badges" id="certBadges"></div>
+      <p><b>Session:</b> <span id="certSession">–</span> &nbsp; <b>Team:</b> <span id="certTeam">–</span> &nbsp; <b>Datum:</b> <span id="certDate">–</span></p>
+      <div class="cert-disclaimer">Spielergebnis einer Unterrichtsübung. Diese Abschlussakte ist kein offizielles schulisches Zertifikat und enthält keine Leistungsbewertung.</div>
+    </div>
+    <div class="cert-actions"><button class="btn btn-primary" id="printCertificate" type="button">Als PDF / drucken</button><button class="btn btn-secondary" id="closeCertificate" type="button">Schließen</button></div>
   </div>
 </div>
 

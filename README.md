@@ -1,41 +1,30 @@
-# Operation Kalter Krieg – V16 Adaptive Classroom
+# Operation Kalter Krieg – V17 Control Room
 
-## Zeitmodi
-Bei allen 8 aktivierten Themenfeldern:
+## Neu in V17
+- **Cold-War-Control-Room** für die Lehrkraft mit Radar, Sessionstatus und Live-Daten.
+- Während des Spiels: **Pause**, **Fortsetzen**, **+1 / +2 / +5 Minuten** und **sofort beenden**.
+- Pro Schülergerät: **Nachricht senden**, **30 Sekunden sperren**, **manuell freigeben**.
+- Live-Heartbeat mit aktuellem Punktestand, Mission und Fehlerzahl.
+- **Team-Modus:** Einzel / 2 / 3 / 4 Teams. Automatische möglichst gleichmäßige Verteilung auf Alpha, Bravo, Charlie, Delta.
+- Live-Teamstände im Control Room.
+- **Frageneditor pro Session:** Titel, Arbeitsauftrag, Antworten/Elemente, Lösung, Punkte, Mission, Schwierigkeit, Zeitmodi, Aktiv/Inaktiv und Quellenlink.
+- Standardfragen können überschrieben oder deaktiviert werden.
+- **Vorschau**, **Duplizieren**, **Neue Frage**, **Löschen/Deaktivieren** und **Override zurücksetzen**.
+- Neue/duplizierte Zusatzfragen werden als zusätzliche Fragen in den adaptiven Finale-Pool aufgenommen.
+- **Quellenanalyse erweitert:** Deutschland (bpb), Vietnam (bpb/LpB), Ende des Kalten Krieges (LpB). Die bestehenden Truman-, Kennedy- und Reagan-Quellen bleiben erhalten.
+- **Interaktive Karten erweitert:** zusätzliche Mehrfach-Kartenmission zu Deutschland, Kuba und Vietnam.
+- **Persönliche Abschlussakte** im CLASSIFIED-Look, als PDF druckbar. Klar als Unterrichtsübung und nicht als offizielles Zertifikat gekennzeichnet.
+- Ergebnisexport enthält nun auch das Team.
 
-| Modus | Aufgabenblöcke |
-| --- | ---: |
-| 5 Minuten | ca. 8 |
-| 10 Minuten | ca. 16 |
-| 15 Minuten | ca. 18 |
-| 20 Minuten | kompletter Umfang, ca. 23 |
-| Ohne Zeitlimit | kompletter Umfang, ca. 23 |
+## Wichtig – Supabase
+Vor Nutzung von V17 einmal `V17_SUPABASE_MIGRATION.sql` im Supabase SQL Editor ausführen.
+V15 und V16 müssen vorher bereits eingerichtet sein.
 
-Die Zahlen sind Aufgabenblöcke. Mehrstufige Quellen-, Karten- oder Krisenaufgaben können innerhalb eines Blocks mehrere Interaktionen enthalten.
-
-## Themenauswahl
-Im Lehrermodus können Mission 1–8 einzeln an- oder abgewählt werden.
-Der Umfang wird automatisch neu berechnet. Mindestens ein Themenfeld muss aktiv sein.
-
-## Wenn die Zeit abläuft
-- Bei 60 Sekunden wird die Uhr rot.
-- Die letzten 10 Sekunden erhalten akustische Radar-Pings.
-- Bei 00:00 werden weitere Eingaben gesperrt.
-- Für ca. 4,5 Sekunden erscheint „ZEITFENSTER GESCHLOSSEN“.
-- Der aktuelle Stand wird automatisch gespeichert.
-- Danach öffnet sich die persönliche Auswertung.
-- Nicht beantwortete Aufgaben geben 0 Punkte, zählen aber NICHT als Fehler.
-
-## Ohne Zeitlimit
-- Vollständiger Umfang der ausgewählten Missionen.
-- HUD zeigt ∞.
-- Kein automatisches Ende.
-
-## Supabase
-Vor Nutzung von V16 einmal `V16_SUPABASE_MIGRATION.sql` im SQL Editor ausführen.
-V15 muss vorher bereits eingerichtet sein.
-
-## Lehrer
+## Lehrermodus
 `https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/?teacher=1`
 
-Der bestehende Klassen-Code-, Lehrerfreigabe-, Cold-War-Countdown-, Export- und Highscore-Workflow bleibt erhalten.
+## Schülerseite
+`https://sessioncrewadmin.github.io/Kalter_Krieg_Quiz_Spiel/`
+
+## Quellen
+Bevorzugt werden die von dir vorgegebenen Angebote von bpb und Landeszentrale für politische Bildung Baden-Württemberg. Bei historischen Originalzitaten bleiben die jeweiligen Presidential Libraries als Primärquelle verlinkt.
