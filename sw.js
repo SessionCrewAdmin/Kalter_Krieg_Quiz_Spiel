@@ -8,9 +8,9 @@ const CORE=[
   './lehrer.html','./kalter_krieg_lehrer.html'
 ];
 const OPTIONAL=[
-  'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js',
-  'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js',
-  'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json'
+  'https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js',
+  'https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js',
+  'https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json'
 ];
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
