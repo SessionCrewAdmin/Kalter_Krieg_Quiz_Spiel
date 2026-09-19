@@ -1,4 +1,4 @@
-const CACHE='kathleen-board-pencil-v132-20260919';
+const CACHE='kathleen-board-material-v14-20260919';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
@@ -12,6 +12,8 @@ const REMOTE=[
   'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js',
   'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js',
   'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+  'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.min.mjs',
+  'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs',
   'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json',
   'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
 ];
