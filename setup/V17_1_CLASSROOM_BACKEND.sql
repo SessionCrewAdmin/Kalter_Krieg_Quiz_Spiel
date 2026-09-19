@@ -1,7 +1,20 @@
 -- ============================================================
--- Kathleens Classroom Board · V17.2.1 · COMPLETE / REPAIR MIGRATION
--- Supabase SQL Editor: run this whole file once.
--- Safe to run again. Existing classroom data is preserved.
+-- Kathleens Classroom Board · V17.3 · CLEAN CLASSROOM BACKEND
+-- Supabase SQL Editor: run this entire script once.
+--
+-- IMPORTANT:
+-- This resets ONLY the Classroom runtime backend:
+--   classroom_sessions
+--   classroom_participants
+--   classroom_messages
+--   classroom_student_events
+--   classroom_admin
+--
+-- It does NOT touch:
+--   Toolbox modules
+--   Boards stored in the browser / IndexedDB
+--   Class lists
+--   Other tools
 -- ============================================================
 
 begin;
@@ -10,12 +23,42 @@ create schema if not exists extensions;
 create extension if not exists pgcrypto with schema extensions;
 
 -- ------------------------------------------------------------
--- 1) Classroom-local admin fallback
+-- 1) Remove old / partial Classroom RPCs first
 -- ------------------------------------------------------------
--- If public.toolbox_verify_admin(text) exists, Classroom uses it.
--- If it does not exist, the first successful Classroom login
--- claims this fallback password (minimum 8 characters).
-create table if not exists public.classroom_admin (
+
+drop function if exists public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb);
+drop function if exists public.classroom_teacher_state(uuid,uuid);
+drop function if exists public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb);
+drop function if exists public.classroom_student_board_event(uuid,jsonb);
+drop function if exists public.classroom_student_update(uuid,text);
+drop function if exists public.classroom_student_state(uuid);
+drop function if exists public.classroom_join(text,text,text);
+drop function if exists public.classroom_presentation_state(text);
+drop function if exists public.classroom_create(text,text,text);
+drop function if exists public.classroom_authenticate(text);
+drop function if exists public.classroom_random_code();
+drop function if exists public.classroom_cleanup_old_sessions(integer);
+
+-- ------------------------------------------------------------
+-- 2) Reset only Classroom runtime tables
+-- ------------------------------------------------------------
+
+drop table if exists public.classroom_student_events cascade;
+drop table if exists public.classroom_messages cascade;
+drop table if exists public.classroom_participants cascade;
+drop table if exists public.classroom_sessions cascade;
+drop table if exists public.classroom_admin cascade;
+
+-- ------------------------------------------------------------
+-- 3) Classroom admin fallback
+-- ------------------------------------------------------------
+-- If public.toolbox_verify_admin(text) exists and works, the same
+-- Toolbox admin password is used.
+--
+-- If no working Toolbox verifier exists, the first Classroom
+-- password (minimum 8 chars) becomes the Classroom fallback password.
+
+create table public.classroom_admin (
   singleton boolean primary key default true check (singleton),
   pass_hash text not null,
   created_at timestamptz not null default now(),
@@ -38,15 +81,18 @@ begin
     return false;
   end if;
 
-  -- Prefer the existing Toolbox admin password when that backend exists.
+  -- Prefer the existing Toolbox admin backend when available.
   if to_regprocedure('public.toolbox_verify_admin(text)') is not null then
     begin
       execute 'select public.toolbox_verify_admin($1)'
         into v_ok
         using p_passphrase;
-      return coalesce(v_ok, false);
+
+      if v_ok is not null then
+        return v_ok;
+      end if;
     exception when others then
-      -- A broken legacy Toolbox verifier must not make Classroom unusable.
+      -- Fall through to Classroom-local authentication.
       null;
     end;
   end if;
@@ -58,7 +104,13 @@ begin
 
   if v_hash is null then
     insert into public.classroom_admin(singleton, pass_hash)
-    values (true, crypt(p_passphrase, gen_salt('bf', 10)))
+    values (
+      true,
+      extensions.crypt(
+        p_passphrase,
+        extensions.gen_salt('bf', 10)
+      )
+    )
     on conflict (singleton) do nothing;
 
     select pass_hash
@@ -67,332 +119,354 @@ begin
      where singleton = true;
   end if;
 
-  return crypt(p_passphrase, v_hash) = v_hash;
+  return extensions.crypt(p_passphrase, v_hash) = v_hash;
 end
 $$;
 
 -- ------------------------------------------------------------
--- 2) Core tables
+-- 4) Core Classroom tables
 -- ------------------------------------------------------------
-create table if not exists public.classroom_sessions (
+
+create table public.classroom_sessions (
   id uuid primary key default gen_random_uuid(),
   room_code text not null unique,
   teacher_token uuid not null default gen_random_uuid(),
+
   title text not null default 'Unterricht',
   class_name text,
-  status text not null default 'open',
-  phase text not null default 'free',
-  traffic text not null default 'green',
+
+  status text not null default 'open'
+    check (status in ('open','closed')),
+
+  phase text not null default 'free'
+    check (phase in ('free','explain','solo','group','class','break')),
+
+  traffic text not null default 'green'
+    check (traffic in ('green','yellow','red')),
+
   frozen boolean not null default false,
+
   board_state jsonb not null default '{}'::jsonb,
-  viewport jsonb not null default '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb,
+  viewport jsonb not null default
+    '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb,
+
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
-create table if not exists public.classroom_participants (
+create table public.classroom_participants (
   id uuid primary key default gen_random_uuid(),
-  session_id uuid not null references public.classroom_sessions(id) on delete cascade,
-  student_token uuid not null default gen_random_uuid(),
+
+  session_id uuid not null
+    references public.classroom_sessions(id)
+    on delete cascade,
+
+  student_token uuid not null unique default gen_random_uuid(),
   device_token text not null,
   display_name text not null,
-  state text not null default 'working',
+
+  state text not null default 'working'
+    check (state in ('working','done','help','unsure')),
+
   can_write boolean not null default false,
   locked boolean not null default false,
   follow_teacher boolean not null default true,
+
   last_seen timestamptz not null default now(),
   created_at timestamptz not null default now()
 );
 
-create table if not exists public.classroom_messages (
+create table public.classroom_messages (
   id bigint generated by default as identity primary key,
-  session_id uuid not null references public.classroom_sessions(id) on delete cascade,
-  participant_id uuid references public.classroom_participants(id) on delete cascade,
+
+  session_id uuid not null
+    references public.classroom_sessions(id)
+    on delete cascade,
+
+  participant_id uuid
+    references public.classroom_participants(id)
+    on delete cascade,
+
   body text not null,
   created_at timestamptz not null default now()
 );
 
-create table if not exists public.classroom_student_events (
+create table public.classroom_student_events (
   id bigint generated by default as identity primary key,
-  session_id uuid not null references public.classroom_sessions(id) on delete cascade,
-  participant_id uuid not null references public.classroom_participants(id) on delete cascade,
+
+  session_id uuid not null
+    references public.classroom_sessions(id)
+    on delete cascade,
+
+  participant_id uuid not null
+    references public.classroom_participants(id)
+    on delete cascade,
+
   payload jsonb not null,
   created_at timestamptz not null default now()
 );
 
--- Repair older/partial versions without deleting data.
-alter table public.classroom_sessions
-  add column if not exists teacher_token uuid default gen_random_uuid(),
-  add column if not exists title text default 'Unterricht',
-  add column if not exists class_name text,
-  add column if not exists status text default 'open',
-  add column if not exists phase text default 'free',
-  add column if not exists traffic text default 'green',
-  add column if not exists frozen boolean default false,
-  add column if not exists board_state jsonb default '{}'::jsonb,
-  add column if not exists viewport jsonb default '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb,
-  add column if not exists created_at timestamptz default now(),
-  add column if not exists updated_at timestamptz default now();
+create unique index classroom_sessions_teacher_token_uq
+  on public.classroom_sessions(teacher_token);
 
-alter table public.classroom_participants
-  add column if not exists student_token uuid default gen_random_uuid(),
-  add column if not exists device_token text,
-  add column if not exists display_name text,
-  add column if not exists state text default 'working',
-  add column if not exists can_write boolean default false,
-  add column if not exists locked boolean default false,
-  add column if not exists follow_teacher boolean default true,
-  add column if not exists last_seen timestamptz default now(),
-  add column if not exists created_at timestamptz default now();
+create index classroom_sessions_room_status_idx
+  on public.classroom_sessions(room_code, status);
 
--- Older Classroom prototypes stored teacher/student tokens as TEXT.
--- Normalize both token columns to UUID before COALESCE/defaults are used.
-alter table public.classroom_sessions
-  alter column teacher_token drop default;
+create index classroom_participants_session_idx
+  on public.classroom_participants(session_id);
 
-alter table public.classroom_sessions
-  alter column teacher_token type uuid
-  using (
+create index classroom_participants_last_seen_idx
+  on public.classroom_participants(last_seen);
+
+create index classroom_messages_session_idx
+  on public.classroom_messages(session_id, id);
+
+create index classroom_student_events_session_idx
+  on public.classroom_student_events(session_id, id);
+
+-- ------------------------------------------------------------
+-- 5) RLS + no direct browser table access
+-- ------------------------------------------------------------
+
+alter table public.classroom_sessions enable row level security;
+alter table public.classroom_participants enable row level security;
+alter table public.classroom_messages enable row level security;
+alter table public.classroom_student_events enable row level security;
+
+revoke all on table public.classroom_admin
+  from anon, authenticated;
+
+revoke all on table public.classroom_sessions
+  from anon, authenticated;
+
+revoke all on table public.classroom_participants
+  from anon, authenticated;
+
+revoke all on table public.classroom_messages
+  from anon, authenticated;
+
+revoke all on table public.classroom_student_events
+  from anon, authenticated;
+
+-- ------------------------------------------------------------
+-- 6) Room-code helper
+-- ------------------------------------------------------------
+-- Excludes visually confusing characters I, O, 0 and 1.
+
+create or replace function public.classroom_random_code()
+returns text
+language plpgsql
+volatile
+security definer
+set search_path = public, extensions, pg_catalog
+as $$
+declare
+  v_chars constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  v_bytes bytea;
+  v_code text;
+  i integer;
+begin
+  loop
+    v_bytes := extensions.gen_random_bytes(6);
+    v_code := '';
+
+    for i in 0..5 loop
+      v_code := v_code ||
+        substr(
+          v_chars,
+          (get_byte(v_bytes, i) % length(v_chars)) + 1,
+          1
+        );
+    end loop;
+
+    exit when not exists (
+      select 1
+        from public.classroom_sessions
+       where room_code = v_code
+         and status = 'open'
+    );
+  end loop;
+
+  return v_code;
+end
+$$;
+
+-- ------------------------------------------------------------
+-- 7) Create Classroom
+-- ------------------------------------------------------------
+
+create or replace function public.classroom_create(
+  p_passphrase text,
+  p_title text default 'Unterricht',
+  p_class_name text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, extensions, pg_catalog
+as $$
+declare
+  v_session public.classroom_sessions;
+begin
+  if not public.classroom_authenticate(p_passphrase) then
+    raise exception using
+      message = 'Admin-Passwort falsch',
+      errcode = '28000';
+  end if;
+
+  insert into public.classroom_sessions(
+    room_code,
+    title,
+    class_name
+  )
+  values (
+    public.classroom_random_code(),
+    coalesce(nullif(trim(p_title), ''), 'Unterricht'),
+    nullif(trim(p_class_name), '')
+  )
+  returning * into v_session;
+
+  return jsonb_build_object(
+    'session_id', v_session.id,
+    'teacher_token', v_session.teacher_token,
+    'room_code', v_session.room_code
+  );
+end
+$$;
+
+-- ------------------------------------------------------------
+-- 8) Teacher live-board sync
+-- ------------------------------------------------------------
+
+create or replace function public.classroom_teacher_sync(
+  p_session uuid,
+  p_teacher_token uuid,
+  p_board_state jsonb,
+  p_viewport jsonb
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_catalog
+as $$
+begin
+  update public.classroom_sessions
+     set board_state = coalesce(p_board_state, board_state),
+         viewport = coalesce(p_viewport, viewport),
+         updated_at = now()
+   where id = p_session
+     and teacher_token = p_teacher_token
+     and status = 'open';
+
+  return found;
+end
+$$;
+
+-- ------------------------------------------------------------
+-- 9) Teacher state / participant list
+-- ------------------------------------------------------------
+
+create or replace function public.classroom_teacher_state(
+  p_session uuid,
+  p_teacher_token uuid
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_catalog
+as $$
+declare
+  v_session public.classroom_sessions;
+  v_participants jsonb;
+begin
+  select *
+    into v_session
+    from public.classroom_sessions
+   where id = p_session
+     and teacher_token = p_teacher_token;
+
+  if v_session.id is null then
+    return jsonb_build_object('ok', false);
+  end if;
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', p.id,
+        'name', p.display_name,
+        'state', p.state,
+        'can_write', p.can_write,
+        'locked', p.locked,
+        'follow_teacher', p.follow_teacher,
+        'online', p.last_seen > now() - interval '15 seconds',
+        'last_seen', p.last_seen
+      )
+      order by p.display_name
+    ),
+    '[]'::jsonb
+  )
+  into v_participants
+  from public.classroom_participants p
+  where p.session_id = v_session.id;
+
+  return jsonb_build_object(
+    'ok', true,
+    'room_code', v_session.room_code,
+    'title', v_session.title,
+    'class_name', v_session.class_name,
+    'session_state', v_session.status,
+    'phase', v_session.phase,
+    'traffic', v_session.traffic,
+    'frozen', v_session.frozen,
+    'participants', v_participants
+  );
+end
+$$;
+
+-- ------------------------------------------------------------
+-- 10) Teacher commands
+-- ------------------------------------------------------------
+
+create or replace function public.classroom_teacher_command(
+  p_session uuid,
+  p_teacher_token uuid,
+  p_command text,
+  p_participant uuid default null,
+  p_value jsonb default '{}'::jsonb
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, pg_catalog
+as $$
+declare
+  v_enabled boolean;
+begin
+  if not exists (
+    select 1
+      from public.classroom_sessions
+     where id = p_session
+       and teacher_token = p_teacher_token
+       and status = 'open'
+  ) then
+    return false;
+  end if;
+
+  v_enabled :=
     case
-      when teacher_token is null then gen_random_uuid()
-      when teacher_token::text ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}
-   set teacher_token = coalesce(teacher_token, gen_random_uuid()),
-       status = coalesce(status, 'open'),
-       phase = coalesce(phase, 'free'),
-       traffic = coalesce(traffic, 'green'),
-       frozen = coalesce(frozen, false),
-       board_state = coalesce(board_state, '{}'::jsonb),
-       viewport = coalesce(viewport, '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb),
-       updated_at = coalesce(updated_at, now());
+      when lower(coalesce(p_value->>'enabled',''))
+           in ('true','1','yes','on')
+        then true
 
-update public.classroom_participants
-   set student_token = coalesce(student_token, gen_random_uuid()),
-       state = coalesce(state, 'working'),
-       can_write = coalesce(can_write, false),
-       locked = coalesce(locked, false),
-       follow_teacher = coalesce(follow_teacher, true),
-       last_seen = coalesce(last_seen, now());
+      when lower(coalesce(p_value->>'enabled',''))
+           in ('false','0','no','off')
+        then false
 
-create unique index if not exists classroom_sessions_teacher_token_uq
-  on public.classroom_sessions(teacher_token);
-
-create unique index if not exists classroom_participants_student_token_uq
-  on public.classroom_participants(student_token);
-
-create index if not exists classroom_participants_session_idx
-  on public.classroom_participants(session_id);
-
-create index if not exists classroom_participants_last_seen_idx
-  on public.classroom_participants(last_seen);
-
-create index if not exists classroom_messages_session_idx
-  on public.classroom_messages(session_id, id);
-
-create index if not exists classroom_student_events_session_idx
-  on public.classroom_student_events(session_id, id);
-
-alter table public.classroom_sessions enable row level security;
-alter table public.classroom_participants enable row level security;
-alter table public.classroom_messages enable row level security;
-alter table public.classroom_student_events enable row level security;
-
--- No direct table access from the browser. All access goes through RPCs.
-revoke all on table public.classroom_admin from anon, authenticated;
-revoke all on table public.classroom_sessions from anon, authenticated;
-revoke all on table public.classroom_participants from anon, authenticated;
-revoke all on table public.classroom_messages from anon, authenticated;
-revoke all on table public.classroom_student_events from anon, authenticated;
-
--- ------------------------------------------------------------
--- 3) Helpers
--- ------------------------------------------------------------
-create or replace function public.classroom_random_code()
-returns text
-language plpgsql
-volatile
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_chars constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  v_bytes bytea;
-  v_code text;
-  i integer;
-begin
-  loop
-    v_bytes := gen_random_bytes(6);
-    v_code := '';
-    for i in 0..5 loop
-      v_code := v_code ||
-        substr(v_chars, (get_byte(v_bytes, i) % length(v_chars)) + 1, 1);
-    end loop;
-
-    exit when not exists (
-      select 1
-        from public.classroom_sessions
-       where room_code = v_code
-         and status = 'open'
-    );
-  end loop;
-
-  return v_code;
-end
-$$;
-
--- ------------------------------------------------------------
--- 4) Teacher RPCs
--- ------------------------------------------------------------
-create or replace function public.classroom_create(
-  p_passphrase text,
-  p_title text default 'Unterricht',
-  p_class_name text default null
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-begin
-  if not public.classroom_authenticate(p_passphrase) then
-    raise exception using
-      message = 'Admin-Passwort falsch',
-      errcode = '28000';
-  end if;
-
-  insert into public.classroom_sessions(
-    room_code, title, class_name, status, phase, traffic, frozen
-  )
-  values (
-    public.classroom_random_code(),
-    coalesce(nullif(trim(p_title), ''), 'Unterricht'),
-    nullif(trim(p_class_name), ''),
-    'open', 'free', 'green', false
-  )
-  returning * into v_session;
-
-  return jsonb_build_object(
-    'session_id', v_session.id,
-    'teacher_token', v_session.teacher_token,
-    'room_code', v_session.room_code
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_sync(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_board_state jsonb,
-  p_viewport jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-begin
-  update public.classroom_sessions
-     set board_state = coalesce(p_board_state, board_state),
-         viewport = coalesce(p_viewport, viewport),
-         updated_at = now()
-   where id = p_session
-     and teacher_token = p_teacher_token
-     and status = 'open';
-
-  return found;
-end
-$$;
-
-create or replace function public.classroom_teacher_state(
-  p_session uuid,
-  p_teacher_token uuid
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-  v_participants jsonb;
-begin
-  select *
-    into v_session
-    from public.classroom_sessions
-   where id = p_session
-     and teacher_token = p_teacher_token;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  select coalesce(
-    jsonb_agg(
-      jsonb_build_object(
-        'id', p.id,
-        'name', p.display_name,
-        'state', p.state,
-        'can_write', p.can_write,
-        'locked', p.locked,
-        'follow_teacher', p.follow_teacher,
-        'online', p.last_seen > now() - interval '15 seconds',
-        'last_seen', p.last_seen
-      )
-      order by p.display_name
-    ),
-    '[]'::jsonb
-  )
-  into v_participants
-  from public.classroom_participants p
-  where p.session_id = v_session.id;
-
-  return jsonb_build_object(
-    'ok', true,
-    'room_code', v_session.room_code,
-    'title', v_session.title,
-    'class_name', v_session.class_name,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'frozen', v_session.frozen,
-    'participants', v_participants
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_command(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_command text,
-  p_participant uuid default null,
-  p_value jsonb default '{}'::jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_enabled boolean;
-begin
-  if not exists (
-    select 1
-      from public.classroom_sessions
-     where id = p_session
-       and teacher_token = p_teacher_token
-       and status = 'open'
-  ) then
-    return false;
-  end if;
-
-  v_enabled := case
-    when lower(coalesce(p_value->>'enabled','')) in ('true','1','yes','on') then true
-    when lower(coalesce(p_value->>'enabled','')) in ('false','0','no','off') then false
-    else null
-  end;
+      else null
+    end;
 
   case p_command
+
     when 'lock_all' then
       update public.classroom_participants
          set locked = true
@@ -439,7 +513,11 @@ begin
 
     when 'message' then
       if nullif(trim(coalesce(p_value->>'body','')), '') is not null then
-        insert into public.classroom_messages(session_id, participant_id, body)
+        insert into public.classroom_messages(
+          session_id,
+          participant_id,
+          body
+        )
         values (
           p_session,
           p_participant,
@@ -449,24 +527,26 @@ begin
 
     when 'phase' then
       update public.classroom_sessions
-         set phase = case
-           when coalesce(p_value->>'phase','') in
-             ('explain','solo','group','class','break','free')
-           then p_value->>'phase'
-           else phase
-         end,
-         updated_at = now()
+         set phase =
+           case
+             when coalesce(p_value->>'phase','')
+                  in ('free','explain','solo','group','class','break')
+               then p_value->>'phase'
+             else phase
+           end,
+           updated_at = now()
        where id = p_session;
 
     when 'traffic' then
       update public.classroom_sessions
-         set traffic = case
-           when coalesce(p_value->>'traffic','') in
-             ('green','yellow','red')
-           then p_value->>'traffic'
-           else traffic
-         end,
-         updated_at = now()
+         set traffic =
+           case
+             when coalesce(p_value->>'traffic','')
+                  in ('green','yellow','red')
+               then p_value->>'traffic'
+             else traffic
+           end,
+           updated_at = now()
        where id = p_session;
 
     when 'freeze' then
@@ -483,6 +563,7 @@ begin
 
     else
       return false;
+
   end case;
 
   return true;
@@ -490,8 +571,9 @@ end
 $$;
 
 -- ------------------------------------------------------------
--- 5) Student RPCs
+-- 11) Student join
 -- ------------------------------------------------------------
+
 create or replace function public.classroom_join(
   p_room_code text,
   p_display_name text,
@@ -505,23 +587,32 @@ as $$
 declare
   v_session public.classroom_sessions;
   v_participant public.classroom_participants;
-  v_name text := trim(coalesce(p_display_name,''));
-  v_device text := trim(coalesce(p_device_token,''));
+  v_name text := trim(coalesce(p_display_name, ''));
+  v_device text := trim(coalesce(p_device_token, ''));
 begin
-  if length(v_name) < 1 or length(v_name) > 80 or length(v_device) < 8 then
-    return jsonb_build_object('ok', false, 'error', 'invalid_input');
+  if length(v_name) < 1
+     or length(v_name) > 80
+     or length(v_device) < 8 then
+
+    return jsonb_build_object(
+      'ok', false,
+      'error', 'invalid_input'
+    );
   end if;
 
   select *
     into v_session
     from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
+   where room_code = upper(trim(coalesce(p_room_code, '')))
      and status = 'open'
    order by created_at desc
    limit 1;
 
   if v_session.id is null then
-    return jsonb_build_object('ok', false, 'error', 'room_not_found');
+    return jsonb_build_object(
+      'ok', false,
+      'error', 'room_not_found'
+    );
   end if;
 
   select *
@@ -533,31 +624,43 @@ begin
    limit 1;
 
   if v_participant.id is null then
+
     insert into public.classroom_participants(
-      session_id, device_token, display_name
+      session_id,
+      device_token,
+      display_name
     )
     values (
-      v_session.id, v_device, v_name
+      v_session.id,
+      v_device,
+      v_name
     )
     returning * into v_participant;
 
   elsif v_participant.device_token = v_device then
+
     update public.classroom_participants
        set last_seen = now()
      where id = v_participant.id
     returning * into v_participant;
 
   elsif v_participant.last_seen > now() - interval '2 minutes' then
-    return jsonb_build_object('ok', false, 'error', 'name_in_use');
+
+    return jsonb_build_object(
+      'ok', false,
+      'error', 'name_in_use'
+    );
 
   else
-    -- A stale takeover rotates the token, invalidating the old device.
+
+    -- Stale takeover. Rotate the token so the old device loses access.
     update public.classroom_participants
        set device_token = v_device,
            student_token = gen_random_uuid(),
            last_seen = now()
      where id = v_participant.id
     returning * into v_participant;
+
   end if;
 
   return jsonb_build_object(
@@ -567,6 +670,10 @@ begin
   );
 end
 $$;
+
+-- ------------------------------------------------------------
+-- 12) Student state
+-- ------------------------------------------------------------
 
 create or replace function public.classroom_student_state(
   p_student_token uuid
@@ -618,7 +725,10 @@ begin
   into v_messages
   from public.classroom_messages m
   where m.session_id = v_session.id
-    and (m.participant_id is null or m.participant_id = v_participant.id)
+    and (
+      m.participant_id is null
+      or m.participant_id = v_participant.id
+    )
     and m.created_at > now() - interval '30 minutes';
 
   return jsonb_build_object(
@@ -635,6 +745,10 @@ begin
   );
 end
 $$;
+
+-- ------------------------------------------------------------
+-- 13) Student status buttons
+-- ------------------------------------------------------------
 
 create or replace function public.classroom_student_update(
   p_student_token uuid,
@@ -658,6 +772,10 @@ begin
   return found;
 end
 $$;
+
+-- ------------------------------------------------------------
+-- 14) Student drawing/events
+-- ------------------------------------------------------------
 
 create or replace function public.classroom_student_board_event(
   p_student_token uuid,
@@ -683,12 +801,15 @@ begin
     return false;
   end if;
 
-  if p_payload is null or jsonb_typeof(p_payload) <> 'object' then
+  if p_payload is null
+     or jsonb_typeof(p_payload) <> 'object' then
     return false;
   end if;
 
   insert into public.classroom_student_events(
-    session_id, participant_id, payload
+    session_id,
+    participant_id,
+    payload
   )
   values (
     v_participant.session_id,
@@ -705,8 +826,9 @@ end
 $$;
 
 -- ------------------------------------------------------------
--- 6) Presentation RPC
+-- 15) Presentation / Beamer state
 -- ------------------------------------------------------------
+
 create or replace function public.classroom_presentation_state(
   p_room_code text
 )
@@ -721,7 +843,7 @@ begin
   select *
     into v_session
     from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
+   where room_code = upper(trim(coalesce(p_room_code, '')))
    order by created_at desc
    limit 1;
 
@@ -742,8 +864,9 @@ end
 $$;
 
 -- ------------------------------------------------------------
--- 7) Maintenance
+-- 16) Maintenance
 -- ------------------------------------------------------------
+
 create or replace function public.classroom_cleanup_old_sessions(
   p_days integer default 30
 )
@@ -756,1399 +879,135 @@ declare
   v_count integer;
 begin
   with deleted as (
-    delete from public.classroom_sessions
-     where created_at < now() - make_interval(days => greatest(1, p_days))
-     returning 1
-  )
-  select count(*) into v_count from deleted;
-
-  return v_count;
-end
-$$;
-
--- ------------------------------------------------------------
--- 8) RPC permissions
--- ------------------------------------------------------------
-revoke execute on function public.classroom_authenticate(text) from public;
-revoke execute on function public.classroom_random_code() from public;
-revoke execute on function public.classroom_create(text,text,text) from public;
-revoke execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) from public;
-revoke execute on function public.classroom_teacher_state(uuid,uuid) from public;
-revoke execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) from public;
-revoke execute on function public.classroom_join(text,text,text) from public;
-revoke execute on function public.classroom_student_state(uuid) from public;
-revoke execute on function public.classroom_student_update(uuid,text) from public;
-revoke execute on function public.classroom_student_board_event(uuid,jsonb) from public;
-revoke execute on function public.classroom_presentation_state(text) from public;
-revoke execute on function public.classroom_cleanup_old_sessions(integer) from public;
-
-grant execute on function public.classroom_authenticate(text) to anon, authenticated;
-grant execute on function public.classroom_create(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) to anon, authenticated;
-grant execute on function public.classroom_teacher_state(uuid,uuid) to anon, authenticated;
-grant execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_join(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_student_state(uuid) to anon, authenticated;
-grant execute on function public.classroom_student_update(uuid,text) to anon, authenticated;
-grant execute on function public.classroom_student_board_event(uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_presentation_state(text) to anon, authenticated;
-
--- Helper / cleanup functions stay server-side only.
-
-commit;
-
--- Ask PostgREST to refresh its RPC schema cache immediately.
-notify pgrst, 'reload schema';
-
--- Sanity check: all required Classroom RPCs should be non-null.
-select
-  to_regprocedure('public.classroom_authenticate(text)') as classroom_authenticate,
-  to_regprocedure('public.classroom_create(text,text,text)') as classroom_create,
-  to_regprocedure('public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)') as classroom_teacher_sync,
-  to_regprocedure('public.classroom_teacher_state(uuid,uuid)') as classroom_teacher_state,
-  to_regprocedure('public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)') as classroom_teacher_command,
-  to_regprocedure('public.classroom_join(text,text,text)') as classroom_join,
-  to_regprocedure('public.classroom_student_state(uuid)') as classroom_student_state,
-  to_regprocedure('public.classroom_student_update(uuid,text)') as classroom_student_update,
-  to_regprocedure('public.classroom_student_board_event(uuid,jsonb)') as classroom_student_board_event,
-  to_regprocedure('public.classroom_presentation_state(text)') as classroom_presentation_state;
-
-        then teacher_token::text::uuid
-      else gen_random_uuid()
-    end
-  );
-
-alter table public.classroom_sessions
-  alter column teacher_token set default gen_random_uuid();
-
-alter table public.classroom_participants
-  alter column student_token drop default;
-
-alter table public.classroom_participants
-  alter column student_token type uuid
-  using (
-    case
-      when student_token is null then gen_random_uuid()
-      when student_token::text ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}
-   set teacher_token = coalesce(teacher_token, gen_random_uuid()),
-       status = coalesce(status, 'open'),
-       phase = coalesce(phase, 'free'),
-       traffic = coalesce(traffic, 'green'),
-       frozen = coalesce(frozen, false),
-       board_state = coalesce(board_state, '{}'::jsonb),
-       viewport = coalesce(viewport, '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb),
-       updated_at = coalesce(updated_at, now());
-
-update public.classroom_participants
-   set student_token = coalesce(student_token, gen_random_uuid()),
-       state = coalesce(state, 'working'),
-       can_write = coalesce(can_write, false),
-       locked = coalesce(locked, false),
-       follow_teacher = coalesce(follow_teacher, true),
-       last_seen = coalesce(last_seen, now());
-
-create unique index if not exists classroom_sessions_teacher_token_uq
-  on public.classroom_sessions(teacher_token);
-
-create unique index if not exists classroom_participants_student_token_uq
-  on public.classroom_participants(student_token);
-
-create index if not exists classroom_participants_session_idx
-  on public.classroom_participants(session_id);
-
-create index if not exists classroom_participants_last_seen_idx
-  on public.classroom_participants(last_seen);
-
-create index if not exists classroom_messages_session_idx
-  on public.classroom_messages(session_id, id);
-
-create index if not exists classroom_student_events_session_idx
-  on public.classroom_student_events(session_id, id);
-
-alter table public.classroom_sessions enable row level security;
-alter table public.classroom_participants enable row level security;
-alter table public.classroom_messages enable row level security;
-alter table public.classroom_student_events enable row level security;
-
--- No direct table access from the browser. All access goes through RPCs.
-revoke all on table public.classroom_admin from anon, authenticated;
-revoke all on table public.classroom_sessions from anon, authenticated;
-revoke all on table public.classroom_participants from anon, authenticated;
-revoke all on table public.classroom_messages from anon, authenticated;
-revoke all on table public.classroom_student_events from anon, authenticated;
-
--- ------------------------------------------------------------
--- 3) Helpers
--- ------------------------------------------------------------
-create or replace function public.classroom_random_code()
-returns text
-language plpgsql
-volatile
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_chars constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  v_bytes bytea;
-  v_code text;
-  i integer;
-begin
-  loop
-    v_bytes := gen_random_bytes(6);
-    v_code := '';
-    for i in 0..5 loop
-      v_code := v_code ||
-        substr(v_chars, (get_byte(v_bytes, i) % length(v_chars)) + 1, 1);
-    end loop;
-
-    exit when not exists (
-      select 1
-        from public.classroom_sessions
-       where room_code = v_code
-         and status = 'open'
-    );
-  end loop;
-
-  return v_code;
-end
-$$;
-
--- ------------------------------------------------------------
--- 4) Teacher RPCs
--- ------------------------------------------------------------
-create or replace function public.classroom_create(
-  p_passphrase text,
-  p_title text default 'Unterricht',
-  p_class_name text default null
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-begin
-  if not public.classroom_authenticate(p_passphrase) then
-    raise exception using
-      message = 'Admin-Passwort falsch',
-      errcode = '28000';
-  end if;
-
-  insert into public.classroom_sessions(
-    room_code, title, class_name, status, phase, traffic, frozen
-  )
-  values (
-    public.classroom_random_code(),
-    coalesce(nullif(trim(p_title), ''), 'Unterricht'),
-    nullif(trim(p_class_name), ''),
-    'open', 'free', 'green', false
-  )
-  returning * into v_session;
-
-  return jsonb_build_object(
-    'session_id', v_session.id,
-    'teacher_token', v_session.teacher_token,
-    'room_code', v_session.room_code
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_sync(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_board_state jsonb,
-  p_viewport jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-begin
-  update public.classroom_sessions
-     set board_state = coalesce(p_board_state, board_state),
-         viewport = coalesce(p_viewport, viewport),
-         updated_at = now()
-   where id = p_session
-     and teacher_token = p_teacher_token
-     and status = 'open';
-
-  return found;
-end
-$$;
-
-create or replace function public.classroom_teacher_state(
-  p_session uuid,
-  p_teacher_token uuid
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-  v_participants jsonb;
-begin
-  select *
-    into v_session
-    from public.classroom_sessions
-   where id = p_session
-     and teacher_token = p_teacher_token;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  select coalesce(
-    jsonb_agg(
-      jsonb_build_object(
-        'id', p.id,
-        'name', p.display_name,
-        'state', p.state,
-        'can_write', p.can_write,
-        'locked', p.locked,
-        'follow_teacher', p.follow_teacher,
-        'online', p.last_seen > now() - interval '15 seconds',
-        'last_seen', p.last_seen
-      )
-      order by p.display_name
-    ),
-    '[]'::jsonb
-  )
-  into v_participants
-  from public.classroom_participants p
-  where p.session_id = v_session.id;
-
-  return jsonb_build_object(
-    'ok', true,
-    'room_code', v_session.room_code,
-    'title', v_session.title,
-    'class_name', v_session.class_name,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'frozen', v_session.frozen,
-    'participants', v_participants
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_command(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_command text,
-  p_participant uuid default null,
-  p_value jsonb default '{}'::jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_enabled boolean;
-begin
-  if not exists (
-    select 1
+    delete
       from public.classroom_sessions
-     where id = p_session
-       and teacher_token = p_teacher_token
-       and status = 'open'
-  ) then
-    return false;
-  end if;
-
-  v_enabled := case
-    when lower(coalesce(p_value->>'enabled','')) in ('true','1','yes','on') then true
-    when lower(coalesce(p_value->>'enabled','')) in ('false','0','no','off') then false
-    else null
-  end;
-
-  case p_command
-    when 'lock_all' then
-      update public.classroom_participants
-         set locked = true
-       where session_id = p_session;
-
-    when 'unlock_all' then
-      update public.classroom_participants
-         set locked = false
-       where session_id = p_session;
-
-    when 'follow_all' then
-      update public.classroom_participants
-         set follow_teacher = coalesce(v_enabled, true)
-       where session_id = p_session;
-
-    when 'class_write' then
-      update public.classroom_participants
-         set can_write = coalesce(v_enabled, false)
-       where session_id = p_session;
-
-    when 'lock_one' then
-      update public.classroom_participants
-         set locked = true
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'unlock_one' then
-      update public.classroom_participants
-         set locked = false
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'follow_one' then
-      update public.classroom_participants
-         set follow_teacher = coalesce(v_enabled, true)
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'write_one' then
-      update public.classroom_participants
-         set can_write = coalesce(v_enabled, false)
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'message' then
-      if nullif(trim(coalesce(p_value->>'body','')), '') is not null then
-        insert into public.classroom_messages(session_id, participant_id, body)
-        values (
-          p_session,
-          p_participant,
-          trim(p_value->>'body')
-        );
-      end if;
-
-    when 'phase' then
-      update public.classroom_sessions
-         set phase = case
-           when coalesce(p_value->>'phase','') in
-             ('explain','solo','group','class','break','free')
-           then p_value->>'phase'
-           else phase
-         end,
-         updated_at = now()
-       where id = p_session;
-
-    when 'traffic' then
-      update public.classroom_sessions
-         set traffic = case
-           when coalesce(p_value->>'traffic','') in
-             ('green','yellow','red')
-           then p_value->>'traffic'
-           else traffic
-         end,
-         updated_at = now()
-       where id = p_session;
-
-    when 'freeze' then
-      update public.classroom_sessions
-         set frozen = coalesce(v_enabled, false),
-             updated_at = now()
-       where id = p_session;
-
-    when 'close' then
-      update public.classroom_sessions
-         set status = 'closed',
-             updated_at = now()
-       where id = p_session;
-
-    else
-      return false;
-  end case;
-
-  return true;
-end
-$$;
-
--- ------------------------------------------------------------
--- 5) Student RPCs
--- ------------------------------------------------------------
-create or replace function public.classroom_join(
-  p_room_code text,
-  p_display_name text,
-  p_device_token text
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-  v_participant public.classroom_participants;
-  v_name text := trim(coalesce(p_display_name,''));
-  v_device text := trim(coalesce(p_device_token,''));
-begin
-  if length(v_name) < 1 or length(v_name) > 80 or length(v_device) < 8 then
-    return jsonb_build_object('ok', false, 'error', 'invalid_input');
-  end if;
-
-  select *
-    into v_session
-    from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
-     and status = 'open'
-   order by created_at desc
-   limit 1;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false, 'error', 'room_not_found');
-  end if;
-
-  select *
-    into v_participant
-    from public.classroom_participants
-   where session_id = v_session.id
-     and lower(display_name) = lower(v_name)
-   order by created_at desc
-   limit 1;
-
-  if v_participant.id is null then
-    insert into public.classroom_participants(
-      session_id, device_token, display_name
-    )
-    values (
-      v_session.id, v_device, v_name
-    )
-    returning * into v_participant;
-
-  elsif v_participant.device_token = v_device then
-    update public.classroom_participants
-       set last_seen = now()
-     where id = v_participant.id
-    returning * into v_participant;
-
-  elsif v_participant.last_seen > now() - interval '2 minutes' then
-    return jsonb_build_object('ok', false, 'error', 'name_in_use');
-
-  else
-    -- A stale takeover rotates the token, invalidating the old device.
-    update public.classroom_participants
-       set device_token = v_device,
-           student_token = gen_random_uuid(),
-           last_seen = now()
-     where id = v_participant.id
-    returning * into v_participant;
-  end if;
-
-  return jsonb_build_object(
-    'ok', true,
-    'student_token', v_participant.student_token,
-    'room_code', v_session.room_code
-  );
-end
-$$;
-
-create or replace function public.classroom_student_state(
-  p_student_token uuid
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_participant public.classroom_participants;
-  v_session public.classroom_sessions;
-  v_messages jsonb;
-begin
-  select *
-    into v_participant
-    from public.classroom_participants
-   where student_token = p_student_token
-   limit 1;
-
-  if v_participant.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  update public.classroom_participants
-     set last_seen = now()
-   where id = v_participant.id;
-
-  select *
-    into v_session
-    from public.classroom_sessions
-   where id = v_participant.session_id;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  select coalesce(
-    jsonb_agg(
-      jsonb_build_object(
-        'id', m.id,
-        'body', m.body,
-        'created_at', m.created_at
-      )
-      order by m.id
-    ),
-    '[]'::jsonb
-  )
-  into v_messages
-  from public.classroom_messages m
-  where m.session_id = v_session.id
-    and (m.participant_id is null or m.participant_id = v_participant.id)
-    and m.created_at > now() - interval '30 minutes';
-
-  return jsonb_build_object(
-    'ok', true,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'locked', v_participant.locked,
-    'can_write', v_participant.can_write,
-    'follow_teacher', v_participant.follow_teacher,
-    'board_state', v_session.board_state,
-    'viewport', v_session.viewport,
-    'messages', v_messages
-  );
-end
-$$;
-
-create or replace function public.classroom_student_update(
-  p_student_token uuid,
-  p_state text
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-begin
-  if p_state not in ('working','done','help','unsure') then
-    return false;
-  end if;
-
-  update public.classroom_participants
-     set state = p_state,
-         last_seen = now()
-   where student_token = p_student_token;
-
-  return found;
-end
-$$;
-
-create or replace function public.classroom_student_board_event(
-  p_student_token uuid,
-  p_payload jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_participant public.classroom_participants;
-begin
-  select *
-    into v_participant
-    from public.classroom_participants
-   where student_token = p_student_token
-   limit 1;
-
-  if v_participant.id is null
-     or not v_participant.can_write
-     or v_participant.locked then
-    return false;
-  end if;
-
-  if p_payload is null or jsonb_typeof(p_payload) <> 'object' then
-    return false;
-  end if;
-
-  insert into public.classroom_student_events(
-    session_id, participant_id, payload
-  )
-  values (
-    v_participant.session_id,
-    v_participant.id,
-    p_payload
-  );
-
-  update public.classroom_participants
-     set last_seen = now()
-   where id = v_participant.id;
-
-  return true;
-end
-$$;
-
--- ------------------------------------------------------------
--- 6) Presentation RPC
--- ------------------------------------------------------------
-create or replace function public.classroom_presentation_state(
-  p_room_code text
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-begin
-  select *
-    into v_session
-    from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
-   order by created_at desc
-   limit 1;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  return jsonb_build_object(
-    'ok', true,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'frozen', v_session.frozen,
-    'board_state', v_session.board_state,
-    'viewport', v_session.viewport
-  );
-end
-$$;
-
--- ------------------------------------------------------------
--- 7) Maintenance
--- ------------------------------------------------------------
-create or replace function public.classroom_cleanup_old_sessions(
-  p_days integer default 30
-)
-returns integer
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_count integer;
-begin
-  with deleted as (
-    delete from public.classroom_sessions
-     where created_at < now() - make_interval(days => greatest(1, p_days))
+     where created_at <
+       now() - make_interval(days => greatest(1, p_days))
      returning 1
   )
-  select count(*) into v_count from deleted;
+  select count(*)
+    into v_count
+    from deleted;
 
   return v_count;
 end
 $$;
 
 -- ------------------------------------------------------------
--- 8) RPC permissions
+-- 17) RPC permissions
 -- ------------------------------------------------------------
-revoke execute on function public.classroom_authenticate(text) from public;
-revoke execute on function public.classroom_random_code() from public;
-revoke execute on function public.classroom_create(text,text,text) from public;
-revoke execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) from public;
-revoke execute on function public.classroom_teacher_state(uuid,uuid) from public;
-revoke execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) from public;
-revoke execute on function public.classroom_join(text,text,text) from public;
-revoke execute on function public.classroom_student_state(uuid) from public;
-revoke execute on function public.classroom_student_update(uuid,text) from public;
-revoke execute on function public.classroom_student_board_event(uuid,jsonb) from public;
-revoke execute on function public.classroom_presentation_state(text) from public;
-revoke execute on function public.classroom_cleanup_old_sessions(integer) from public;
 
-grant execute on function public.classroom_authenticate(text) to anon, authenticated;
-grant execute on function public.classroom_create(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) to anon, authenticated;
-grant execute on function public.classroom_teacher_state(uuid,uuid) to anon, authenticated;
-grant execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_join(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_student_state(uuid) to anon, authenticated;
-grant execute on function public.classroom_student_update(uuid,text) to anon, authenticated;
-grant execute on function public.classroom_student_board_event(uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_presentation_state(text) to anon, authenticated;
+revoke execute on function public.classroom_authenticate(text)
+  from public;
 
--- Helper / cleanup functions stay server-side only.
+revoke execute on function public.classroom_random_code()
+  from public;
+
+revoke execute on function public.classroom_create(text,text,text)
+  from public;
+
+revoke execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)
+  from public;
+
+revoke execute on function public.classroom_teacher_state(uuid,uuid)
+  from public;
+
+revoke execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)
+  from public;
+
+revoke execute on function public.classroom_join(text,text,text)
+  from public;
+
+revoke execute on function public.classroom_student_state(uuid)
+  from public;
+
+revoke execute on function public.classroom_student_update(uuid,text)
+  from public;
+
+revoke execute on function public.classroom_student_board_event(uuid,jsonb)
+  from public;
+
+revoke execute on function public.classroom_presentation_state(text)
+  from public;
+
+revoke execute on function public.classroom_cleanup_old_sessions(integer)
+  from public;
+
+-- Browser-facing RPCs
+grant execute on function public.classroom_authenticate(text)
+  to anon, authenticated;
+
+grant execute on function public.classroom_create(text,text,text)
+  to anon, authenticated;
+
+grant execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)
+  to anon, authenticated;
+
+grant execute on function public.classroom_teacher_state(uuid,uuid)
+  to anon, authenticated;
+
+grant execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)
+  to anon, authenticated;
+
+grant execute on function public.classroom_join(text,text,text)
+  to anon, authenticated;
+
+grant execute on function public.classroom_student_state(uuid)
+  to anon, authenticated;
+
+grant execute on function public.classroom_student_update(uuid,text)
+  to anon, authenticated;
+
+grant execute on function public.classroom_student_board_event(uuid,jsonb)
+  to anon, authenticated;
+
+grant execute on function public.classroom_presentation_state(text)
+  to anon, authenticated;
+
+-- Internal helpers are intentionally NOT granted to anon/authenticated:
+-- classroom_random_code()
+-- classroom_cleanup_old_sessions(integer)
 
 commit;
 
--- Ask PostgREST to refresh its RPC schema cache immediately.
+-- ------------------------------------------------------------
+-- 18) Force PostgREST to refresh its RPC schema
+-- ------------------------------------------------------------
+
 notify pgrst, 'reload schema';
 
--- Sanity check: all required Classroom RPCs should be non-null.
+-- ------------------------------------------------------------
+-- 19) Sanity check
+-- ------------------------------------------------------------
+-- Every field below should show a function signature, not NULL.
+
 select
-  to_regprocedure('public.classroom_authenticate(text)') as classroom_authenticate,
-  to_regprocedure('public.classroom_create(text,text,text)') as classroom_create,
-  to_regprocedure('public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)') as classroom_teacher_sync,
-  to_regprocedure('public.classroom_teacher_state(uuid,uuid)') as classroom_teacher_state,
-  to_regprocedure('public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)') as classroom_teacher_command,
-  to_regprocedure('public.classroom_join(text,text,text)') as classroom_join,
-  to_regprocedure('public.classroom_student_state(uuid)') as classroom_student_state,
-  to_regprocedure('public.classroom_student_update(uuid,text)') as classroom_student_update,
-  to_regprocedure('public.classroom_student_board_event(uuid,jsonb)') as classroom_student_board_event,
-  to_regprocedure('public.classroom_presentation_state(text)') as classroom_presentation_state;
+  to_regprocedure('public.classroom_authenticate(text)')
+    as classroom_authenticate,
 
-        then student_token::text::uuid
-      else gen_random_uuid()
-    end
-  );
+  to_regprocedure('public.classroom_create(text,text,text)')
+    as classroom_create,
 
-alter table public.classroom_participants
-  alter column student_token set default gen_random_uuid();
+  to_regprocedure('public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)')
+    as classroom_teacher_sync,
 
-update public.classroom_sessions
-   set teacher_token = coalesce(teacher_token, gen_random_uuid()),
-       status = coalesce(status, 'open'),
-       phase = coalesce(phase, 'free'),
-       traffic = coalesce(traffic, 'green'),
-       frozen = coalesce(frozen, false),
-       board_state = coalesce(board_state, '{}'::jsonb),
-       viewport = coalesce(viewport, '{"scale":0.65,"tx":-500,"ty":-350}'::jsonb),
-       updated_at = coalesce(updated_at, now());
+  to_regprocedure('public.classroom_teacher_state(uuid,uuid)')
+    as classroom_teacher_state,
 
-update public.classroom_participants
-   set student_token = coalesce(student_token, gen_random_uuid()),
-       state = coalesce(state, 'working'),
-       can_write = coalesce(can_write, false),
-       locked = coalesce(locked, false),
-       follow_teacher = coalesce(follow_teacher, true),
-       last_seen = coalesce(last_seen, now());
+  to_regprocedure('public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)')
+    as classroom_teacher_command,
 
-create unique index if not exists classroom_sessions_teacher_token_uq
-  on public.classroom_sessions(teacher_token);
+  to_regprocedure('public.classroom_join(text,text,text)')
+    as classroom_join,
 
-create unique index if not exists classroom_participants_student_token_uq
-  on public.classroom_participants(student_token);
+  to_regprocedure('public.classroom_student_state(uuid)')
+    as classroom_student_state,
 
-create index if not exists classroom_participants_session_idx
-  on public.classroom_participants(session_id);
+  to_regprocedure('public.classroom_student_update(uuid,text)')
+    as classroom_student_update,
 
-create index if not exists classroom_participants_last_seen_idx
-  on public.classroom_participants(last_seen);
+  to_regprocedure('public.classroom_student_board_event(uuid,jsonb)')
+    as classroom_student_board_event,
 
-create index if not exists classroom_messages_session_idx
-  on public.classroom_messages(session_id, id);
-
-create index if not exists classroom_student_events_session_idx
-  on public.classroom_student_events(session_id, id);
-
-alter table public.classroom_sessions enable row level security;
-alter table public.classroom_participants enable row level security;
-alter table public.classroom_messages enable row level security;
-alter table public.classroom_student_events enable row level security;
-
--- No direct table access from the browser. All access goes through RPCs.
-revoke all on table public.classroom_admin from anon, authenticated;
-revoke all on table public.classroom_sessions from anon, authenticated;
-revoke all on table public.classroom_participants from anon, authenticated;
-revoke all on table public.classroom_messages from anon, authenticated;
-revoke all on table public.classroom_student_events from anon, authenticated;
-
--- ------------------------------------------------------------
--- 3) Helpers
--- ------------------------------------------------------------
-create or replace function public.classroom_random_code()
-returns text
-language plpgsql
-volatile
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_chars constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  v_bytes bytea;
-  v_code text;
-  i integer;
-begin
-  loop
-    v_bytes := gen_random_bytes(6);
-    v_code := '';
-    for i in 0..5 loop
-      v_code := v_code ||
-        substr(v_chars, (get_byte(v_bytes, i) % length(v_chars)) + 1, 1);
-    end loop;
-
-    exit when not exists (
-      select 1
-        from public.classroom_sessions
-       where room_code = v_code
-         and status = 'open'
-    );
-  end loop;
-
-  return v_code;
-end
-$$;
-
--- ------------------------------------------------------------
--- 4) Teacher RPCs
--- ------------------------------------------------------------
-create or replace function public.classroom_create(
-  p_passphrase text,
-  p_title text default 'Unterricht',
-  p_class_name text default null
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, extensions, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-begin
-  if not public.classroom_authenticate(p_passphrase) then
-    raise exception using
-      message = 'Admin-Passwort falsch',
-      errcode = '28000';
-  end if;
-
-  insert into public.classroom_sessions(
-    room_code, title, class_name, status, phase, traffic, frozen
-  )
-  values (
-    public.classroom_random_code(),
-    coalesce(nullif(trim(p_title), ''), 'Unterricht'),
-    nullif(trim(p_class_name), ''),
-    'open', 'free', 'green', false
-  )
-  returning * into v_session;
-
-  return jsonb_build_object(
-    'session_id', v_session.id,
-    'teacher_token', v_session.teacher_token,
-    'room_code', v_session.room_code
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_sync(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_board_state jsonb,
-  p_viewport jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-begin
-  update public.classroom_sessions
-     set board_state = coalesce(p_board_state, board_state),
-         viewport = coalesce(p_viewport, viewport),
-         updated_at = now()
-   where id = p_session
-     and teacher_token = p_teacher_token
-     and status = 'open';
-
-  return found;
-end
-$$;
-
-create or replace function public.classroom_teacher_state(
-  p_session uuid,
-  p_teacher_token uuid
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-  v_participants jsonb;
-begin
-  select *
-    into v_session
-    from public.classroom_sessions
-   where id = p_session
-     and teacher_token = p_teacher_token;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  select coalesce(
-    jsonb_agg(
-      jsonb_build_object(
-        'id', p.id,
-        'name', p.display_name,
-        'state', p.state,
-        'can_write', p.can_write,
-        'locked', p.locked,
-        'follow_teacher', p.follow_teacher,
-        'online', p.last_seen > now() - interval '15 seconds',
-        'last_seen', p.last_seen
-      )
-      order by p.display_name
-    ),
-    '[]'::jsonb
-  )
-  into v_participants
-  from public.classroom_participants p
-  where p.session_id = v_session.id;
-
-  return jsonb_build_object(
-    'ok', true,
-    'room_code', v_session.room_code,
-    'title', v_session.title,
-    'class_name', v_session.class_name,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'frozen', v_session.frozen,
-    'participants', v_participants
-  );
-end
-$$;
-
-create or replace function public.classroom_teacher_command(
-  p_session uuid,
-  p_teacher_token uuid,
-  p_command text,
-  p_participant uuid default null,
-  p_value jsonb default '{}'::jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_enabled boolean;
-begin
-  if not exists (
-    select 1
-      from public.classroom_sessions
-     where id = p_session
-       and teacher_token = p_teacher_token
-       and status = 'open'
-  ) then
-    return false;
-  end if;
-
-  v_enabled := case
-    when lower(coalesce(p_value->>'enabled','')) in ('true','1','yes','on') then true
-    when lower(coalesce(p_value->>'enabled','')) in ('false','0','no','off') then false
-    else null
-  end;
-
-  case p_command
-    when 'lock_all' then
-      update public.classroom_participants
-         set locked = true
-       where session_id = p_session;
-
-    when 'unlock_all' then
-      update public.classroom_participants
-         set locked = false
-       where session_id = p_session;
-
-    when 'follow_all' then
-      update public.classroom_participants
-         set follow_teacher = coalesce(v_enabled, true)
-       where session_id = p_session;
-
-    when 'class_write' then
-      update public.classroom_participants
-         set can_write = coalesce(v_enabled, false)
-       where session_id = p_session;
-
-    when 'lock_one' then
-      update public.classroom_participants
-         set locked = true
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'unlock_one' then
-      update public.classroom_participants
-         set locked = false
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'follow_one' then
-      update public.classroom_participants
-         set follow_teacher = coalesce(v_enabled, true)
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'write_one' then
-      update public.classroom_participants
-         set can_write = coalesce(v_enabled, false)
-       where id = p_participant
-         and session_id = p_session;
-
-    when 'message' then
-      if nullif(trim(coalesce(p_value->>'body','')), '') is not null then
-        insert into public.classroom_messages(session_id, participant_id, body)
-        values (
-          p_session,
-          p_participant,
-          trim(p_value->>'body')
-        );
-      end if;
-
-    when 'phase' then
-      update public.classroom_sessions
-         set phase = case
-           when coalesce(p_value->>'phase','') in
-             ('explain','solo','group','class','break','free')
-           then p_value->>'phase'
-           else phase
-         end,
-         updated_at = now()
-       where id = p_session;
-
-    when 'traffic' then
-      update public.classroom_sessions
-         set traffic = case
-           when coalesce(p_value->>'traffic','') in
-             ('green','yellow','red')
-           then p_value->>'traffic'
-           else traffic
-         end,
-         updated_at = now()
-       where id = p_session;
-
-    when 'freeze' then
-      update public.classroom_sessions
-         set frozen = coalesce(v_enabled, false),
-             updated_at = now()
-       where id = p_session;
-
-    when 'close' then
-      update public.classroom_sessions
-         set status = 'closed',
-             updated_at = now()
-       where id = p_session;
-
-    else
-      return false;
-  end case;
-
-  return true;
-end
-$$;
-
--- ------------------------------------------------------------
--- 5) Student RPCs
--- ------------------------------------------------------------
-create or replace function public.classroom_join(
-  p_room_code text,
-  p_display_name text,
-  p_device_token text
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-  v_participant public.classroom_participants;
-  v_name text := trim(coalesce(p_display_name,''));
-  v_device text := trim(coalesce(p_device_token,''));
-begin
-  if length(v_name) < 1 or length(v_name) > 80 or length(v_device) < 8 then
-    return jsonb_build_object('ok', false, 'error', 'invalid_input');
-  end if;
-
-  select *
-    into v_session
-    from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
-     and status = 'open'
-   order by created_at desc
-   limit 1;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false, 'error', 'room_not_found');
-  end if;
-
-  select *
-    into v_participant
-    from public.classroom_participants
-   where session_id = v_session.id
-     and lower(display_name) = lower(v_name)
-   order by created_at desc
-   limit 1;
-
-  if v_participant.id is null then
-    insert into public.classroom_participants(
-      session_id, device_token, display_name
-    )
-    values (
-      v_session.id, v_device, v_name
-    )
-    returning * into v_participant;
-
-  elsif v_participant.device_token = v_device then
-    update public.classroom_participants
-       set last_seen = now()
-     where id = v_participant.id
-    returning * into v_participant;
-
-  elsif v_participant.last_seen > now() - interval '2 minutes' then
-    return jsonb_build_object('ok', false, 'error', 'name_in_use');
-
-  else
-    -- A stale takeover rotates the token, invalidating the old device.
-    update public.classroom_participants
-       set device_token = v_device,
-           student_token = gen_random_uuid(),
-           last_seen = now()
-     where id = v_participant.id
-    returning * into v_participant;
-  end if;
-
-  return jsonb_build_object(
-    'ok', true,
-    'student_token', v_participant.student_token,
-    'room_code', v_session.room_code
-  );
-end
-$$;
-
-create or replace function public.classroom_student_state(
-  p_student_token uuid
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_participant public.classroom_participants;
-  v_session public.classroom_sessions;
-  v_messages jsonb;
-begin
-  select *
-    into v_participant
-    from public.classroom_participants
-   where student_token = p_student_token
-   limit 1;
-
-  if v_participant.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  update public.classroom_participants
-     set last_seen = now()
-   where id = v_participant.id;
-
-  select *
-    into v_session
-    from public.classroom_sessions
-   where id = v_participant.session_id;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  select coalesce(
-    jsonb_agg(
-      jsonb_build_object(
-        'id', m.id,
-        'body', m.body,
-        'created_at', m.created_at
-      )
-      order by m.id
-    ),
-    '[]'::jsonb
-  )
-  into v_messages
-  from public.classroom_messages m
-  where m.session_id = v_session.id
-    and (m.participant_id is null or m.participant_id = v_participant.id)
-    and m.created_at > now() - interval '30 minutes';
-
-  return jsonb_build_object(
-    'ok', true,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'locked', v_participant.locked,
-    'can_write', v_participant.can_write,
-    'follow_teacher', v_participant.follow_teacher,
-    'board_state', v_session.board_state,
-    'viewport', v_session.viewport,
-    'messages', v_messages
-  );
-end
-$$;
-
-create or replace function public.classroom_student_update(
-  p_student_token uuid,
-  p_state text
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-begin
-  if p_state not in ('working','done','help','unsure') then
-    return false;
-  end if;
-
-  update public.classroom_participants
-     set state = p_state,
-         last_seen = now()
-   where student_token = p_student_token;
-
-  return found;
-end
-$$;
-
-create or replace function public.classroom_student_board_event(
-  p_student_token uuid,
-  p_payload jsonb
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_participant public.classroom_participants;
-begin
-  select *
-    into v_participant
-    from public.classroom_participants
-   where student_token = p_student_token
-   limit 1;
-
-  if v_participant.id is null
-     or not v_participant.can_write
-     or v_participant.locked then
-    return false;
-  end if;
-
-  if p_payload is null or jsonb_typeof(p_payload) <> 'object' then
-    return false;
-  end if;
-
-  insert into public.classroom_student_events(
-    session_id, participant_id, payload
-  )
-  values (
-    v_participant.session_id,
-    v_participant.id,
-    p_payload
-  );
-
-  update public.classroom_participants
-     set last_seen = now()
-   where id = v_participant.id;
-
-  return true;
-end
-$$;
-
--- ------------------------------------------------------------
--- 6) Presentation RPC
--- ------------------------------------------------------------
-create or replace function public.classroom_presentation_state(
-  p_room_code text
-)
-returns jsonb
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_session public.classroom_sessions;
-begin
-  select *
-    into v_session
-    from public.classroom_sessions
-   where room_code = upper(trim(coalesce(p_room_code,'')))
-   order by created_at desc
-   limit 1;
-
-  if v_session.id is null then
-    return jsonb_build_object('ok', false);
-  end if;
-
-  return jsonb_build_object(
-    'ok', true,
-    'session_state', v_session.status,
-    'phase', v_session.phase,
-    'traffic', v_session.traffic,
-    'frozen', v_session.frozen,
-    'board_state', v_session.board_state,
-    'viewport', v_session.viewport
-  );
-end
-$$;
-
--- ------------------------------------------------------------
--- 7) Maintenance
--- ------------------------------------------------------------
-create or replace function public.classroom_cleanup_old_sessions(
-  p_days integer default 30
-)
-returns integer
-language plpgsql
-security definer
-set search_path = public, pg_catalog
-as $$
-declare
-  v_count integer;
-begin
-  with deleted as (
-    delete from public.classroom_sessions
-     where created_at < now() - make_interval(days => greatest(1, p_days))
-     returning 1
-  )
-  select count(*) into v_count from deleted;
-
-  return v_count;
-end
-$$;
-
--- ------------------------------------------------------------
--- 8) RPC permissions
--- ------------------------------------------------------------
-revoke execute on function public.classroom_authenticate(text) from public;
-revoke execute on function public.classroom_random_code() from public;
-revoke execute on function public.classroom_create(text,text,text) from public;
-revoke execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) from public;
-revoke execute on function public.classroom_teacher_state(uuid,uuid) from public;
-revoke execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) from public;
-revoke execute on function public.classroom_join(text,text,text) from public;
-revoke execute on function public.classroom_student_state(uuid) from public;
-revoke execute on function public.classroom_student_update(uuid,text) from public;
-revoke execute on function public.classroom_student_board_event(uuid,jsonb) from public;
-revoke execute on function public.classroom_presentation_state(text) from public;
-revoke execute on function public.classroom_cleanup_old_sessions(integer) from public;
-
-grant execute on function public.classroom_authenticate(text) to anon, authenticated;
-grant execute on function public.classroom_create(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb) to anon, authenticated;
-grant execute on function public.classroom_teacher_state(uuid,uuid) to anon, authenticated;
-grant execute on function public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_join(text,text,text) to anon, authenticated;
-grant execute on function public.classroom_student_state(uuid) to anon, authenticated;
-grant execute on function public.classroom_student_update(uuid,text) to anon, authenticated;
-grant execute on function public.classroom_student_board_event(uuid,jsonb) to anon, authenticated;
-grant execute on function public.classroom_presentation_state(text) to anon, authenticated;
-
--- Helper / cleanup functions stay server-side only.
-
-commit;
-
--- Ask PostgREST to refresh its RPC schema cache immediately.
-notify pgrst, 'reload schema';
-
--- Sanity check: all required Classroom RPCs should be non-null.
-select
-  to_regprocedure('public.classroom_authenticate(text)') as classroom_authenticate,
-  to_regprocedure('public.classroom_create(text,text,text)') as classroom_create,
-  to_regprocedure('public.classroom_teacher_sync(uuid,uuid,jsonb,jsonb)') as classroom_teacher_sync,
-  to_regprocedure('public.classroom_teacher_state(uuid,uuid)') as classroom_teacher_state,
-  to_regprocedure('public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb)') as classroom_teacher_command,
-  to_regprocedure('public.classroom_join(text,text,text)') as classroom_join,
-  to_regprocedure('public.classroom_student_state(uuid)') as classroom_student_state,
-  to_regprocedure('public.classroom_student_update(uuid,text)') as classroom_student_update,
-  to_regprocedure('public.classroom_student_board_event(uuid,jsonb)') as classroom_student_board_event,
-  to_regprocedure('public.classroom_presentation_state(text)') as classroom_presentation_state;
+  to_regprocedure('public.classroom_presentation_state(text)')
+    as classroom_presentation_state;
