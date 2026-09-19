@@ -18,3 +18,12 @@
 .world.lined{background-color:#fff;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#d8c8dc 31px,#d8c8dc 32px)!important;background-size:100% 32px!important}
 .world.grid{background-color:#fff;background-image:linear-gradient(to right,#ded2e0 1px,transparent 1px),linear-gradient(to bottom,#ded2e0 1px,transparent 1px)!important;background-size:32px 32px!important}
 .world.boardgreen{background-color:#315b4b!important;background-image:none!important}
+
+/* V13 Object & Selection UX */
+.item{--sel:#8d6fc0}.item.selected{border:2px solid var(--sel)!important;box-shadow:0 0 0 2px #fff,0 0 0 4px #8d6fc035!important}
+.item[data-locked="1"].selected{--sel:#8d788f}.item[data-locked="1"] .drag{cursor:not-allowed}.item[data-locked="1"] .resize,.item[data-locked="1"] .rotateHandle{display:none}
+.resize{width:14px;height:14px;right:-8px;bottom:-8px;background:#fff;border:2px solid var(--sel);border-radius:3px;cursor:nwse-resize}
+.rotateHandle{display:none;position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--sel);color:var(--sel);font-style:normal;font-size:14px;place-items:center;cursor:grab;box-shadow:0 2px 7px #49354a20}.item.selected .rotateHandle{display:grid}.item:not(.selected) .resize{display:none}
+.selectionBar{position:fixed;padding:4px;gap:2px;border-radius:11px}.selectionBar button{width:36px;height:34px;padding:0;border:0;border-radius:8px;font-size:15px}.selectionBar button:hover{background:#f4edf6}.selectionBar .danger{background:transparent;color:#bd4055}
+.marquee{position:absolute;z-index:35;border:1.5px solid #8d6fc0;background:#aa91df18;pointer-events:none}
+@media(pointer:coarse){.resize{width:22px;height:22px;right:-12px;bottom:-12px}.rotateHandle{width:32px;height:32px;top:-44px}.selectionBar button{width:42px;height:40px}}
