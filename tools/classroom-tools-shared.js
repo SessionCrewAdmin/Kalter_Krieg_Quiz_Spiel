@@ -4,6 +4,9 @@ const LEGACY_KEY='kathleenClassListsV1';
 const VAULT_KEY='kathleenClassListsVaultV2';
 const KDF_ITERATIONS=250000;
 const AUTO_LOCK_MS=15*60*1000;
+const SUPABASE_URL='https://fzqxnjhuvgpgovcovosl.supabase.co';
+const SUPABASE_KEY='sb_publishable_GIyyWoyaQXipaA4S9OuTyQ_cZn7LUgV';
+const CLOUD_VAULT_ID='schoolyear-2026-27';
 const enc=new TextEncoder(),dec=new TextDecoder(),AAD=enc.encode('KathleenClassListsVaultV2');
 let key=null,cache=[],guardPromise=null,guardResolve=null,lockTimer=null,activityBound=false;
 
@@ -27,6 +30,9 @@ async function deriveKey(pin,salt,iterations=KDF_ITERATIONS){
   const material=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);
   return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])
 }
+async function cloudRpc(name,body){const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/'+name,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(body||{})});if(!r.ok)throw new Error(name+' '+r.status+' '+await r.text());return r.json()}
+async function cloudPull(passphrase){if(!navigator.onLine||!passphrase)return false;try{const d=await cloudRpc('class_vault_get',{p_passphrase:passphrase,p_vault_id:CLOUD_VAULT_ID});if(!d?.exists||!validateVault(d.vault))return false;localStorage.setItem(VAULT_KEY,JSON.stringify(d.vault));window.dispatchEvent(new CustomEvent('kathleen:classlists-cloud',{detail:{action:'pull',updatedAt:d.updated_at}}));return true}catch(e){console.warn('Klassenlisten-Cloud konnte nicht geladen werden.',e);return false}}
+async function cloudPush(passphrase){if(!navigator.onLine||!passphrase)return false;const raw=localStorage.getItem(VAULT_KEY);if(!raw)return false;try{const vault=JSON.parse(raw);if(!validateVault(vault))return false;await cloudRpc('class_vault_save',{p_passphrase:passphrase,p_vault_id:CLOUD_VAULT_ID,p_vault:vault});window.dispatchEvent(new CustomEvent('kathleen:classlists-cloud',{detail:{action:'push',updatedAt:vault.updatedAt}}));return true}catch(e){console.warn('Klassenlisten-Cloud konnte nicht gespeichert werden.',e);return false}}
 function hasVault(){return !!localStorage.getItem(VAULT_KEY)}
 function hasLegacy(){return !!localStorage.getItem(LEGACY_KEY)}
 function isUnlocked(){return !!key}
@@ -42,7 +48,7 @@ async function persist(lists=cache){
   const cipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:AAD},key,payload));
   const next={version:2,cipher:'AES-256-GCM',kdf:'PBKDF2-SHA256',iterations:KDF_ITERATIONS,salt:vault.salt,iv:bytesToB64(iv),data:bytesToB64(cipher),updatedAt:new Date().toISOString()};
   localStorage.setItem(VAULT_KEY,JSON.stringify(next));localStorage.removeItem(LEGACY_KEY);touch();
-  window.dispatchEvent(new CustomEvent('kathleen:classlists'));return true
+  window.dispatchEvent(new CustomEvent('kathleen:classlists'));const admin=sessionStorage.getItem('kathleenAdminPass')||'';if(admin)await cloudPush(admin);return true
 }
 async function setup(pin){
   pin=String(pin||'');if(pin.length<8)throw new Error('Die Lehrer-PIN muss mindestens 8 Zeichen haben.');
@@ -124,15 +130,17 @@ function ensureGuardStyles(){
 function closeGuard(){document.getElementById('kclGuard')?.remove();const r=guardResolve;guardPromise=null;guardResolve=null;if(r)r(true)}
 async function requireUnlock(){
   if(key){touch();return true}
-  const admin=sessionStorage.getItem('kathleenAdminPass')||'';if(hasVault()&&admin){try{await unlock(admin);return true}catch(e){}}
+  const admin=sessionStorage.getItem('kathleenAdminPass')||'';
+  if(!hasVault()&&admin)await cloudPull(admin);
+  if(hasVault()&&admin){try{await unlock(admin);return true}catch(e){}}
   if(guardPromise)return guardPromise;ensureGuardStyles();guardPromise=new Promise(resolve=>{guardResolve=resolve});
   const setupMode=!hasVault(),g=document.createElement('div');g.id='kclGuard';g.className='kcl-guard';
-  g.innerHTML='<div class="kcl-guard-card"><div class="kcl-lock-icon">🔐</div><h2>'+(setupMode?'Klassenlisten schützen':'Klassenlisten entsperren')+'</h2><p>'+(setupMode?'Lege einmalig eine lokale Lehrer-PIN fest. Vorhandene unverschlüsselte Listen werden automatisch verschlüsselt und danach aus dem alten Speicher entfernt.':'Die Namen sind auf diesem Gerät AES-256-GCM-verschlüsselt. Zum Verwenden der Klassenlisten bitte entsperren.')+'</p><p class="kcl-security-note">🔒 Nur lokal · kein Upload · automatische Sperre nach 15 Minuten Inaktivität.</p><label>Lehrer-PIN</label><input id="kclPin" type="password" autocomplete="'+(setupMode?'new-password':'current-password')+'" placeholder="Mindestens 8 Zeichen">'+(setupMode?'<label>PIN wiederholen</label><input id="kclPin2" type="password" autocomplete="new-password" placeholder="PIN wiederholen">':'')+'<div class="kcl-guard-msg" id="kclMsg"></div><div class="kcl-guard-actions"><button class="primary" id="kclUnlock">'+(setupMode?'Verschlüsselung aktivieren':'Entsperren')+'</button><button id="kclBack">← Tools</button></div>'+(setupMode?'<p>Die PIN wird nicht gespeichert und kann nicht wiederhergestellt werden. Du kannst dieselbe wie dein Kisten-Admin-Passwort verwenden.</p>':'')+'</div>';
+  g.innerHTML='<div class="kcl-guard-card"><div class="kcl-lock-icon">🔐</div><h2>'+(setupMode?'Klassenlisten schützen':'Klassenlisten entsperren')+'</h2><p>'+(setupMode?'Lege einmalig eine lokale Lehrer-PIN fest. Vorhandene unverschlüsselte Listen werden automatisch verschlüsselt und danach aus dem alten Speicher entfernt.':'Die Namen sind auf diesem Gerät AES-256-GCM-verschlüsselt. Zum Verwenden der Klassenlisten bitte entsperren.')+'</p><p class="kcl-security-note">🔒 Ende-zu-Ende verschlüsselt · Supabase speichert nur Ciphertext · automatische Sperre nach 15 Minuten.</p><label>Lehrer-PIN</label><input id="kclPin" type="password" autocomplete="'+(setupMode?'new-password':'current-password')+'" placeholder="Mindestens 8 Zeichen">'+(setupMode?'<label>PIN wiederholen</label><input id="kclPin2" type="password" autocomplete="new-password" placeholder="PIN wiederholen">':'')+'<div class="kcl-guard-msg" id="kclMsg"></div><div class="kcl-guard-actions"><button class="primary" id="kclUnlock">'+(setupMode?'Verschlüsselung aktivieren':'Entsperren')+'</button><button id="kclBack">← Tools</button></div>'+(setupMode?'<p>Die PIN wird nicht gespeichert und kann nicht wiederhergestellt werden. Du kannst dieselbe wie dein Kisten-Admin-Passwort verwenden.</p>':'')+'</div>';
   document.body.appendChild(g);
   const pin=g.querySelector('#kclPin'),msg=g.querySelector('#kclMsg'),submit=g.querySelector('#kclUnlock');
-  const run=async()=>{msg.textContent='';submit.disabled=true;try{if(setupMode){const p2=g.querySelector('#kclPin2').value;if(pin.value!==p2)throw new Error('Die beiden PINs stimmen nicht überein.');await setup(pin.value)}else await unlock(pin.value);closeGuard()}catch(e){msg.textContent=e.message||'Entsperren fehlgeschlagen.';submit.disabled=false;pin.focus()}};
+  const run=async()=>{msg.textContent='';submit.disabled=true;try{if(setupMode){const p2=g.querySelector('#kclPin2').value;if(pin.value!==p2)throw new Error('Die beiden PINs stimmen nicht überein.');const pulled=await cloudPull(pin.value);if(pulled)await unlock(pin.value);else await setup(pin.value)}else await unlock(pin.value);closeGuard()}catch(e){msg.textContent=e.message||'Entsperren fehlgeschlagen.';submit.disabled=false;pin.focus()}};
   submit.onclick=run;pin.addEventListener('keydown',e=>{if(e.key==='Enter')run()});g.querySelector('#kclPin2')?.addEventListener('keydown',e=>{if(e.key==='Enter')run()});g.querySelector('#kclBack').onclick=()=>{location.href=new URL('../../#tools',location.href).toString()};setTimeout(()=>pin.focus(),60);
   return guardPromise
 }
-window.KathleenClassLists={load,persist,upsert,remove,get,cleanStudents,shuffle,parseDelimited,importCsv,exportCsv,templateCsv,importPlainJson,exportSecureBackup,importSecureBackup,changePin,setup,unlock,lock,requireUnlock,isUnlocked,hasVault,hasLegacy,autoLockMinutes:AUTO_LOCK_MS/60000,key:VAULT_KEY,legacyKey:LEGACY_KEY};
+window.KathleenClassLists={load,persist,upsert,remove,get,cleanStudents,shuffle,parseDelimited,importCsv,exportCsv,templateCsv,importPlainJson,exportSecureBackup,importSecureBackup,changePin,setup,unlock,lock,requireUnlock,isUnlocked,hasVault,hasLegacy,autoLockMinutes:AUTO_LOCK_MS/60000,cloudPull,cloudPush,cloudVaultId:CLOUD_VAULT_ID,key:VAULT_KEY,legacyKey:LEGACY_KEY};
 })();
