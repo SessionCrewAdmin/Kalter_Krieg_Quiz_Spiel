@@ -1,5 +1,5 @@
 -- ============================================================
--- Kathleens Classroom Board · V17.4 · CLASSROOM QR + ROSTER BACKEND
+-- Kathleens Classroom Board · V17.4.1 · CLASSROOM QR + ROSTER BACKEND
 -- Supabase SQL Editor: run this entire script once.
 --
 -- IMPORTANT:
