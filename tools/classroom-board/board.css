@@ -27,3 +27,7 @@
 .selectionBar{position:fixed;padding:4px;gap:2px;border-radius:11px}.selectionBar button{width:36px;height:34px;padding:0;border:0;border-radius:8px;font-size:15px}.selectionBar button:hover{background:#f4edf6}.selectionBar .danger{background:transparent;color:#bd4055}
 .marquee{position:absolute;z-index:35;border:1.5px solid #8d6fc0;background:#aa91df18;pointer-events:none}
 @media(pointer:coarse){.resize{width:22px;height:22px;right:-12px;bottom:-12px}.rotateHandle{width:32px;height:32px;top:-44px}.selectionBar button{width:42px;height:40px}}
+
+/* V13.2 handwriting / Pencil */
+.inkLasso{position:fixed;inset:0;width:100vw;height:100vh;z-index:62;pointer-events:none}.inkLasso path{fill:#aa91df12;stroke:#8d6fc0;stroke-width:1.5;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}
+.inkSelection{position:fixed;z-index:64;display:flex;gap:2px;padding:4px;background:#fff;border:1px solid #e7dde7;border-radius:11px;box-shadow:0 10px 28px #49354a20}.inkSelection button{height:36px;border:0;background:transparent;border-radius:8px;color:#5b4a60;font-weight:850;padding:0 10px}.inkSelection button:hover{background:#f4edf6}.inkSelection .danger{color:#bd4055}.eraserCursor{position:fixed;z-index:63;border:1.5px solid #8d6fc0;border-radius:50%;background:#fff5;pointer-events:none;transform:translateZ(0)}
