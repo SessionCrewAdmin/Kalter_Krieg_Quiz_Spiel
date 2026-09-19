@@ -1,9 +1,9 @@
-const CACHE='kathleen-board-stable-restore-20260919';
+const CACHE='kathleen-board-modular-v2-20260919';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
   './tools/classroom-tools-shared.js','./tools/randomizer/index.html','./tools/classroom-timer/index.html','./tools/team-generator/index.html',
-  './tools/class-lists/index.html','./tools/classroom-board/index.html','./tools/classroom-board/student.html','./tools/classroom-board/present.html','./tools/live-poll/index.html','./tools/live-poll/student.html',
+  './tools/class-lists/index.html','./tools/classroom-board/index.html','./tools/classroom-board/board.css','./tools/classroom-board/board-app.js','./tools/classroom-board/student.html','./tools/classroom-board/present.html','./tools/live-poll/index.html','./tools/live-poll/student.html',
   './tools/kalter-krieg/index.html','./tools/kalter-krieg/lehrer.html',
   './assets/covers/cold-war.svg','./assets/covers/english-world.svg',
   './assets/icons/app-180.png','./assets/icons/app-512.png'
