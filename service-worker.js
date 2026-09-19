@@ -1,4 +1,4 @@
-const CACHE='kathleen-board-widgets-v1-20260919';
+const CACHE='kathleen-widgets-expanded-20260919b';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
