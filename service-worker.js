@@ -1,4 +1,4 @@
-const CACHE='kathleen-voucher-reveal-20260919b';
+const CACHE='kathleen-class-cloud-20260919';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
