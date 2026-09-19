@@ -1,4 +1,4 @@
-const CACHE='kathleen-board-text-delete-v3-20260919';
+const CACHE='kathleen-board-richtext-v4-20260919';
 const CORE=[
   './','./index.html','./manifest.webmanifest',
   './tools/english-world-quiz/index.html','./tools/english-world-quiz/bonus.html','./tools/homework-vouchers/index.html',
