@@ -1,5 +1,5 @@
 -- ============================================================
--- Kathleens Classroom Board · V17.4.6 FINAL CLEAN
+-- Kathleens Classroom Board · V18 FINAL CLEAN
 -- Canonical Classroom backend for the current frontend.
 --
 -- Run ONCE in Supabase SQL Editor.
@@ -827,6 +827,11 @@ begin
     'room_code', v_session.room_code,
     'title', v_session.title,
     'class_name', v_session.class_name,
+    'roster_count', (
+      select count(*)::integer
+      from public.classroom_roster r
+      where r.session_id = v_session.id
+    ),
     'session_state', v_session.status,
     'phase', v_session.phase,
     'traffic', v_session.traffic,
