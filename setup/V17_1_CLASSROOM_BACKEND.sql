@@ -1,5 +1,5 @@
 -- ============================================================
--- Kathleens Classroom Board · V17.4.1 · CLASSROOM QR + ROSTER BACKEND
+-- Kathleens Classroom Board · V17.4.6 · CLASSROOM QR + ROSTER BACKEND
 -- Supabase SQL Editor: run this entire script once.
 --
 -- IMPORTANT:
@@ -25,6 +25,40 @@ create extension if not exists pgcrypto with schema extensions;
 -- ------------------------------------------------------------
 -- 1) Remove old / partial Classroom RPCs first
 -- ------------------------------------------------------------
+
+-- Remove every legacy overload, not only the currently expected signatures.
+-- PostgREST returns HTTP 300 when two RPC overloads with the same argument name
+-- are still present (for example classroom_student_state(text) + (...uuid)).
+do $cleanup$
+declare
+  r record;
+begin
+  for r in
+    select p.oid::regprocedure::text as signature
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public'
+       and p.proname in (
+         'classroom_teacher_command',
+         'classroom_set_roster',
+         'classroom_roster',
+         'classroom_teacher_state',
+         'classroom_teacher_sync',
+         'classroom_student_board_event',
+         'classroom_student_update',
+         'classroom_student_state',
+         'classroom_join',
+         'classroom_presentation_state',
+         'classroom_create',
+         'classroom_authenticate',
+         'classroom_random_code',
+         'classroom_cleanup_old_sessions'
+       )
+  loop
+    execute 'drop function if exists ' || r.signature || ' cascade';
+  end loop;
+end
+$cleanup$;
 
 drop function if exists public.classroom_teacher_command(uuid,uuid,text,uuid,jsonb);
 drop function if exists public.classroom_set_roster(uuid,uuid,text,jsonb);
